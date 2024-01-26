@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>dynamicCaRV</display-name>
+  <welcome-file-list>
+<!--     <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file> -->
+<welcome-file>index.jsp</welcome-file>
+<!--     <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file> -->
+<!--     <welcome-file>UserServlet</welcome-file> -->
+  </welcome-file-list>
+<!--  https://stackoverflow.com/questions/3655316/browser-cant-access-find-relative-resources-like-css-images-and-links-when-cal?noredirect=1&lq=1 -->  
+<!--   <servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>cetus.registration.controller.UserServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/UserServlet</url-pattern>
+</servlet-mapping> -->
+
+
+
+
+<!-- pre initialization of servlet , servlet is loaded at first request. That means it consumes more time at first request. If you specify the load-on-startup in web.xml, servlet will be loaded at project deployment time or server start. So, it will take less time for responding to first request. -->
+  <servlet>  
+   <servlet-name>UserServlet</servlet-name>  
+   <servlet-class>cetus.registration.controller.UserServlet</servlet-class>  
+   <!--If you pass the positive value, the lower integer value servlet will be loaded before the higher integer value servlet. In other words, container loads the servlets in ascending integer value.   -->
+   <load-on-startup>0</load-on-startup>  
+  </servlet>
+  
+<!-- <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/UserServlet/*</url-pattern>
+</servlet-mapping> -->
+<!-- <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+</servlet-mapping> -->
+<servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+</servlet-mapping>
+
+<!-- <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/img/*</url-pattern>
+</servlet-mapping> -->
+
+<!-- <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.jpg</url-pattern>
+</servlet-mapping> -->
+  
+
+<!-- <context-param> 
+   <description>Location to store user code</description> 
+   <param-name>user-upload</param-name> 
+   <param-value>
+      C:\Users\13022\Desktop\VM_share\apache-tomcat-9.0.41\apache-tomcat-9.0.41\webapps\data\usercode.c
+   </param-value> 
+</context-param>
+
+<context-param>    
+   <description>Location to store example codes</description> 
+   <param-name>example-upload</param-name> 
+   <param-value>
+      C:\Users\13022\Desktop\VM_share\apache-tomcat-9.0.41\apache-tomcat-9.0.41\webapps\data\examplecode.c
+   </param-value> 
+</context-param>  -->
+
+<resource-ref>
+<description>User Queries in MySQL</description>
+<res-ref-name>jdbc/users</res-ref-name>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+
+</web-app>
