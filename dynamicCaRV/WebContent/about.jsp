@@ -124,7 +124,7 @@ pageContext.setAttribute("basePath", basePath);
 					Engineering)</br> Optimizing Compilers, High-performance computing, Programming methodologies</br>
 					<br> <i>Website:</i><a href="https://sites.udel.edu/parinazb/"
 						target="_blank"> https://sites.udel.edu/parinazb/</a></br> <i>Email:</i>
-					parinazb [at] udel [dot] edu</br>
+					parinazb [at] udel [dot] edu</br> testing
 				</p>
 			</div>
 		</div>
