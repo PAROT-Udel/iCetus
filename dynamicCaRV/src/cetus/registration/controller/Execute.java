@@ -62,7 +62,7 @@ public class Execute {
 					System.out.println("Deleted previous C executable: " + cExeFile + "\n");
 				}
 				//when compiling with gcc, using 2>&1 in the command ensures that both stdout and stderr are captured in the same stream
-				compCode = compCommand + cExe + " " + cFile.toString()+" -lm ";
+				compCode = compCommand + cExe + " " + cFile.toString()+" -lm" ;
 				System.out.println(compCode);
 
 				// Runtime.getRuntime().exec(compCode).waitFor();

@@ -86,11 +86,11 @@ public class ExperimentalTimer extends TransformPass {
 			"#include <unistd.h>",
 			"#include <math.h>",
 			//"#define NRM  \"\\x1B[0m\"",
-			"#define RED  \"\\x1B[31m\"",
-			"#define GRN  \"\\x1B[32m\"",
-			"#define MAG  \"\\x1B[35m\"",
+			//"#define RED  \"\\x1B[31m\"",
+			//"#define GRN  \"\\x1B[32m\"",
+			//"#define MAG  \"\\x1B[35m\"",
 			//"#define CYN  \"\\x1B[36m\"",
-			"#define RESET \"\\x1B[0m\"",
+			//"#define RESET \"\\x1B[0m\"",
 			//      "//The first step is to uncomment this line, then compile and run the file.",
 			"//When Initial directive is defined the original code runs in order to save the variables and timers' values.",
 			"#define Initial",
@@ -116,11 +116,11 @@ public class ExperimentalTimer extends TransformPass {
 			"void read_var_from_file(char *varName,void* var, size_t sizeOfType, size_t numElements, FILE* fp){",
 			"if(fread(var, sizeOfType, numElements, fp) != numElements) {",
 			"	if(feof(fp))",
-			"		printf(\"%sPremature end of file.%s\\n\",RED,RESET);",
+			"		printf(\"Premature end of file.\\n\");",
 			"	else",
-			"		printf(\"%sFile read error of var %s %s\\n\",RED,varName,RESET);",
+			"		printf(\"File read error of var %s. \\n\",varName);",
 			"}else if(verbosity > 1) {",
-			"	printf(\"%sThe value of variable %s is read from the file.%s\\n\",GRN,varName,RESET); ",
+			"	printf(\"The value of variable %s is read from the file.\\n\",varName); ",
 			"     }",
 			"}",
 			"",
@@ -129,11 +129,11 @@ public class ExperimentalTimer extends TransformPass {
            // "//Where ptr is the pointer to the data to be written, size is the size of each element in bytes, count is the number of elements to be written, and stream is a pointer to the file.",
 			"if(fwrite(var, sizeOfType, numElements, fp) != numElements) {",
 			"	if(feof(fp))",
-			"		printf(\"%sPremature end of file.%s\\n\",RED,RESET);",
+			"		printf(\"Premature end of file.\\n\");",
 			"	else",
-			"		printf(\"%sFile write error of var %s %s\\n\",RED,varName,RESET);", 
+			"		printf(\"File write error of var %s.\\n\",varName);", 
 			"}else if(verbosity > 1) {",
-			"	printf(\"%sThe value of variable %s is written to the file.%s\\n\",GRN,varName,RESET); ",
+			"	printf(\"The value of variable %s is written to the file.\\n\",varName); ",
 			"     }",
 			"}",
 			"",
@@ -149,30 +149,30 @@ public class ExperimentalTimer extends TransformPass {
 			"initialOutputStateFile=fopen(initialOutputStateFile,\"rb\");",
 			"modifiedOutputStateFile=fopen(modifiedOutputStateFile,\"rb\");",
 			"if(initialOutputStateFile == NULL){",
-			"	printf(\"%sError: Failed to open initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to open initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(modifiedOutputStateFile == NULL){",
-			"printf(\"%sError: Failed to open modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"printf(\"Error: Failed to open modifiedOutputStateFile.\\n\");",
 			"return;",
 			"}",
 			"//sets the file pointer at the right position",
 			"if(fseek(initialOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(fseek(modifiedOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for modifiedOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"n1 = fread(tmp1, sizeOfType, numElements, initialOutputStateFile);",
 			"if (n1 <numElements && ferror(initialOutputStateFile)) {",
-			"   printf(\"%sError: Failed to read from initialOutputStateFile. %s\\n \",RED,RESET );",
-			"}else if(verbosity > 1) {printf(\"%sinitialOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"   printf(\"Error: Failed to read from initialOutputStateFile. \\n \" );",
+			"}else if(verbosity > 1) {printf(\"initialOutputStateFile is read successfully.\\n\"); }",
 			"n2 = fread(tmp2, sizeOfType, numElements, modifiedOutputStateFile);",
 			"if (n2 <numElements && ferror(modifiedOutputStateFile)) {",
-			"   printf(\"%sError: Failed to read from modifiedOutputStateFile.%s\\n\",RED,RESET);",
-			"}else if(verbosity > 1) {printf(\"%smodifiedOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"   printf(\"Error: Failed to read from modifiedOutputStateFile.\\n\");",
+			"}else if(verbosity > 1) {printf(\"modifiedOutputStateFile is read successfully.\\n\"); }",
 			"// Check for possible buffer overflows when copying data from tmp1 and tmp2.",
 //			"if(numElements > sizeof(tmp1) || numElements > sizeof(tmp2)){",
 //			"	printf(\"%sError: buffer overflow.%s\\n\", RED, RESET);",
@@ -185,9 +185,9 @@ public class ExperimentalTimer extends TransformPass {
 			"     if (tmp1[i] != tmp2[i]) {",
 			"      offset = i;",
 			"	  if (n_min==1){",
-			"         printf(\"%sMISMATCH: The value of variable %s before and after modification differs.%s\\n\", MAG, varName , RESET);}",
+			"         printf(\"MISMATCH: The value of variable %s before and after modification differs.\\n\",  varName );}",
 			" 	  else{",
-			"          printf(\"%sMISMATCH: The value of variable %s before and after modification differs starting from element %d.%s\\n\",MAG,varName,offset, RESET);}",// tmp1[i], tmp2[i]);}",
+			"          printf(\"MISMATCH: The value of variable %s before and after modification differs starting from element %d.\\n\",varName,offset);}",// tmp1[i], tmp2[i]);}",
 			//    	"          printf(\"%sMISMATCH: The value of variable %s differs at element %d of the array.%s\\n\",MAG,varName, offset,RESET);}",// tmp1[i], tmp2[i]);}",
 			"		   break;",
 			"	   }}",
@@ -196,7 +196,7 @@ public class ExperimentalTimer extends TransformPass {
 			//    	"	   else ",
 			//    	"          printf(\"\\nThe initial value of the variable %s is less than the modified value.\",varName);",
 			"}else if(ret==0){",
-			"   printf(\"%sMATCH: The value of variable %s before and after modification is equal.%s\\n\",GRN,varName,RESET);",
+			"   printf(\"MATCH: The value of variable %s before and after modification is equal.\\n\",varName);",
 			"}",
 			"free(tmp1);",
 			"free(tmp2);",
@@ -212,29 +212,29 @@ public class ExperimentalTimer extends TransformPass {
 			"initialOutputStateFile=fopen(initialOutputStateFile,\"rb\");",
 			"modifiedOutputStateFile=fopen(modifiedOutputStateFile,\"rb\");",
 			"if(initialOutputStateFile == NULL){",
-			"	printf(\"%sError: Failed to open initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to open initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(modifiedOutputStateFile == NULL){",
-			"	printf(\"%sError: Failed to open modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to open modifiedOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(fseek(initialOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(fseek(modifiedOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for modifiedOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"n1 = fread(tmp1, sizeOfType, numElements, initialOutputStateFile);",
 			"if (n1 <numElements && ferror(initialOutputStateFile)) {",
-			"	printf(\"%sError: Failed to read from initialOutputStateFile. %s\\n \",RED,RESET );",
-			"}else if(verbosity > 1) {printf(\"%sinitialOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"	printf(\"Error: Failed to read from initialOutputStateFile. \\n \");",
+			"}else if(verbosity > 1) {printf(\"initialOutputStateFile is read successfully.\\n\"); }",
 			"n2 = fread(tmp2, sizeOfType, numElements, modifiedOutputStateFile);",
 			"if (n2 <numElements && ferror(modifiedOutputStateFile)) {",
-			"	printf(\"%sError: Failed to read from modifiedOutputStateFile.%s\\n\",RED,RESET);",
-			"}else if(verbosity > 1) {printf(\"%smodifiedOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"	printf(\"Error: Failed to read from modifiedOutputStateFile.\\n\");",
+			"}else if(verbosity > 1) {printf(\"modifiedOutputStateFile is read successfully.\\n\"); }",
 //			"// Check for possible buffer overflows when copying data from tmp1 and tmp2.",
 //			"if(numElements > sizeof(tmp1) || numElements > sizeof(tmp2)){",
 //			"	printf(\"%sError: buffer overflow.%s\\n\", RED, RESET);",
@@ -247,21 +247,21 @@ public class ExperimentalTimer extends TransformPass {
 			"		if (tmp1[i] != tmp2[i] && !closeEnough(tmp1[i],tmp2[i]) && !(isnan(tmp1[i]) && isnan(tmp2[i])) ) {",
 			"			offset = i;",
 			"			if (n_min==1){",
-			"				printf(\"%sMISMATCH: The value of variable %s before and after modification differs.%s\\n\", MAG, varName , RESET);}",
+			"				printf(\"MISMATCH: The value of variable %s before and after modification differs.\\n\",  varName );}",
 		//	"			// returns 1 if the given argument is -nan, and 0 if it is not.",
 			"			else if((isnan(tmp1[i]) && isnan(tmp2[i]))){",
 			"			continue;",
 			"			}",
 			"			else if(!closeEnough(tmp1[i],tmp2[i])){",
-			"				printf(\"%sMISMATCH: The value of variable %s before and after modification differs starting from element %d.%s\\n\",MAG,varName,offset, RESET);",
+			"				printf(\"MISMATCH: The value of variable %s before and after modification differs starting from element %d.\\n\",varName,offset);",
 			"				break;}",
 			"		}else if ((tmp1[i] == tmp2[i] && i==n_min-1) || (closeEnough(tmp1[i],tmp2[i]) && i==n_min-1)){",
-			"			printf(\"%sMATCH: The value of variable %s before and after modification is equal.%s\\n\",GRN,varName,RESET);",
+			"			printf(\"MATCH: The value of variable %s before and after modification is equal.\\n\",varName);",
 			"			break;",
 			"		}",
 			"	}",
 			"}else if(ret==0){",
-			"	printf(\"%sMATCH: The value of variable %s before and after modification is equal.%s\\n\",GRN,varName,RESET);",
+			"	printf(\"MATCH: The value of variable %s before and after modification is equal.\\n\",varName);",
 			"}",
 			"free(tmp1);",
 			"free(tmp2);",
@@ -277,29 +277,29 @@ public class ExperimentalTimer extends TransformPass {
 			"initialOutputStateFile=fopen(initialOutputStateFile,\"rb\");",
 			"modifiedOutputStateFile=fopen(modifiedOutputStateFile,\"rb\");",
 			"if(initialOutputStateFile == NULL){",
-			"	printf(\"%sError: Failed to open initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to open initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(modifiedOutputStateFile == NULL){",
-			"	printf(\"%sError: Failed to open modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to open modifiedOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(fseek(initialOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for initialOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for initialOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"if(fseek(modifiedOutputStateFile, filePointer, SEEK_SET) != 0){",
-			"	printf(\"%sError: Failed to set the file pointer for modifiedOutputStateFile.%s\\n\", RED, RESET);",
+			"	printf(\"Error: Failed to set the file pointer for modifiedOutputStateFile.\\n\");",
 			"	return;",
 			"}",
 			"n1 = fread(tmp1, sizeOfType, numElements, initialOutputStateFile);",
 			"if (n1 <numElements && ferror(initialOutputStateFile)) {",
-			"	printf(\"%sError: Failed to read from initialOutputStateFile. %s\\n \",RED,RESET );",
-			"}else if(verbosity > 1) {printf(\"%sinitialOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"	printf(\"Error: Failed to read from initialOutputStateFile. \\n \" );",
+			"}else if(verbosity > 1) {printf(\"initialOutputStateFile is read successfully.\\n\"); }",
 			"n2 = fread(tmp2, sizeOfType, numElements, modifiedOutputStateFile);",
 			"if (n2 <numElements && ferror(modifiedOutputStateFile)) {",
-			"	printf(\"%sError: Failed to read from modifiedOutputStateFile.%s\\n\",RED,RESET);",
-			"}else if(verbosity > 1) {printf(\"%smodifiedOutputStateFile is read successfully.%s\\n\",GRN,RESET); }",
+			"	printf(\"Error: Failed to read from modifiedOutputStateFile.\\n\");",
+			"}else if(verbosity > 1) {printf(\"modifiedOutputStateFile is read successfully.\\n\"); }",
 //			"// Check for possible buffer overflows when copying data from tmp1 and tmp2.",
 //			"if(numElements > sizeof(tmp1) || numElements > sizeof(tmp2)){",
 //			"	printf(\"%sError: buffer overflow.%s\\n\", RED, RESET);",
@@ -312,21 +312,21 @@ public class ExperimentalTimer extends TransformPass {
 			"		if (tmp1[i] != tmp2[i] && !closeEnough(tmp1[i],tmp2[i]) && !(isnan(tmp1[i]) && isnan(tmp2[i])) ) {",
 			"			offset = i;",
 			"			if (n_min==1){",
-			"				printf(\"%sMISMATCH: The value of variable %s before and after modification differs.%s\\n\", MAG, varName , RESET);}",
+			"				printf(\"MISMATCH: The value of variable %s before and after modification differs.\\n\",  varName );}",
 		//	"			// returns 1 if the given argument is -nan, and 0 if it is not.",
 			"			else if((isnan(tmp1[i]) && isnan(tmp2[i]))){",
 			"			continue;",
 			"			}",
 			"			else if(!closeEnough(tmp1[i],tmp2[i])){",
-			"				printf(\"%sMISMATCH: The value of variable %s before and after modification differs starting from element %d.%s\\n\",MAG,varName,offset, RESET);",
+			"				printf(\"MISMATCH: The value of variable %s before and after modification differs starting from element %d.\\n\",varName,offset);",
 			"				break;}",
 			"		}else if ((tmp1[i] == tmp2[i] && i==n_min-1) || (closeEnough(tmp1[i],tmp2[i]) && i==n_min-1)){",
-			"			printf(\"%sMATCH: The value of variable %s before and after modification is equal.%s\\n\",GRN,varName,RESET);",
+			"			printf(\"MATCH: The value of variable %s before and after modification is equal.\\n\",varName);",
 			"           break;",
 			"		}",
 			"	}",
 			"}else if(ret==0){",
-			"	printf(\"%sMATCH: The value of variable %s before and after modification is equal.%s\\n\",GRN,varName,RESET);",
+			"	printf(\"MATCH: The value of variable %s before and after modification is equal.\\n\",varName);",
 			"}",
 			"free(tmp1);",
 			"free(tmp2);",
@@ -482,9 +482,9 @@ public class ExperimentalTimer extends TransformPass {
 			//codes.add("FILE* initialExperimentalSectionRunTime= fopen(\"initialExperimentalSectionRunTime\",\"w\");");
 			//codes.add("write_var_to_file(\"exp_time_used\", &exp_time_used, sizeof(double), 1, initialExperimentalSectionRunTime);");
 			//codes.add("if(verbosity > 0 && iteration_count>1) {printf(\"iteration_count= %d\\n\",iteration_count);}");
-			codes.add("if(iteration_count>1){printf(\"the experimental section is iterated over %d times\\n\",iteration_count);}");
+			codes.add("if(iteration_count>1){printf(\"The experimental section is iterated over %d times.\\n\",iteration_count);}");
 			//"	if(verbosity > 0) {printf(\"The original experimental code section took %.6lf seconds to run.\\n\", exp_time_used);}"+ NEWLINE +
-			codes.add("printf(\"\\n\\n%sUncomment the line: #define Experimental, make your changes to the experimental section then compile and run the code.%s\\n\",MAG ,RESET );");
+			//codes.add("printf(\"\\n\\n%sUncomment the line: #define Experimental, make your changes to the experimental section then compile and run the code.%s\\n\",MAG ,RESET );");
 			//codes.add("#endif //Initial");// it should not end in here. should end at the end of the program
 			// program exit
 			for (Statement exit : exit_stmts) {
@@ -1294,7 +1294,7 @@ public class ExperimentalTimer extends TransformPass {
 												"printf(\"The output set of iteration %d is written to the file.\\n\",iteration_count);"+NEWLINE+
 												"printf(\"The capture_output_write_time took %.6lf seconds.\\n\\n\", capture_output_write_time);"+NEWLINE+
 												"}"+NEWLINE+
-												"}else{if(verbosity > 0){printf(\"The output set of iteration %d is not written to the file.\\n\",iteration_count);}}"+ NEWLINE+
+												"}else{if(verbosity > 1){printf(\"The output set of iteration %d is not written to the file.\\n\",iteration_count);}}"+ NEWLINE+
 												"iteration_count++;"+ NEWLINE+
 												"#endif //Initial"+ NEWLINE+
 												"#ifdef Experimental"+ NEWLINE+
@@ -1305,9 +1305,9 @@ public class ExperimentalTimer extends TransformPass {
 												"read_var_from_file(\"initial_exp_time_used\",&initial_exp_time_used, sizeof(double), 1, initialExperimentalSectionRunTime"+expname+");"+ NEWLINE+
 												"printf(\"The original experimental section (before modifications) took %.6lf seconds to run.\\n\", initial_exp_time_used);"+ NEWLINE+
 												"if(closeEnough(initial_exp_time_used, exp_time_used)){"+ NEWLINE+
-												"printf(\"%sThe execution time of the experimental section before and after modification remains the same.%s\\n\",GRN,RESET);"+ NEWLINE+
+												"printf(\"The execution time of the experimental section before and after modification remains the same.\\n\");"+ NEWLINE+
 												"}else{"+ NEWLINE+
-												"printf(\"%sThere is a change of %.6lf seconds between the execution time of the experimental section before and after the modification%s\\n\",MAG, fabs((initial_exp_time_used) - (exp_time_used)), RESET);}"+ NEWLINE+
+												"printf(\"There is a change of %.6lf seconds between the execution time of the experimental section before and after the modification\\n\", fabs((initial_exp_time_used) - (exp_time_used)));}"+ NEWLINE+
 												"FILE* modifiedExperimentalSectionTimeFile"+expname+" = fopen(\"modifiedExperimentalSectionRunTime"+expname+"\", \"w\");"+ NEWLINE+
 												"fwrite(&exp_time_used, sizeof(double), 1, modifiedExperimentalSectionTimeFile);"+ NEWLINE+
 												"gettimeofday(&replayStartOutputWriteCompare, NULL);"+ NEWLINE+
@@ -1378,7 +1378,7 @@ public class ExperimentalTimer extends TransformPass {
 								"printf(\"The output set of iteration %d is written to the file.\\n\",iteration_count);"+ NEWLINE +
 								"printf(\"The capture_output_write_time took %.6lf seconds.\\n\\n\", capture_output_write_time);"+ NEWLINE +
 								"}"+ NEWLINE +
-								"}else{if(verbosity > 0){printf(\"The output set of iteration %d is not written to the file.\\n\",iteration_count);}}"+ NEWLINE+
+								"}else{if(verbosity > 1){printf(\"The output set of iteration %d is not written to the file.\\n\",iteration_count);}}"+ NEWLINE+
 								"iteration_count++;"+ NEWLINE+
 								"#endif //Initial"+ NEWLINE+
 								"#ifdef Experimental"+ NEWLINE+
@@ -1389,9 +1389,9 @@ public class ExperimentalTimer extends TransformPass {
 								"read_var_from_file(\"initial_exp_time_used\",&initial_exp_time_used, sizeof(double), 1, initialExperimentalSectionRunTime"+expname+");"+ NEWLINE+
 								"printf(\"The original experimental section (before modifications) took %.6lf seconds to run.\\n\", initial_exp_time_used);"+ NEWLINE+
 								"if(closeEnough(initial_exp_time_used, exp_time_used)){"+ NEWLINE+
-								"printf(\"%sThe execution time of the experimental section before and after modification remains the same.%s\\n\",GRN,RESET);"+ NEWLINE+
+								"printf(\"The execution time of the experimental section before and after modification remains the same.\\n\");"+ NEWLINE+
 								"}else{"+ NEWLINE+
-								"printf(\"%sThere is a change of %.6lf seconds between the execution time of the experimental section before and after the modification%s\\n\",MAG, fabs((initial_exp_time_used) - (exp_time_used)), RESET);}"+ NEWLINE+
+								"printf(\"There is a change of %.6lf seconds between the execution time of the experimental section before and after the modification\\n\", fabs((initial_exp_time_used) - (exp_time_used)));}"+ NEWLINE+
 								"FILE* modifiedExperimentalSectionTimeFile"+expname+" = fopen(\"modifiedExperimentalSectionRunTime"+expname+"\", \"w\");"+ NEWLINE+
 								"fwrite(&exp_time_used, sizeof(double), 1, modifiedExperimentalSectionTimeFile);"+ NEWLINE+
 								"gettimeofday(&replayStartOutputWriteCompare, NULL);"+ NEWLINE+
@@ -2703,7 +2703,7 @@ private String getProcedureParameters(Procedure exp_proc) {
 				"printf(\"The input set of iteration %d is written to the file.\\n\",iteration_count);"+NEWLINE+
 				"printf(\"The capture_input_write_time took %.6lf seconds.\\n\", capture_input_write_time);"+NEWLINE+
 				"}"+NEWLINE+
-				"}else{if(verbosity > 0){printf(\"The input set of iteration %d is not written to the file.\\n\",iteration_count);}}"+NEWLINE;//+"fclose(initialInputStateFile);";
+				"}else{if(verbosity > 1){printf(\"The input set of iteration %d is not written to the file.\\n\",iteration_count);}}"+NEWLINE;//+"fclose(initialInputStateFile);";
 
 	}
 

@@ -1307,9 +1307,9 @@ $(function() {
  		document.getElementById("pluggedininput").style.display = "none"; //hide
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
-		document.getElementById("replayExp").style.display = "";//hide
+		document.getElementById("replayExp").style.display = "none";
 <%-- 		document.getElementById("replayExp").innerHTML= "<%=%>"; --%>
-// 		document.getElementById("replayPerf").style.display = "";//hide
+ 		document.getElementById("replayPerf").style.display = "none";
 		//document.getElementById("replaySelector").addEventListener("change", updateOtherFields);
  	// Execute the function as soon as the page loads
  		  processContentChanges();		
