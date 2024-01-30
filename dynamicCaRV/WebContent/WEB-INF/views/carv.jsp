@@ -484,7 +484,7 @@ try {
 // 	        String replayExecutionResults = resultSetReplays.getString("execution_results");
 // 		}	
 %>
-
+<!-- Since all the replays are still related to the initial CaRV process, we are holding that process Id -->
 <c:set var="userId" value="<%=generatedKey%>" /> <!-- Replace with your actual user ID. saving user ID as an attribute in the page context --> 
 
 <%
@@ -497,7 +497,7 @@ try {
 <!-- Iterate through replayList and generate hiddenHTML fields dynamically -->
     <%
         for (Carvreplay replay : replayList) {
-            %>
+    %>
             <div id="replayDetails_<%= replay.getReplayid() %>" style="display: none;">
                 <div>
                     <label for="replayId_<%= replay.getReplayid() %>">Replay ID:</label>
@@ -517,7 +517,7 @@ try {
                 </div>
                 <!-- Add more fields as needed -->
             </div>
-            <%
+    <%
         }
     %>
 
@@ -532,7 +532,7 @@ try {
 //reads from the files saved on the server -These are all file paths that we need for redaing them and writing to them in case of recompiling
 String inputContent = user.getFileOutput(resultSet.getString("input_code"));
 System.out.println("\n\n\n inputContent"+inputContent);
-request.setAttribute("inputContent", inputContent);//To be used in JavaScripot code		
+request.setAttribute("inputContent", inputContent);//To be used in JavaScript code		
 		
 String outputContent = user.getFileOutput(resultSet.getString("cetus_output_filepath"));
 System.out.println("\n\n\n outputContent"+outputContent);
@@ -925,8 +925,8 @@ request.setAttribute("filepathPara",pathToFile);  */
 			
 			<input type="hidden" id="DBRowId" name="DBRowId" value="<%=generatedKey%>">
 			
-			<input type="hidden" id="expsection" name="expsection"
-				value="EXP Section">
+			<input type="hidden" id="expsectionpara" name="expsectionpara"
+				value="">
 			<!-- if the code should only be executed and not compiled set the vale to execute -->
 			<%-- 	     <input type="hidden" id="filenamePara" name="filenamePara" value="<%=outputFileName %>">
 	     <input type="hidden" id="filepathPara" name="filepathPara" value="<%=pathToFile %>"> --%>
@@ -1308,7 +1308,6 @@ $(function() {
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
 		document.getElementById("replayExp").style.display = "none";
-<%-- 		document.getElementById("replayExp").innerHTML= "<%=%>"; --%>
  		document.getElementById("replayPerf").style.display = "none";
 		//document.getElementById("replaySelector").addEventListener("change", updateOtherFields);
  	// Execute the function as soon as the page loads
@@ -1415,7 +1414,7 @@ $(function() {
 		var divOutput= document.getElementById("cetusoutput");
 		var outputDivString = divOutput.innerText;
 		var expOutput= document.getElementById("expsection");
-		var modifiedCode = expOutput.innerText; 
+		var modifiedCode = expOutput.innerText;  //exp section code
 		console.log("modifiedCode: \n "+modifiedCode);
 		// Your existing code to get the start and end indexes of the experimental section
 		var expStartIdx = outputDivString.indexOf("gettimeofday(&startexp, NULL);", 0);
@@ -1430,14 +1429,18 @@ $(function() {
 	    
 		var inputParameter= document.getElementById("usercode"); //setting the usercode field that is the hidden file to what should be passed. in this case is the output is set to be passed for execution
 		inputParameter.value=  divOutput.innerText+"\n"; 
+		var expParameter= document.getElementById("expsectionpara"); //setting the exp section that should be passed
+		expParameter.value=  modifiedCode; //the experimental section
 		
+
 		document.getElementById("codeRadios").value="passedFile"; //It's a file we are passing to the servlet
 		document.getElementById("gridRadios").value="CaRVExecute"; //write a new RedirectPage to "/WEB-INF/views/CaRV.jsp";
 		document.getElementById("CaRVPhase").value="Replay"; // CaRVPhase can be set to Cature or Replay.
 		//ReplayIndex++;
 	}
 
-	
+
+
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");
 		var divOutput= document.getElementById("cetusoutput");
@@ -1547,7 +1550,7 @@ $(function() {
 <script>
     // Function to update other fields based on the selected replay
     function updateReplayDetails() {
-    	 console.log("updateOtherFields function called");
+    	 //console.log("updateOtherFields function called");
     
         var replaySelector = document.getElementById("replaySelector");
         var selectedReplayId = replaySelector.value; //parseInt(replaySelector.value,10);//to convert a string to an integer
@@ -1570,8 +1573,10 @@ $(function() {
        //Update HTML elements with the values from the selected replay
        //document.getElementById("replayId").value = document.getElementById("replayId_" + selectedReplayId).value;
        //document.getElementById("fileContent").value = document.getElementById("fileContent_" + selectedReplayId).value;
-        document.getElementById("replayExp").value = document.getElementById("expContent_" + selectedReplayId).value;
-        document.getElementById("replayPerf").value = document.getElementById("executionContent_" + selectedReplayId).value;
+       	document.getElementById("replayExp").style.display = "";
+ 		document.getElementById("replayPerf").style.display = "";
+        document.getElementById("replayExp").textContent = document.getElementById("expContent_" + selectedReplayId).value;
+        document.getElementById("replayPerf").textContent = document.getElementById("executionContent_" + selectedReplayId).value;
     }
 
     // Attach the updateOtherFields function to the change event of the replaySelector

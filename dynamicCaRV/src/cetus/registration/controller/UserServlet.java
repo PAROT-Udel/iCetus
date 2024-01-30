@@ -46,7 +46,7 @@ import java.nio.file.StandardOpenOption;
 //register
 @WebServlet("/")
 //@MultipartConfig(location = "C:/Users/13022/Desktop/CExamples/")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB file’s size that is greater than this threshold will be
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB fileï¿½s size that is greater than this threshold will be
 // directly written to disk, instead of saving in memory.
 		maxFileSize = 1024 * 1024 * 10, // maximum size for a single upload file.
 		maxRequestSize = 1024 * 1024 * 50) // 50MB maximum size for a request. All sizes are measured in bytes.
@@ -206,8 +206,8 @@ public class UserServlet extends HttpServlet {
 		    }}
 		
 		String carvPhase= request.getParameter("CaRVPhase"); //This parameters can be set to Capture or Replay
-		String expsection= request.getParameter("expsection"); //passing experimental section for saving in Carv Replay DB
-		// System.out.println("UserServlet- input file address is:\n" + inputCode);
+		String expsection= request.getParameter("expsectionpara")+ "\n";//passing experimental section for saving in Carv Replay DB
+	    System.out.println("UserServlet- expsection passed is:\n" + expsection);
 		// String inputCode = request.getParameter("inputCode") + "\n";
 		// write your own code
 		String inputProgramCode = request.getParameter("usercode") + "\n";
@@ -495,7 +495,7 @@ public class UserServlet extends HttpServlet {
 		 * }
 		 */
 		// DO NOT REMOVE- ADDED FOR VERSION 2
-		// getting all #include “*.h” files from the users
+		// getting all #include ï¿½*.hï¿½ files from the users
 		// starting from beginning of the file
 		// int index = 0;
 		// // to store all the header files
