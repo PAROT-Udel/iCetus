@@ -1382,6 +1382,7 @@ public class UserServlet extends HttpServlet {
             replay.setReplayfilecontent(replayFileContent);
             replay.setReplayexpsection(expsection); 
             System.out.println("Replay Experimental Section:::"+ expsection);
+            request.setAttribute("expsectionOfReplay", expsection); //passing expsection to jsp page after each replay
             replay.setReplayexecutionresults(execution);
             System.out.println("Replay File Execution results:::"+ execution);
             CarvreplayDAO carvreplayDAO = new CarvreplayDAO();

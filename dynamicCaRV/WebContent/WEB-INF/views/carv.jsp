@@ -204,7 +204,6 @@ font-weight: bold;
 	cursor: text;
 	overflow: auto;
 	height: 275px;
-	overflow: auto;
 	resize: both;
 	-moz-box-shadow: inset 0px 1px 2px #ccc;
 	-webkit-box-shadow: inset 0px 1px 2px #ccc;
@@ -959,10 +958,10 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<!--  								<code  id="cetusinput" name="cetusinput" contentEditable=true rows="12" onclick="EnableCompileButtons()" contentEditable
 										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;" onclick="EnableCompileButtons()">  -->
 									<code class="prettyprint lang-c" id="cetusinput" rows="12"
-										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;">
+										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
 									<code class="prettyprint lang-c" id="pluggedininput" rows="12"
-										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;">
+										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
 								</div>
 							</div>
@@ -995,12 +994,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<code class="highlighted-text" id="liveoutexpsection" rows="3"
 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
 									</code>
-									<code class="prettyprint lang-c" id="replayExp" rows="7"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
-									</code>
-									<code class="" id="replayPerf" rows="7"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
-									</code>
+
 								</div>
 							</div>
 						</div>
@@ -1085,15 +1079,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 									
 								
 
-								<label for="replaySelector">Select a Replay:</label> 
-							    <select id="replaySelector" onchange="updateReplayDetails()">
-							        <!-- Populate the dropdown dynamically based on the data retrieved from the database -->
-								    <c:forEach var="replay" items="${replayList}">
-								        <option value="${replay.replayid}">
-								        	${replay.replayid}
-								        </option> 
-								    </c:forEach>
-							    </select>	
+
 
 								
 
@@ -1120,12 +1106,12 @@ request.setAttribute("filepathPara",pathToFile);  */
 					</div>
 				</div>
 				<!-- --------------------------  -->
-				<!-- Obtained Results and Advisor divs -->
+				<!-- Obtained Results and  and Replay History    //Advisor divs -->
 				<!-- --------------------------  -->
 
 						<div class="row" id="queryResult" >
 
-							<div class="column">
+							<div class="column" style="max-width: 50%;">
 								<div class="form-row">
 									<div align="left">
 										<h4>Obtained Results</h4>
@@ -1135,14 +1121,50 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<div align="left">
 										<div class="container">
 											<div id="ExecutionResultDiv" contentEditable=false rows="12"
-												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;">
-
-
+												style="border-radius: 10px; width: 100%; max-width: 47vw; padding: 25px; box-sizing: border-box; overflow: scroll;white-space: pre-wrap; word-wrap: break-word;">
 											</div>
 										</div>
 									</div>
 								</div>
 								</div>
+							<div class="column" >
+								<div class="form-row">
+									<div align="left">
+										<h4>Replay History</h4>
+									</div>
+								</div>
+								<div class="form-row">
+								<div align="left">
+								<label for="replaySelector">Select a Replay:</label> 
+							    <select id="replaySelector" onclick="updateReplayDetails()">
+							        <!-- Populate the dropdown dynamically based on the data retrieved from the database -->
+								    <c:forEach var="replay" items="${replayList}">
+								        <option value="${replay.replayid}">
+								        	${replay.replayid}
+								        </option> 
+								    </c:forEach>
+							    </select>	
+							    </div>
+							    <div  align="left" class="form-row">
+							    	<code class="prettyprint lang-c" id="replayExp" rows="10"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; height: 380px;">
+									</code>
+									<code class="" id="replayPerf" rows="7"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"> 
+									</code> 
+<!-- 										<div class="container"> -->
+<!-- 											<div id="AdvisorDiv" rows="12" -->
+<!-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"> -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+								</div>
+								</div>
+							</div>
+						</div>
+				<!-- --------------------------  -->
+				<!-- Advisor div -->
+				<!-- --------------------------  -->
+					<div class="row" id="LLMResult" >
 							<div class="column">
 								<div class="form-row">
 									<div align="left">
@@ -1295,19 +1317,31 @@ $(function() {
 		/* prettify the code */
 		PR.prettyPrint();
 		
+		var expoutput= document.getElementById("expsection");
+        // Retrieve the attribute from the request object
+<%--         var expsectionOfReplay = '<%= request.getAttribute("expsectionOfReplay") %>'; --%>
+//         // Check if the attribute is not null
+//         if (expsectionOfReplay !== "") {
+//             // Set the value to expoutput.innerHTML
+//         	expoutput.innerHTML += ""+expsectionOfReplay.replace(/\n/g, '<br>');;
+//         } else {
+            // Set something else if it is null
+        	expoutput.innerHTML += ""<%=ExperimentalSectionFinalString%>;
+//        }
+        
 		document.getElementById("liveinexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveInExtractedLine%>;
 		document.getElementById("liveoutexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-out data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveOutExtractedLine%>;
-		var expoutput= document.getElementById("expsection");
+	
 		//expoutput.innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in and live-out data are displayed in the format type:name[:size]."+"</span>"; 
 <%-- 		expoutput.innerHTML += "<br><span class=\"highlighted-text\"> /*"+<%=liveInExtractedLine%>+"*/</span><br>";  --%>
-		expoutput.innerHTML += ""<%=ExperimentalSectionFinalString%>; 
+<%-- 		expoutput.innerHTML += ""<%=ExperimentalSectionFinalString%>;  --%>
 <%-- 		expoutput.innerHTML += "<br><span class=\"highlighted-text\"> /*"+<%=liveOutExtractedLine%>+" */</span>";  --%>
  		var executionResult=document.getElementById("ExecutionResultDiv");
  		executionResult.innerHTML = ""<%=exeResultfinalString%>; //Result of Execution in Capture and REplay wil be added here
  		document.getElementById("pluggedininput").style.display = "none"; //hide
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
-		document.getElementById("replayExp").style.display = "none";
+		document.getElementById("replayExp").style.display = "";
  		document.getElementById("replayPerf").style.display = "none";
 		//document.getElementById("replaySelector").addEventListener("change", updateOtherFields);
  	// Execute the function as soon as the page loads
@@ -1486,6 +1520,7 @@ $(function() {
 
 	function processContentChanges() {
 	    var content = document.getElementById("ExecutionResultDiv");
+	    // Get the inner HTML content of the Execution results
 	    var text = content.innerHTML; 
 		var index;
 
@@ -1525,7 +1560,7 @@ $(function() {
 		 var sectionId = title.toLowerCase() + 'Section'+ index;
 		 
 		    return '<div class="collapsible-section">' +
-			        '<button class="btn btn-link buttonwide" type="button" onclick="toggleCollapse(\'' + sectionId + '\')">' +
+			        '<button class="btn btn-link buttonwide" type="button" style="text-align: left;" onclick="toggleCollapse(\'' + sectionId + '\')">' +
 			        '[' + title + '] [End' + title + ']' +
 			        '</button>' +
 			        '<div id="' + sectionId + '" class="collapsible-content">' +
@@ -1574,9 +1609,9 @@ $(function() {
        //document.getElementById("replayId").value = document.getElementById("replayId_" + selectedReplayId).value;
        //document.getElementById("fileContent").value = document.getElementById("fileContent_" + selectedReplayId).value;
        	document.getElementById("replayExp").style.display = "";
- 		document.getElementById("replayPerf").style.display = "";
-        document.getElementById("replayExp").textContent = document.getElementById("expContent_" + selectedReplayId).value;
-        document.getElementById("replayPerf").textContent = document.getElementById("executionContent_" + selectedReplayId).value;
+ 		//document.getElementById("replayPerf").style.display = "";
+        document.getElementById("replayExp").innerHTML = document.getElementById("expContent_" + selectedReplayId).value.replace(/\n/g, '<br>');
+        //document.getElementById("replayPerf").innerHTML = document.getElementById("executionContent_" + selectedReplayId).value.replace(/\n/g, '<br>');
     }
 
     // Attach the updateOtherFields function to the change event of the replaySelector
