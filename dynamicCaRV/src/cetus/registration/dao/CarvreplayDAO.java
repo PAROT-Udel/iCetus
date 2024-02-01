@@ -20,6 +20,34 @@ import cetus.registration.model.Carvreplay;
  */
 public class CarvreplayDAO {
 	int generatedKey = 0;
+	
+	//to get the last replay id so that we can add the replay id to execution results we rae saving in user database
+	public int getLastReplayId()throws SQLException, ClassNotFoundException {
+		int lastReplayId = 0;
+		String QUERY_SQL = "SELECT carv_replay_id FROM users.carvreplays ORDER BY carv_replay_id DESC LIMIT 1;" ;
+	    // Load the JDBC driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        //Connecting to MySQl DB: users Schema/database
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users?useSSL=false", "root", "Bezanberim");
+            // Step 2:Create a statement using connection object
+        	PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SQL);
+            //System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                // Retrieve the last replay ID from the result set
+                if (resultSet.next()) {
+                    lastReplayId = resultSet.getInt("carv_replay_id");
+                }
+            } catch (SQLException e) {
+                // Handle SQL exceptions
+                printSQLException(e);
+            }
+
+            return lastReplayId;
+	}
+	
+	
 	public int insertReplayRequest(Carvreplay replay) throws ClassNotFoundException {
         String INSERT_REPLAY_SQL = "INSERT INTO users.carvreplays" +
             "  ( user_id, datafile_path, datafile_content, experimental_section, execution_results) VALUES " + 

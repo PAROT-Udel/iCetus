@@ -1526,7 +1526,7 @@ $(function() {
 
 	    // Regular expressions to identify sections
  	    var captureRegex = /<pre>\[Capture\]([\s\S]*?)\[EndCapture\]<\/pre>/g;// /\[Capture\]([\s\S]*?)\[EndCapture\]/g;
-	    var replayRegex = /<pre>\[Replay\]([\s\S]*?)\[EndReplay\]<\/pre>/g;///\[Replay\]([\s\S]*?)\[EndReplay\]/g;
+	    var replayRegex = /<pre>\[Replay(\d+)\]([\s\S]*?)\[EndReplay\1\]<\/pre>/g;///\[Replay\]([\s\S]*?)\[EndReplay\]/g;
 	    var inputRegex = /<pre>\[Input\]([\s\S]*?)\[EndInput\]<\/pre>/g;///\[Input\]([\s\S]*?)\[EndInput\]/g;
 	    console.log(captureRegex);
 	 
@@ -1538,11 +1538,16 @@ $(function() {
 	   	    return createCollapsibleSection("Capture", content, index);
 	    });
 
-	    text = text.replace(replayRegex, function (match, content) {
-	    	index+="R";
-	      return createCollapsibleSection("Replay", content, index);
-	    });
+// 	    text = text.replace(replayRegex, function (match, content) {
+// 	    	index+="R";
+// 	      return createCollapsibleSection("Replay", content, index);
+// 	    });
 
+   		text = text.replace(replayRegex, function (match, replayNumber, content) {
+        index += "R";
+        return createCollapsibleSection("Replay" + replayNumber, content, index);
+    	});
+   		
 	    text = text.replace(inputRegex, function (match, content) {
 	    	index+="I";
 	      return createCollapsibleSection("Input", content, index);

@@ -1347,6 +1347,17 @@ public class UserServlet extends HttpServlet {
 			System.out.println("Replay phase");
 			//if replay phase is executed. replace the define parameter, and then compile and execute the code how you compiled and executed the capture phase file.
 			int numThreads = 4; 
+			CarvreplayDAO carvreplayDAO = new CarvreplayDAO();
+			int lastReplayId=0;
+			//gets the last replay Id the one taht will be inserted to DB will be lastReplayId+1
+			try {
+				// register the user using DAO layer in the DB
+				lastReplayId =carvreplayDAO.getLastReplayId();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			lastReplayId++; //since we will insert the replay into the DB later, to get the correct id, one should be added to id.
 			File execFile = new File(inputPrg);
 			String execFilePath = execFile.getAbsolutePath();
 			modifyFile(execFilePath, "#define Initial","#define Experimental"); 
@@ -1354,7 +1365,7 @@ public class UserServlet extends HttpServlet {
 
 			File paraFile = execute.compileCFile(execFile, 1); 
 			String parResult= execute.executionResult(paraFile, numThreads);
-			String execution = "\n==========================================\n[Replay] \n"+parResult + "\n[EndReplay]\n\n";
+			String execution = "\n==========================================\n[Replay"+lastReplayId+"] \n"+parResult + "\n[EndReplay"+lastReplayId+"]\n\n";
 			System.out.println("Replay Phase Execution Results:   \n"+ execution  ); 
 //			System.out.println("execFilePath is:"+ execFilePath);
 //			System.out.println("inputPrg is:"+ inputPrg);
@@ -1372,6 +1383,9 @@ public class UserServlet extends HttpServlet {
 				}
 			
 			Carvreplay replay= new Carvreplay();
+			//int lastreplayID= carvreplayDAO.getLastReplayId()
+			//int replayId= replay.getReplayid();
+			//System.out.println("carv-replay-id:::"+ replayId);
 			replay.setUserid(Integer.parseInt(dbRowIdParameter)); //user-id
 			System.out.println("Cetus-user-id:::"+ dbRowIdParameter);
 			replay.setReplayfilepath(execFilePath); 
@@ -1385,7 +1399,7 @@ public class UserServlet extends HttpServlet {
             request.setAttribute("expsectionOfReplay", expsection); //passing expsection to jsp page after each replay
             replay.setReplayexecutionresults(execution);
             System.out.println("Replay File Execution results:::"+ execution);
-            CarvreplayDAO carvreplayDAO = new CarvreplayDAO();
+            
             try {
 				// register the user using DAO layer in the DB
 				carvreplayDAO.insertReplayRequest(replay);
