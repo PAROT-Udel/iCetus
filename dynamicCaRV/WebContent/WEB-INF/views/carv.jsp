@@ -1617,8 +1617,31 @@ $(function() {
  		//document.getElementById("replayPerf").style.display = "";
         document.getElementById("replayExp").innerHTML = document.getElementById("expContent_" + selectedReplayId).value.replace(/\n/g, '<br>');
         //document.getElementById("replayPerf").innerHTML = document.getElementById("executionContent_" + selectedReplayId).value.replace(/\n/g, '<br>');
-    }
+        
+     // Find the corresponding button with the same replay number in its label
+        //var button = document.querySelector('[Replay' + selectedReplayId + '] [EndReplay'+ selectedReplayId +']');
+        //[Replay88] [EndReplay88]
+      // If the button is found, click on it
+     // Construct the regex pattern for matching the div section id id="replay90SectionundefinedCR" 
+        var regexPattern = new RegExp('replay' + selectedReplayId + 'Section.*');
+     // Find all div sections with ids starting with replay
+//         var allSections = document.querySelectorAll('[id^="replay"]');
 
+//      // Hide all such sections
+//      allSections.forEach(function (section) {
+//          section.style.display = 'none';
+//      });
+     // Find the div section that matches the pattern
+        var matchingSection = document.querySelector('[id^="replay' + selectedReplayId + 'Section"]');
+
+        if (matchingSection) {
+            // Show the content of the matching section
+            matchingSection.style.display = 'block';
+        }
+        
+    }
+ // Call the function when you want to show the selected replay
+   // showSelectedReplay();
     // Attach the updateOtherFields function to the change event of the replaySelector
 //     document.getElementById("replaySelector").addEventListener("click", function() {
 //     console.log("change event triggered");
