@@ -59,6 +59,13 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+<!-- Bootstrap CSS and JavaScript files along with jQuery (which is required by Bootstrap) -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script> -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
 <style type="text/css">
@@ -115,7 +122,12 @@ button {
 }
 .buttonwide {
 
-	width: 220px;
+	width: 210px;
+}
+
+.buttonextrawide {
+
+	width: 260px;
 }
 
 .boxsizingBorder {
@@ -1019,7 +1031,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 								data-placement="top" class="fa fa-question-circle"></i></span>
 								
 							<button type="button" id="copyToInput" class="btn btn-primary buttonwide"
-								onclick="copytoInput()">Copy the experimental section into Input</button>
+								onclick="copytoInput()">Copy Exp section into Input</button>
 							&nbsp;<span><i data-content="To copy the experimental section to the input code."
 								data-placement="top" class="fa fa-question-circle"></i></span>
 								
@@ -1057,51 +1069,43 @@ request.setAttribute("filepathPara",pathToFile);  */
 									data-content="Compile and execute the output file in Capture mode."
 									data-placement="top" class="fa fa-question-circle"></i></span>
 
-								<button type="button" id="displayoutput"
-									class="btn btn-primary buttonwide" onclick="displayOutput()">Display Output</button>
-								&nbsp;<span><i
-									data-content="Use this button to chcek out the generated Output file."
-									data-placement="top" class="fa fa-question-circle"></i></span>
-
 								<button type="button" id="modifyExpSection"
 									class="btn btn-primary buttonwide" onclick="changeExpSection()">Modify
-									Experimental Section</button>
+									Exp Section</button>
 								&nbsp;<span><i
 									data-content="Use this button to manually further optimize the experimental section of the code. Then run the code in Replay mode to check its validity."
 									data-placement="top" class="fa fa-question-circle"></i></span>
 
 								<button type="submit" id="Replay" name="action"
-									value="Replay" class="btn btn-primary"
+									value="Replay" class="btn btn-primary buttonwide"
 									onclick="setReplayParasforservlet()">Replay & Validate</button>
 								&nbsp;<span><i id="helpReplay"
 									data-content="Compile and execute the experimental section in Replay mode. It also reports on the verification of the applied optimization."
 									data-placement="top" class="fa fa-question-circle"></i></span>
-									
-								
-
-
-
-								
-
-									
-
-								<!-- 								<button type="submit" name="action" id="displayExecTime" -->
-								<!-- 									class="btn btn-primary buttonwide" -->
-								<!-- 									onclick="setParasforExecutionTime()">Execute the Code</button> -->
-								<!-- 								&nbsp;<span><i -->
-								<!-- 									data-content="Displays the execution time of the serial code and the parallel code after making chnages to it. " -->
-								<!-- 									data-placement="top" class="fa fa-question-circle"></i></span> -->
-								<!-- 						 <button type="submit" name="action" id="downloadOutput"  class="btn btn-primary buttonwide" onclick="document.forms[0].action = 'download.jsp'; return true;"  >Download output</button>&nbsp;<span><i
-						data-content="Downloads output file from the server. "
-						data-placement="top" class="fa fa-question-circle"></i></span>  -->
-
-								<!-- <button type="button" id="displayExecResult"  class="btn btn-primary buttonwide" onclick="changeOutput()" >Display Execution Result</button>&nbsp;<span><i
-						data-content="To ensure the code has been parallelized correctly, it displays execution result of the serial and the parralel code."
-						data-placement="top" class="fa fa-question-circle"></i></span>  -->
 							</div>
+						</div>
 
+						<div class="form-row">
+							<div align="left">
+								<button type="submit" id="AskCetus" name="action" value="AskCetus"
+									class="btn btn-primary" onclick="setDefaultCetusParasforservlet()">Ask Cetus</button>
+								&nbsp;<span><i id="helpAskCetus"
+									data-content="Cetus Auto-parallelizer offers parallelization techniques applicable to the experimental section."
+									data-placement="top" class="fa fa-question-circle"></i></span>
+									
+								<button type="submit" id="AskGPT" name="action" value="AskGPT"
+									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>
+								&nbsp;<span><i id="helpAskGPT"
+									data-content="GPT offers optimization techniques applicable to your code."
+									data-placement="top" class="fa fa-question-circle"></i></span>
 
-
+								<button type="button" id="displayoutput"
+									class="btn btn-primary buttonwide" onclick="displayOutput()">Display
+									Output</button>
+								&nbsp;<span><i
+									data-content="Use this button to chcek out the generated Output file."
+									data-placement="top" class="fa fa-question-circle"></i></span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -1267,14 +1271,15 @@ $(document).ready(function(){
 		});//submit
 });//document ready
 			
-			
-//hovering over question mark shows the popover contents	
+
+
+/* 	hovering over question mark shows the popover contents	 */
 $(function() {
-			$('.fa').popover({
-				trigger : "hover"
-			});
-})
-		
+		$('.fa').popover({
+			trigger : "hover"
+		});
+	})
+	
 
 
 </script>
@@ -1473,7 +1478,29 @@ $(function() {
 		//ReplayIndex++;
 	}
 
-
+	
+	//Ask Cetus
+	function setDefaultCetusParasforservlet(){
+		//get input code
+		var divInput= document.getElementById("cetusinput");
+		var inputString = divInput.innerText;
+		//get experimental  section
+		var exp= document.getElementById("expsection");
+		var expString = exp.innerText;  //exp section code
+		
+		//replace experiemntal section in the input code
+		var expStartIdx = inputString.indexOf("#pragma experimental section start", 0);
+		var expStopIdx = inputString.indexOf("#pragma experimental section stop", expStartIdx);
+	    var newInput = inputString.substring(0, expStartIdx) + "#pragma experimental section start\n"+
+	    				expString + "\n"+
+	    				inputString.substring(expStopIdx);
+		//pass the file 
+		document.getElementById("usercode").value= newInput+"\n"; //should be checked
+		document.getElementById("codeRadios").value="passedFile"; //should be checked
+		document.getElementById("gridRadios").value="AskCetus";   //should be checked //it should be all about developing this pass 
+																  //which is equal to running "auto" but then saving it to CetusDB.
+			
+	}
 
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");
@@ -1565,7 +1592,7 @@ $(function() {
 		 var sectionId = title.toLowerCase() + 'Section'+ index;
 		 
 		    return '<div class="collapsible-section">' +
-			        '<button class="btn btn-link buttonwide" type="button" style="text-align: left;" onclick="toggleCollapse(\'' + sectionId + '\')">' +
+			        '<button class="btn btn-link buttonextrawide" type="button" style="text-align: left;" onclick="toggleCollapse(\'' + sectionId + '\')">' +
 			        '[' + title + '] [End' + title + ']' +
 			        '</button>' +
 			        '<div id="' + sectionId + '" class="collapsible-content">' +

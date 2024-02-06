@@ -31,6 +31,8 @@ import cetus.registration.model.User;
 import cetus.registration.controller.Execute;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -608,7 +610,95 @@ public class UserServlet extends HttpServlet {
 		// Running Cetus in auto mode
 		System.out.println("setting Cetus options");
 		
-		if (gridRadios.equals("CaRV")) {
+		if (gridRadios.equals("AskCetus")) {
+			String[] args = null;
+			args = new String[6];
+			cetusOptionSet[1] = "-verbosity=2";
+			args[0] = cetusOptionSet[0]; // preprocessor
+			args[1] = cetusOptionSet[1]; // verbosity set to 4
+			args[2] = "-callgraph";
+			args[3] = "-ompGen=4"; // keeps all pragmas
+			args[4] = output;
+			args[5] = inputPrg;
+
+			System.out.println("Cetus options in " + gridRadios + " mode are set to: ");
+			for (int i = 0; i < args.length; i++) {
+				System.out.println("args[" + i + "]" + args[i]);
+			}
+
+			// getting the filename from the path
+			File f = new File(inputPrg);
+			String fileName = f.getName();
+			System.out.println("\n Here is the file name " + fileName);
+			Path inputPath = Path.of(inputPrg); //should be saved in DB
+			String inputConetnt = Files.readString(inputPath); //should be saved in DB
+			System.out.println("\n Here is the content of the input file " + inputConetnt);
+			// Save original out stream.
+			PrintStream originalOut = System.out;
+			// Save original err stream.
+			PrintStream originalErr = System.err;
+
+			// Create a new file output stream.
+
+			PrintStream fileOut = new PrintStream(cetusDebuggerReport + "/" + fileName); 
+			// Create a new file error stream.
+			// PrintStream fileErr = new PrintStream("./err.txt");
+			PrintStream fileErr = new PrintStream(cetusAnalysisReport + "/" + fileName);
+
+			// Redirect standard out to file.
+			System.setOut(fileOut);
+			// Redirect standard err to file.
+			System.setErr(fileErr);
+
+			Driver driver = new Driver();
+			// System.out.println("UserServlet- going inside Cetus Driver.main \n");
+			// System.out.println("Cetus options in auto mode are set to: " +
+			// Arrays.toString(args));
+			// Running Cetus on the application
+			driver.main(args);
+			// System.out.println("UserServlet- back from Cetus Driver \n");
+			// back to original output
+			System.setOut(originalOut);
+			System.setErr(originalErr);
+			// remove empty lines from Cetus output file
+			removeCommentsEmptyLines(outputFolder + "/" + fileName);
+
+			System.out.println("\n Setting DB fields ");
+			user.setCetusOptionSet(Arrays.toString(args));
+			user.setInputCode(inputPrg);
+			user.setInputContent(inputConetnt);
+			user.setCetusOutput(outputFolder + "/" + fileName);
+			user.setCetusDebuggerReport(cetusDebuggerReport + "/" + fileName);
+			user.setCetusAnalysisReport(cetusAnalysisReport + "/" + fileName);
+			// to send file content to DB, not just file paths
+			Path outputCetus = Path.of(outputFolder + "/" + fileName);
+			Path passesCetus = Path.of(cetusDebuggerReport + "/" + fileName);
+			Path analysisCetus = Path.of(cetusAnalysisReport + "/" + fileName);
+			String outputContent = Files.readString(outputCetus);
+			String passesContent = Files.readString(passesCetus);
+			String analysisContent = Files.readString(analysisCetus);
+			user.setCetusOutputContent(outputContent);
+			user.setCetusPassesContent(passesContent);
+			user.setCetusAnalysisConetent(analysisContent);
+			String expSection = extractExperimentalSection(outputContent);
+			// Print extracted code section
+	        System.out.println("Extracted Code Section:\n" + expSection);
+			user.setExperimentalSection(expSection); //experimental section should be set
+			System.out.println("\n All DB fields for AskCetus pass is created.");
+			// save Cetus output results in DB
+			try {
+				// register the user using DAO layer in the DB
+				// The limit is 16 MB for packet sizes.
+				//userDAO.insertCetusResults(user);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			RedirectPage = "/WEB-INF/views/carv.jsp";
+			// insert the request to Cetus DB including the userDB index, path to input, input content,Cetus options, path to output, output content, exp section
+			
+		}else if (gridRadios.equals("CaRV")) {
 			String[] args = null;
 			args = new String[7];
 			cetusOptionSet[1] = "-verbosity=2";
@@ -1455,6 +1545,22 @@ public class UserServlet extends HttpServlet {
 		// response.sendRedirect("employeedetails.jsp");
 	}
 	
+	private String extractExperimentalSection(String content) {
+		String expSection = "";
+
+        // Define regex pattern for extracting code section
+        String regex = "#pragma experimental section start name=null\\s*(.*?)\\s*#pragma experimental section stop name=null";
+        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(content);
+
+        // If a match is found, extract the code section
+        if (matcher.find()) {
+            expSection = matcher.group(1).trim();
+        }
+
+        return expSection;
+	}
+
 	/**
 	 * 
 	 * @param user

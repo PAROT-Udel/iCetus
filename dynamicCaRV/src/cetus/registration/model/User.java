@@ -24,7 +24,14 @@ public class User {
 	private String cetusOutputContent;
 	private String cetusPassesContent;
 	private String cetusAnalysisConetent;
+	private String experimentalSection;
 	
+	public String getExperimentalSection() {
+		return experimentalSection;
+	}
+	public void setExperimentalSection(String experimentalSection) {
+		this.experimentalSection = experimentalSection;
+	}
 	/**
 	 * @return the inputContent
 	 */
