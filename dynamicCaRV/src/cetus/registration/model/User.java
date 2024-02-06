@@ -24,8 +24,16 @@ public class User {
 	private String cetusOutputContent;
 	private String cetusPassesContent;
 	private String cetusAnalysisConetent;
-	private String experimentalSection;
+	private String experimentalSection; //for Cetus table
+	private int FkId; //for Cetus table
 	
+	
+	public int getFkId() {
+		return FkId;
+	}
+	public void setFkId(int fkId) {
+		FkId = fkId;
+	}
 	public String getExperimentalSection() {
 		return experimentalSection;
 	}

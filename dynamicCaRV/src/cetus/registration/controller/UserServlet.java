@@ -26,6 +26,7 @@ import javax.servlet.http.Part;
 import cetus.exec.Driver;
 import cetus.registration.dao.CarvreplayDAO;
 import cetus.registration.dao.UserDAO;
+import cetus.registration.dao.CetusDAO;
 import cetus.registration.model.Carvreplay;
 import cetus.registration.model.User;
 import cetus.registration.controller.Execute;
@@ -58,10 +59,12 @@ public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDAO userDAO;
 	private Execute execute;
+	private CetusDAO cetusDAO;
 
 	public void init() {
 		userDAO = new UserDAO();
 		execute = new Execute();
+		cetusDAO= new CetusDAO();
 	}
 
 	/**
@@ -665,6 +668,7 @@ public class UserServlet extends HttpServlet {
 
 			System.out.println("\n Setting DB fields ");
 			user.setCetusOptionSet(Arrays.toString(args));
+			user.setFkId(Integer.parseInt(dbRowIdParameter));
 			user.setInputCode(inputPrg);
 			user.setInputContent(inputConetnt);
 			user.setCetusOutput(outputFolder + "/" + fileName);
@@ -689,7 +693,7 @@ public class UserServlet extends HttpServlet {
 			try {
 				// register the user using DAO layer in the DB
 				// The limit is 16 MB for packet sizes.
-				//userDAO.insertCetusResults(user);
+				cetusDAO.insertCetusResults(user);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
