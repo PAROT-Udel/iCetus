@@ -538,15 +538,16 @@ try {
 </script>
 
 <%
-
+String carvExpSection= (String)request.getAttribute("carvExpSection");
+System.out.println("\n\n\n carvExpSection  "+carvExpSection);
 //int ReplayIndex=0;
 //reads from the files saved on the server -These are all file paths that we need for redaing them and writing to them in case of recompiling
 String inputContent = user.getFileOutput(resultSet.getString("input_code"));
-System.out.println("\n\n\n inputContent"+inputContent);
+//System.out.println("\n\n\n inputContent"+inputContent);
 request.setAttribute("inputContent", inputContent);//To be used in JavaScript code		
 		
 String outputContent = user.getFileOutput(resultSet.getString("cetus_output_filepath"));
-System.out.println("\n\n\n outputContent"+outputContent);
+//System.out.println("\n\n\n outputContent"+outputContent);
 //reading Analysis file content from the server not the Database file content.
 String analysisContent = user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"));
 String analysis2=resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
@@ -562,7 +563,7 @@ String inputPath = resultSet.getString("input_code");
 //get the filename from the file path
 Path p = Paths.get(inputPath);
 String file = p.getFileName().toString();
-System.out.println("\n\n \n inputfile name:" + file);
+//System.out.println("\n\n \n inputfile name:" + file);
 
 StringBuilder sb= new StringBuilder();
 sb = servlet.seperateOptions(cetusOptions, sb);
@@ -580,6 +581,7 @@ String ExperimentalSectionFinalString= null;
 String ExperimentalSectionInputFinalString=null;
 String extractedText=null;
 String extractedInputText=null;
+String expFinalString =null;
 // String RangefinalString = null;
 // String cfgfinalString = null;
 // String ipafinalString = null;
@@ -608,6 +610,20 @@ inputFinalString = finalinputStringBuilder.toString();
 request.setAttribute("inputFinalString", inputFinalString);//To be used in JavaScripot code		
 System.out.println("\n\n \n inputFinalString:" + inputFinalString);
 System.out.println("Cetus input created");
+
+//make carvExpSection ready for html view===============================================================================
+if(carvExpSection !=null){
+System.out.println("Creating CarvExpSection");
+System.out.println("carvExpSection: "+ carvExpSection);
+StringBuilder finalExpStringBuilder = new StringBuilder("");
+String[] Explines = carvExpSection.split("\n");
+Explines= servlet.makeHTMLqualified(Explines,finalExpStringBuilder );
+expFinalString = finalExpStringBuilder.toString().substring(1); //removing the first +
+request.setAttribute("expFinalString", expFinalString);//To be used in JavaScripot code		
+//expFinalString= "+\""+expFinalString+"\""; 
+System.out.println("\n\n \n expFinalString:" + expFinalString);
+System.out.println("carvExpSection created");
+}else{request.setAttribute("expFinalString", null);}
 
 /* Cetus Output for queries, div section ===================================================================================== */
 System.out.println("Creating Cetus output");
@@ -1321,18 +1337,19 @@ $(function() {
 		divoutput.style.display = "none";
 		/* prettify the code */
 		PR.prettyPrint();
-		
+<%--   	    var expFinalString = <%=expFinalString%>; //null  or strats with +"" --%>
+ 	   	var expFinalSection = <%=expFinalString%>;
+
+ 		console.log("expFinalSection:"+expFinalSection);
+//  		console.log("expFinalString:"+expFinalString);
 		var expoutput= document.getElementById("expsection");
         // Retrieve the attribute from the request object
-<%--         var expsectionOfReplay = '<%= request.getAttribute("expsectionOfReplay") %>'; --%>
-//         // Check if the attribute is not null
-//         if (expsectionOfReplay !== "") {
-//             // Set the value to expoutput.innerHTML
-//         	expoutput.innerHTML += ""+expsectionOfReplay.replace(/\n/g, '<br>');;
-//         } else {
-            // Set something else if it is null
-        	expoutput.innerHTML += ""<%=ExperimentalSectionFinalString%>;
-//        }
+  	
+    	
+         if (expFinalSection !== null) {
+             expoutput.innerHTML = expFinalSection;
+        }else{expoutput.innerHTML = ""<%=ExperimentalSectionFinalString%>;}
+
         
 		document.getElementById("liveinexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveInExtractedLine%>;
 		document.getElementById("liveoutexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-out data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveOutExtractedLine%>;

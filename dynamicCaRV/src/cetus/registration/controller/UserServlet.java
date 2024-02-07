@@ -685,9 +685,10 @@ public class UserServlet extends HttpServlet {
 			user.setCetusPassesContent(passesContent);
 			user.setCetusAnalysisConetent(analysisContent);
 			String expSection = extractExperimentalSection(outputContent);
-			// Print extracted code section
+	        // Print extracted code section
 	        System.out.println("Extracted Code Section:\n" + expSection);
 			user.setExperimentalSection(expSection); //experimental section should be set
+			request.setAttribute("carvExpSection", expSection);
 			System.out.println("\n All DB fields for AskCetus pass is created.");
 			// save Cetus output results in DB
 			try {
@@ -1490,7 +1491,7 @@ public class UserServlet extends HttpServlet {
             replay.setReplayfilecontent(replayFileContent);
             replay.setReplayexpsection(expsection); 
             System.out.println("Replay Experimental Section:::"+ expsection);
-            request.setAttribute("expsectionOfReplay", expsection); //passing expsection to jsp page after each replay
+            request.setAttribute("carvExpSection", expsection); //passing expsection to jsp page after each replay
             replay.setReplayexecutionresults(execution);
             System.out.println("Replay File Execution results:::"+ execution);
             
@@ -1549,21 +1550,38 @@ public class UserServlet extends HttpServlet {
 		// response.sendRedirect("employeedetails.jsp");
 	}
 	
-	private String extractExperimentalSection(String content) {
-		String expSection = "";
+//	private String extractExperimentalSection(String content) {
+//		String expSection = "";
+//
+//        // Define regex pattern for extracting code section
+//        String regex = "#pragma experimental section start name=null\\s*(.*?)\\s*#pragma experimental section stop name=null";
+//        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//        Matcher matcher = pattern.matcher(content);
+//
+//        // If a match is found, extract the code section
+//        if (matcher.find()) {
+//            expSection = matcher.group(1).trim();
+//        }
+//
+//        return expSection;
+//	}
 
-        // Define regex pattern for extracting code section
-        String regex = "#pragma experimental section start name=null\\s*(.*?)\\s*#pragma experimental section stop name=null";
-        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(content);
+	// Method to extract code section without using regex
+    public static String extractExperimentalSection(String content) {
+        String expSection = "";
 
-        // If a match is found, extract the code section
-        if (matcher.find()) {
-            expSection = matcher.group(1).trim();
+        // Find the start and stop indices of the pragma statements
+        int startIndex = content.indexOf("#pragma experimental section start name= null");
+        int stopIndex = content.indexOf("#pragma experimental section stop name= null");
+
+        // If both start and stop indices are found
+        if (startIndex != -1 && stopIndex != -1) {
+            // Extract the code section
+            expSection = content.substring(startIndex+ "#pragma experimental section start name= null".length(), stopIndex);
         }
 
         return expSection;
-	}
+    }
 
 	/**
 	 * 
@@ -1851,7 +1869,7 @@ public class UserServlet extends HttpServlet {
 			 * sb.append("+\"").append(s).append("<br>\""); }
 			 */
 			
-			  if (!s.equals("")) {
+			  if (!s.equals("") ) {
 			  sb.append("+\"").append(s.trim()).append("<br>\"").append(System.getProperty("line.separator")); }
 			 
 		}
