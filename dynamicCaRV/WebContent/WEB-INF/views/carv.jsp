@@ -1192,7 +1192,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 							<div class="column">
 								<div class="form-row">
 									<div align="left">
-										<h4>Advisor</h4>
+<!-- 										<h4>Advisor</h4> -->
 									</div>
 								</div>
 								<div class="form-row">
@@ -1201,7 +1201,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 <!-- 											<div id="AdvisorDiv" rows="12" -->
 <!-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"> -->
 <!-- 											</div> -->
-											<iframe src="https://chat.openai.com/" width="800" height="600"></iframe>
+<!-- 											<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. -->
 										</div>
 									</div>
 								</div>
@@ -1525,7 +1525,7 @@ $(function() {
 	}
 
 	
-	//Ask GPT
+	//Ask GPT for API
 	function setPromptParasforservlet(){
 		var exp= document.getElementById("expsection");
 		var expString = exp.innerText; //exp section
@@ -1542,6 +1542,33 @@ $(function() {
 		liveoutParameter.value=  liveoutString; //the experimental section
 		document.getElementById("gridRadios").value="AskGPT";
 	}
+	
+    function openAskGPT() {
+        // Define the prompt to be sent to GPT
+        var prompt = "";
+        var exp= document.getElementById("expsection");
+		var expString = exp.innerText; //exp section
+		var livein= document.getElementById("liveinexpsection");
+		var liveinString = livein.innerText; //live-ins
+		var liveout= document.getElementById("liveoutexpsection");
+		var liveoutString = liveout.innerText; //live-outs		
+		prompt= "you have the role of C code optimizer. The optimizations you suggest are for C codes and it can be related to data structure changes,"+ 
+		"algorithmic changes, or adding OpenMP pragmas for parallelizing teh code."+
+		" Here is the code section that needs to be optimized:"+  expString +
+		" I also provide you the live-in variables that are used in that code section. In the form of ‘type of variable: variable name: variable size’."+
+		"For example ‘In=int:i,int:l,double:q:10,’  means live-in variables are int i; int l; double q[10]; "+ "Here are live-in variables: "+ liveinString +
+		"I also provide live-out variables in the same format as live-in variables. Here is an example:  Out=double:q:10,double:sx,double:sy,"+
+		"Notice that live-out variables are the variables that their values should not change during the optimization process. "+"Here are live-out variables:"+
+		liveoutString+ "Give me only the optimized version of the code. No explanation is needed. Give me the entire code and do not shorten the code." ;
+		
+        // Encode the prompt to be included in the URL
+        var encodedPrompt = encodeURIComponent(prompt);
+        // Construct the URL with the encoded prompt
+        var url = "https://chat.openai.com/?prompt=" + encodedPrompt;
+
+        // Open the URL in a new window
+        window.open(url, "_blank");
+    }
 	
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");
