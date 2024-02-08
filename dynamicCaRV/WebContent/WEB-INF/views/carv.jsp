@@ -1198,9 +1198,10 @@ request.setAttribute("filepathPara",pathToFile);  */
 								<div class="form-row">
 									<div align="left">
 										<div class="container">
-											<div id="AdvisorDiv" rows="12"
-												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;">
-											</div>
+<!-- 											<div id="AdvisorDiv" rows="12" -->
+<!-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"> -->
+<!-- 											</div> -->
+											<iframe src="https://chat.openai.com/" width="800" height="600"></iframe>
 										</div>
 									</div>
 								</div>
