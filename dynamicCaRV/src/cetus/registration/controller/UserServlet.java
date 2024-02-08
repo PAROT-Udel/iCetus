@@ -8,9 +8,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -613,7 +617,38 @@ public class UserServlet extends HttpServlet {
 		// Running Cetus in auto mode
 		System.out.println("setting Cetus options");
 		
-		if (gridRadios.equals("AskCetus")) {
+		if(gridRadios.equals("AskGPT")) {
+			String expSection = request.getParameter("expsectionpara");
+		    String liveInData = request.getParameter("liveinpara");
+		    String liveOutData = request.getParameter("liveoutpara");
+			//Send Request to GPT API
+		    String gptUrl = "https://api.openai.com/v1/completions";
+		    String apiKey = "YOUR_API_KEY";
+		    String requestBody = "{ \"model\": \"text-davinci-002\", \"prompt\": \"" + liveInData + expSection + liveOutData +"\", \"max_tokens\": 100 }";
+
+		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+		    connection.setRequestProperty("Content-Type", "application/json");
+		    connection.setDoOutput(true);
+
+		    try (OutputStream os = connection.getOutputStream()) {
+		        byte[] input = requestBody.getBytes("utf-8");
+		        os.write(input, 0, input.length);
+		    }
+		 // Code to handle response from GPT API
+		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+		        StringBuilder responseBuilder = new StringBuilder();
+		        String responseLine = null;
+		        while ((responseLine = br.readLine()) != null) {
+		            responseBuilder.append(responseLine.trim());
+		        }
+		        String gptResponse = responseBuilder.toString();
+
+		  // Code to extract optimized code from response
+		    }
+		    
+		}else if (gridRadios.equals("AskCetus")) {
 			String[] args = null;
 			args = new String[6];
 			cetusOptionSet[1] = "-verbosity=2";

@@ -954,6 +954,10 @@ request.setAttribute("filepathPara",pathToFile);  */
 			
 			<input type="hidden" id="expsectionpara" name="expsectionpara"
 				value="">
+			<input type="hidden" id="liveinpara" name="liveinpara"
+				value="">
+			<input type="hidden" id="liveoutpara" name="liveoutpara"
+				value="">	
 			<!-- if the code should only be executed and not compiled set the vale to execute -->
 			<%-- 	     <input type="hidden" id="filenamePara" name="filenamePara" value="<%=outputFileName %>">
 	     <input type="hidden" id="filepathPara" name="filepathPara" value="<%=pathToFile %>"> --%>
@@ -1519,6 +1523,25 @@ $(function() {
 			
 	}
 
+	
+	//Ask GPT
+	function setPromptParasforservlet(){
+		var exp= document.getElementById("expsection");
+		var expString = exp.innerText; //exp section
+		var livein= document.getElementById("liveinexpsection");
+		var liveinString = livein.innerText; //live-ins
+		var liveout= document.getElementById("liveoutexpsection");
+		var liveoutString = liveout.innerText; //live-outs		
+		//setting  parameters that should be passed to server
+		var expParameter= document.getElementById("expsectionpara"); //setting the exp section that should be passed
+		expParameter.value=  expString; //the experimental section
+		var liveinParameter= document.getElementById("liveinpara"); //setting the exp section that should be passed
+		liveinParameter.value=  liveinString; //the experimental section
+		var liveoutParameter= document.getElementById("liveoutpara"); //setting the exp section that should be passed
+		liveoutParameter.value=  liveoutString; //the experimental section
+		document.getElementById("gridRadios").value="AskGPT";
+	}
+	
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");
 		var divOutput= document.getElementById("cetusoutput");
