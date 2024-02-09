@@ -1130,7 +1130,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 					</div>
 				</div>
 				<!-- --------------------------  -->
-				<!-- Obtained Results and  and Replay History    //Advisor divs -->
+				<!-- Obtained Results and  and Replay History    
 				<!-- --------------------------  -->
 
 						<div class="row" id="queryResult" >
@@ -1176,11 +1176,6 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<code class="" id="replayPerf" rows="7"
 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"> 
 									</code> 
-<!-- 										<div class="container"> -->
-<!-- 											<div id="AdvisorDiv" rows="12" -->
-<!-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"> -->
-<!-- 											</div> -->
-<!-- 										</div> -->
 								</div>
 								</div>
 							</div>
@@ -1199,8 +1194,11 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<div align="left">
 										<div class="container">
 											<div id="AdvisorDiv" rows="12"
-												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><%= request.getAttribute("gptResponse") %>
+												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre>
 											</div>
+									<code class="prettyprint lang-c" id="expsection" rows="8"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"><%= request.getAttribute("gptResponse") %>
+									</code>
 <!-- 											<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. -->
 										</div>
 									</div>

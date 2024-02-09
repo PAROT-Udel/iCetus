@@ -408,46 +408,117 @@ public class UserServlet extends HttpServlet {
 				str.append(cetusOptionSet[i] + ", ");
 			}
 		}
-		
+		//https://www.youtube.com/watch?v=TkJ2dFtD0ho
 		if(gridRadios.equals("AskGPT")) {
 			String expSection = request.getParameter("expsectionpara");
+			// Split the expSection string into lines
+			String[] lines = expSection.split("\\r\\n");
+			// Create a StringBuilder to store the concatenated lines
+			StringBuilder concatenatedLines = new StringBuilder();
+			// Iterate through the lines array and concatenate each line
+			for (String line : lines) {
+			    concatenatedLines.append(line).append(" "); // Append each line followed by a space
+			}
+			// Convert the StringBuilder to a single string
+			String expSectionresult = concatenatedLines.toString().trim(); // Trim to remove trailing space
 		    String liveInData = request.getParameter("liveinpara");
 		    String liveOutData = request.getParameter("liveoutpara");
-		    String message = "Optimize the following C code using OpenMP pragmas and return the full optimized code with no explanation: " + "This is my c code";
+		    String message = "Optimize the C code using OpenMP. Return only the optimized code without any explanation. " + expSectionresult;
+		    String gptFinalResponse="";
+		    String url = "https://api.openai.com/v1/chat/completions";
+	        String apiKey = "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"; // API key goes here
+	        String model = "gpt-3.5-turbo"; // current model of chatgpt api
+
+	        try {
+	            // Create the HTTP POST request
+	            URL obj = new URL(url);
+	            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	            con.setRequestMethod("POST");
+	            con.setRequestProperty("Authorization", "Bearer " + apiKey);
+	            con.setRequestProperty("Content-Type", "application/json");
+
+	            // Build the request body
+	            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + message + "\"}]}";
+	            con.setDoOutput(true);
+	            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+	            writer.write(body);
+	            writer.flush();
+	            writer.close();
+
+	            // Get the response
+	            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	            String inputLine;
+	            StringBuffer gptresponse = new StringBuffer();
+	            while ((inputLine = in.readLine()) != null) {
+	            	gptresponse.append(inputLine);
+	            }
+	            in.close();
+
+	            // returns the extracted contents of the response.
+	           gptFinalResponse= extractContentFromResponse(gptresponse.toString());
+	           System.out.println( gptFinalResponse);
+	           request.setAttribute("gptResponse", gptFinalResponse);
+
+	        } catch (IOException e) {
+	            throw new RuntimeException(e);
+	        }
+	    
+
+
 			//Send Request to GPT API
-		    String gptUrl = "https://api.openai.com/v1/completions";
-		    String apiKey = "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"; //API added https://platform.openai.com/api-keys
-		    String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"prompt\": \"" + message + "\" }";
-		    System.out.println("Request Body: " + requestBody);
-		   try { 
-		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
-		    connection.setRequestMethod("POST");
-		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
-		    connection.setRequestProperty("Content-Type", "application/json");
-		    connection.setDoOutput(true);
-//sending the JSON-formatted request body to the server over the HTTP connection established earlier. 
-		    try (OutputStream os = connection.getOutputStream()) {
-		        byte[] input = requestBody.getBytes("utf-8");
-		        os.write(input, 0, input.length);
-		    }
-		 // Code to handle response from GPT API
-		    //reads the response from the server line by line and appends
-		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-		        StringBuilder responseBuilder = new StringBuilder();
-		        String responseLine = null;
-		        while ((responseLine = br.readLine()) != null) {
-		            responseBuilder.append(responseLine.trim());
-		        }
-		        String gptResponse = responseBuilder.toString();
-			    System.out.println("Response from OpenAI API: " + gptResponse);
-			    request.setAttribute("gptResponse", gptResponse);
-		        //br.close();
-		    }
-		  // Code to extract optimized code from response
-		    }catch (IOException e) {
-		        System.out.println("Error reading response from OpenAI API: " + e.getMessage());
-		        e.printStackTrace(); // Log stack trace for debugging
-		    }
+//		    String gptUrl = "https://api.openai.com/v1/chat/completions";
+//		    String apiKey = "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";//"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"; //API added https://platform.openai.com/api-keys
+//		    String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"prompt\": \"" + message + "\" }";
+//		    System.out.println("Request Body: " + requestBody);
+//		    String apiUrl = gptUrl;
+//		    String connectionmessage= "test";
+//		    try {
+//	            URL url = new URL(apiUrl);
+//	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//	            connection.setRequestMethod("GET");
+//
+//	            int responseCode = connection.getResponseCode();
+//	            if (responseCode == HttpURLConnection.HTTP_OK) {
+//	                System.out.println("API endpoint is operational (HTTP Status 200 OK)");
+//	                connectionmessage= "API endpoint is operational (HTTP Status 200 OK)";
+//	            } else {
+//	                System.out.println("API endpoint is not operational (HTTP Status " + responseCode + ")");
+//	                connectionmessage= "API endpoint is not operational (HTTP Status " + responseCode + ")";
+//	            }
+//	        } catch (IOException e) {
+//	            System.out.println("Failed to access the API endpoint: " + e.getMessage());
+//	            connectionmessage= "Failed to access the API endpoint: " + e.getMessage();
+//	        }
+//		    
+//		   try { 
+//		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
+//		    connection.setRequestMethod("POST");
+//		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+//		    connection.setRequestProperty("Content-Type", "application/json");
+//		    connection.setDoOutput(true);
+////sending the JSON-formatted request body to the server over the HTTP connection established earlier. 
+//		    try (OutputStream os = connection.getOutputStream()) {
+//		        byte[] input = requestBody.getBytes("utf-8");
+//		        os.write(input, 0, input.length);
+//		    }
+//		 // Code to handle response from GPT API
+//		    //reads the response from the server line by line and appends
+//		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+//		        StringBuilder responseBuilder = new StringBuilder();
+//		        String responseLine = null;
+//		        while ((responseLine = br.readLine()) != null) {
+//		            responseBuilder.append(responseLine.trim());
+//		        }
+//		        String gptResponse = responseBuilder.toString();
+//			    System.out.println("Response from OpenAI API: " + gptResponse);
+//			    request.setAttribute("gptResponse", connectionmessage +gptResponse);
+//		        //br.close();
+//		    }
+//		  // Code to extract optimized code from response
+//		    }catch (IOException e) {
+//		        System.out.println("Error reading response from OpenAI API: " + e.getMessage());
+//		        e.printStackTrace(); // Log stack trace for debugging
+//		    }
 		   RedirectPage = "/WEB-INF/views/carv.jsp";
 		    
 		}
@@ -2001,7 +2072,15 @@ public class UserServlet extends HttpServlet {
 		//System.out.println("File Content- empty lines replaced: " + code);
 		return code;
 	}
-  
+	
+    //This method extracts the response expected from chatgpt and returns it.
+   public static String extractContentFromResponse(String response) {
+       int startMarker = response.indexOf("content")+11; // Marker for where the content starts.
+       int endMarker = response.indexOf("\"", startMarker); // Marker for where the content ends.
+       return response.substring(startMarker, endMarker); // Returns the substring containing only the response.
+   }
+   
+   
     static void modifyFile(String filePath, String oldString, String newString)
     {
         File fileToBeModified = new File(filePath);
