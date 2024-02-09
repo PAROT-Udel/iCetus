@@ -1198,9 +1198,9 @@ request.setAttribute("filepathPara",pathToFile);  */
 								<div class="form-row">
 									<div align="left">
 										<div class="container">
-<!-- 											<div id="AdvisorDiv" rows="12" -->
-<!-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"> -->
-<!-- 											</div> -->
+											<div id="AdvisorDiv" rows="12"
+												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><%= request.getAttribute("gptResponse") %>
+											</div>
 <!-- 											<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. -->
 										</div>
 									</div>
@@ -1541,6 +1541,7 @@ $(function() {
 		var liveoutParameter= document.getElementById("liveoutpara"); //setting the exp section that should be passed
 		liveoutParameter.value=  liveoutString; //the experimental section
 		document.getElementById("gridRadios").value="AskGPT";
+		document.getElementById("usercode").value= "Ask GPT";
 	}
 	
 	//openning up a chat.openai.com window and passing the encoded prompt to it does not work.logging in is needed before passing the prompt. and the login or sign up links do not work.

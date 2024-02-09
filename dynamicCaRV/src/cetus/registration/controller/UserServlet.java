@@ -349,62 +349,8 @@ public class UserServlet extends HttpServlet {
 		// Default settings for iCetus based on the server settings
 		// cetusOptionSet[0] = "-preprocessor=cpp.exe"; // for windows
 		
-		if(gridRadios.equals("AskGPT")) {
-			String expSection = request.getParameter("expsectionpara");
-		    String liveInData = request.getParameter("liveinpara");
-		    String liveOutData = request.getParameter("liveoutpara");
-		    String message = "Optimize the following C code using OpenMP pragmas: " + expSection;
-			//Send Request to GPT API
-		    String gptUrl = "https://api.openai.com/v1/completions";
-		    String apiKey = "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"; //API added https://platform.openai.com/api-keys
-		    String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"prompt\": \"" + message + "\" }";
-		    System.out.println("Request Body: " + requestBody);
-		   try { 
-		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
-		    connection.setRequestMethod("POST");
-		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
-		    connection.setRequestProperty("Content-Type", "application/json");
-		    connection.setDoOutput(true);
-//sending the JSON-formatted request body to the server over the HTTP connection established earlier. 
-		    try (OutputStream os = connection.getOutputStream()) {
-		        byte[] input = requestBody.getBytes("utf-8");
-		        os.write(input, 0, input.length);
-		    }
-		 // Code to handle response from GPT API
-		    //reads the response from the server line by line and appends
-		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-		        StringBuilder responseBuilder = new StringBuilder();
-		        String responseLine = null;
-		        while ((responseLine = br.readLine()) != null) {
-		            responseBuilder.append(responseLine.trim());
-		        }
-		        String gptResponse = responseBuilder.toString();
-			    System.out.println("Response from OpenAI API: " + gptResponse);
-		        //br.close();
-		    }
-		  // Code to extract optimized code from response
-		    }catch (IOException e) {
-		        System.out.println("Error reading response from OpenAI API: " + e.getMessage());
-		        e.printStackTrace(); // Log stack trace for debugging
-		    }
-		    
-		}
-		
-		
-		
 		cetusOptionSet[0] = "-preprocessor=cpp -C -I."; // for linux and Mac
-		// what if I set no preprocessor? what if I set the default one?
-		// if verbosity is set by the user then I would take it. Otherwise I would like
-		// it to be set on -verbosity=4
-		// cetusOptionSet[1] = "-verbosity=4";
-
-		// getting parameters from different FE components and storing them in
-		// String verbosity = request.getParameter("verbosity");
-		// cetusOptionSet[1] = verbosity;
-		// Setting it to 4 at all time to get sys.err messages
 		cetusOptionSet[1] = "-verbosity=2";
-		//cetusOptionSet[1] = "-save-experimental-section";
-		
 		String ddt = request.getParameter("ddt");
 		cetusOptionSet[2] = ddt;
 		String range = request.getParameter("range");
@@ -419,10 +365,8 @@ public class UserServlet extends HttpServlet {
 		cetusOptionSet[7] = reduction;
 		String induction = request.getParameter("induction");
 		cetusOptionSet[8] = induction;
-
 		String profiling = request.getParameter("profiling");
 		cetusOptionSet[9] = profiling;
-		
 		String profiler = request.getParameter("profiler");
 		if (profiler==null ){
 			cetusOptionSet[9] = profiling;
@@ -456,7 +400,7 @@ public class UserServlet extends HttpServlet {
 		
 		String codeExecuter= request.getParameter("codeExecuter");
 		String paracodeExecuter= request.getParameter("paracodeExecuter");
-
+		
 		// if the optins we got from the user are not null or empty then save them
 		for (int i = 0; i < 20; i++) {
 			if (cetusOptionSet[i] != null && !cetusOptionSet[i].trim().isEmpty()) {
@@ -464,155 +408,74 @@ public class UserServlet extends HttpServlet {
 				str.append(cetusOptionSet[i] + ", ");
 			}
 		}
+		
+		if(gridRadios.equals("AskGPT")) {
+			String expSection = request.getParameter("expsectionpara");
+		    String liveInData = request.getParameter("liveinpara");
+		    String liveOutData = request.getParameter("liveoutpara");
+		    String message = "Optimize the following C code using OpenMP pragmas and return the full optimized code with no explanation: " + "This is my c code";
+			//Send Request to GPT API
+		    String gptUrl = "https://api.openai.com/v1/completions";
+		    String apiKey = "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"; //API added https://platform.openai.com/api-keys
+		    String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"prompt\": \"" + message + "\" }";
+		    System.out.println("Request Body: " + requestBody);
+		   try { 
+		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+		    connection.setRequestProperty("Content-Type", "application/json");
+		    connection.setDoOutput(true);
+//sending the JSON-formatted request body to the server over the HTTP connection established earlier. 
+		    try (OutputStream os = connection.getOutputStream()) {
+		        byte[] input = requestBody.getBytes("utf-8");
+		        os.write(input, 0, input.length);
+		    }
+		 // Code to handle response from GPT API
+		    //reads the response from the server line by line and appends
+		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+		        StringBuilder responseBuilder = new StringBuilder();
+		        String responseLine = null;
+		        while ((responseLine = br.readLine()) != null) {
+		            responseBuilder.append(responseLine.trim());
+		        }
+		        String gptResponse = responseBuilder.toString();
+			    System.out.println("Response from OpenAI API: " + gptResponse);
+			    request.setAttribute("gptResponse", gptResponse);
+		        //br.close();
+		    }
+		  // Code to extract optimized code from response
+		    }catch (IOException e) {
+		        System.out.println("Error reading response from OpenAI API: " + e.getMessage());
+		        e.printStackTrace(); // Log stack trace for debugging
+		    }
+		   RedirectPage = "/WEB-INF/views/carv.jsp";
+		    
+		}
+		
+		
 
 		System.out.println("UserServlet- input programs " + inputPrg);
-		// String output =
-		// "-outdir=C:\\Users\\13022\\Desktop\\VM_share\\cetusWeb\\cetus_output\\";
-		// String output =
+		
 		// "-outdir=C:\\Users\\13022\\Desktop\\VM_share\\apache-tomcat-9.0.41\\apache-tomcat-9.0.41\\webapps\\data\\cetus_output\\";
 		// Setting Cetus options that will be passed to Cetus
 		String output = "-outdir=" + contextPath + "cetus_output";
 
-		// System.out.println("User Selections are = " + str.toString()+ "length"+
-		// str.length()+ "is it good enough?"+str.deleteCharAt(str.length()-2) );
 
-		// setting user inputs that I got from the request for this user instance
+		// setting the user instance 
 		User user = new User();
 		//setting input file path
 		System.out.println("Setting input file path");
 		user.setInputCode(inputPrg);
-		// to send file content to DB.
-		/*
-		 * what if I have multiple input files? How to save them all in one entry in DB?
-		 * append them all in one file( file_name1 file_content1 file_name2
-		 * file_content2 file_name3 file_content3). One file should be sent to DB.
-		 */
-//Max five input files  can be uploaded to the server
-		/*
-		 * String[] inputFiles= new String[5]; Path codeName; String userCode1="";
-		 * inputFiles = inputPrg.split(" "); System.out.println("input files: " +
-		 * Arrays.toString(inputFiles)); int len = inputFiles.length;
-		 * System.out.println("Number of input files: " + len); for (int i=0; i<len;
-		 * i++) { System.out.println("inputs "+inputFiles[i]); codeName =
-		 * Path.of(inputFiles[i]); userCode1 =userCode1+ Files.readString(codeName);
-		 * 
-		 * } //copying all input file contents to one DB entry user.setInputContent(
-		 * Arrays.toString(inputFiles)+ userCode1);
-		 */
-
-		// String userCode1="",userCode2="",userCode3="",userCode4="",userCode5="";
-
-		// Path codeName = Path.of(inputFiles[0]);
-		// userCode1 = Files.readString(codeName);
-
-		/*
-		 * Path codeName1 = Path.of(inputFiles[1]); if (codeName1!=null ) { userCode2 =
-		 * Files.readString(codeName1); }
-		 */
-
-		/*
-		 * Path codeName2 = Path.of(inputFiles[2]); if (codeName2!=null ) { userCode3 =
-		 * Files.readString(codeName2); }
-		 * 
-		 * Path codeName3 = Path.of(inputFiles[3]); if (codeName3!=null ) { userCode4 =
-		 * Files.readString(codeName3); }
-		 * 
-		 * Path codeName4 = Path.of(inputFiles[4]); if (codeName4!=null ) { userCode5 =
-		 * Files.readString(codeName4); }
-		 */
-
-		// String userCode= userCode1+"\n"+ userCode2
-		// +"\n"+userCode3+"\n"+userCode4+"\n"+userCode5;
+		
 		//returns the path
 		Path codeName = Path.of(inputPrg);
 		//reads file content to a string to be saved in DB
 		System.out.println("Reading input file content from file path");
 		String userCode1 = Files.readString(codeName);
 		//System.out.println("code is read");
-
-		/*
-		 * ToDO- For the next version can be considered- If the userCode1 contains
-		 * #include "file.h" then get the file.h from the // user.forward the servlet to
-		 * a new page to get the required files from the // user.
-		 */
-		/*
-		 * while (userCode1.contains("#include \"")) { //get the string from
-		 * #include" to " as the file name. int lbindex =
-		 * userCode1.indexOf("#include \""); //Returns the index of this substring. int
-		 * hbindex = userCode1.indexOf(".h\""); String libFileName =
-		 * userCode1.substring(lbindex+9, hbindex+2);
-		 * System.out.println("The Keyword :example: is found in given string"
-		 * +libFileName);
-		 * 
-		 * 
-		 * }
-		 */
-		// DO NOT REMOVE- ADDED FOR VERSION 2
-		// getting all #include �*.h� files from the users
-		// starting from beginning of the file
-		// int index = 0;
-		// // to store all the header files
-		// String[] libFileName = new String[10];
-		// // number of header files
-		// int count = 0;
-		// while (index < userCode1.length()) {
-		// String str22="#include \"";
-		// int lbindex = userCode1.indexOf("#include \"", index);
-		// int hbindex = userCode1.indexOf(".h\"", index);
-		// // if the pattern is recognized
-		// if (lbindex != -1) {
-		// libFileName[count] = userCode1.substring(lbindex + 10, hbindex + 2);
-		// System.out.println("Header File Required " + libFileName[count]);
-		// count++;
-		// // check the rest of the file
-		// index = hbindex + 1;
-		// } else {
-		// System.out.println("The Keyword is all found"+libFileName[count]);
-
-		// String helper0 = libFileName[0];
-		// String helper1 = libFileName[1];
-		// String helper2 = libFileName[2];
-		// String helper3 = libFileName[3];
-		// List<String> helpers = Arrays.asList(Arrays.toString(libFileName));
-		// System.out.println("Source" + inputPrg);
-		// request.setAttribute("sourceFile", inputPrg);
-		// System.out.println("Header files" + helpers);
-		// request.setAttribute("libFiles", helpers);
-		// RedirectPage="/WEB-INF/views/helpers.jsp";
-
-		// RequestDispatcher dispatcher =
-		// request.getRequestDispatcher("/WEB-INF/views/helpers.jsp");
-		// dispatcher.forward(request, response);
-		// response.sendRedirect("/WEB-INF/views/helpers.jsp");
-		// how to forward to the new page
-		// }
-		// }
-		/*
-		 * else { break; }
-		 */
-		// create file.h file on the server.
-		// Read the content of file.h from the server.
-		// write the content of file.h into the main file so that we dont need to care
-		// about the location of the files on the server
-		// write the new main file to the server
-
-		// user.setInputContent(userCode);
-		
-		/*use the pipe (|) to match comments  replaces all comments*/
-		//userCode1 = userCode1.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", "");
-		//System.out.println(userCode1.replaceAll("/\\*(?:.|[\\n\\r])*?\\*/",""));
-		//Non-greedy Matching
-		//userCode1 = userCode1.replaceAll("/\\*(.|[\\r\\n])*?\\*/","");
-		//replaces all empty lines
-		//userCode1 = userCode1.replaceAll("(?m)^\\s*$[\n\r]{1,}", "");
+	
 		user.setInputContent(userCode1);
-		// System.out.println("UserServlet- \n" + inputPrg + "\n" + userCode1);
-
-		// Storing Cetus Results on the server
-		// Creating Directories to save the files in
-		// String outputFolder =
-		// "C:\\Users\\13022\\Desktop\\VM_share\\cetusWeb\\cetus_output\\";
-		// String outputFolder =
+		
 		// "C:\\Users\\13022\\Desktop\\VM_share\\apache-tomcat-9.0.41\\apache-tomcat-9.0.41\\webapps\\data\\cetus_output\\";
 		// Setting the directory where Cetus-output is stored
 		System.out.println("Setting output file path");
@@ -622,15 +485,6 @@ public class UserServlet extends HttpServlet {
 			theDir.mkdirs();
 		}
 
-		// Cetus Debugger Report
-		// String cetusDebuggerReport =
-		// "C:\\Users\\13022\\Desktop\\VM_share\\cetusWeb\\cetusDebuggerReport\\"; // to
-		// show Cetus passes to the user
-		// String cetusAnalysisReport =
-		// "C:\\Users\\13022\\Desktop\\VM_share\\cetusWeb\\cetusAnalysisReport\\"; // to
-		// dump Cetus messages to it
-		// String cetusDebuggerReport =
-		// "C:\\Users\\13022\\Desktop\\VM_share\\apache-tomcat-9.0.41\\apache-tomcat-9.0.41\\webapps\\data\\cetusDebuggerReport\\";
 		// Setting the directory to save info related to Cetus passes
 		System.out.println("Setting debugger file path");
 		String cetusDebuggerReport = contextPath + "cetusDebuggerReport";
@@ -648,15 +502,7 @@ public class UserServlet extends HttpServlet {
 			theAnalysisDir.mkdirs();
 		}
 
-		// File theoutputDir = new File(output);
-		// if (!theoutputDir.exists()){
-		// theoutputDir.mkdirs();
-		// }
 
-		// preprocessor is set for my windows machines--Windows server to be found for
-		// this app
-		// String[] args = new String[] {"-preprocessor=cpp.exe", option1, output,
-		// inputCode };
 
 		// Running Cetus in auto mode
 		System.out.println("setting Cetus options");
