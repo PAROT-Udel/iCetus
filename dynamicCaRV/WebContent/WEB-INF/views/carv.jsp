@@ -1114,11 +1114,11 @@ request.setAttribute("filepathPara",pathToFile);  */
 									data-placement="top" class="fa fa-question-circle"></i></span>
 									
 								<button type="submit" id="AskGPT" name="action" value="AskGPT"
-									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>
+									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>  
 								&nbsp;<span><i id="helpAskGPT"
 									data-content="GPT offers optimization techniques applicable to your code."
 									data-placement="top" class="fa fa-question-circle"></i></span>
-
+								<!-- to use the API use this function "setPromptParasforservlet()" -->
 								<button type="button" id="displayoutput"
 									class="btn btn-primary buttonwide" onclick="displayOutput()">Display
 									Output</button>
@@ -1543,32 +1543,33 @@ $(function() {
 		document.getElementById("gridRadios").value="AskGPT";
 	}
 	
-    function openAskGPT() {
-        // Define the prompt to be sent to GPT
-        var prompt = "";
-        var exp= document.getElementById("expsection");
-		var expString = exp.innerText; //exp section
-		var livein= document.getElementById("liveinexpsection");
-		var liveinString = livein.innerText; //live-ins
-		var liveout= document.getElementById("liveoutexpsection");
-		var liveoutString = liveout.innerText; //live-outs		
-		prompt= "you have the role of C code optimizer. The optimizations you suggest are for C codes and it can be related to data structure changes,"+ 
-		"algorithmic changes, or adding OpenMP pragmas for parallelizing teh code."+
-		" Here is the code section that needs to be optimized:"+  expString +
-		" I also provide you the live-in variables that are used in that code section. In the form of ‘type of variable: variable name: variable size’."+
-		"For example ‘In=int:i,int:l,double:q:10,’  means live-in variables are int i; int l; double q[10]; "+ "Here are live-in variables: "+ liveinString +
-		"I also provide live-out variables in the same format as live-in variables. Here is an example:  Out=double:q:10,double:sx,double:sy,"+
-		"Notice that live-out variables are the variables that their values should not change during the optimization process. "+"Here are live-out variables:"+
-		liveoutString+ "Give me only the optimized version of the code. No explanation is needed. Give me the entire code and do not shorten the code." ;
+	//openning up a chat.openai.com window and passing the encoded prompt to it does not work.logging in is needed before passing the prompt. and the login or sign up links do not work.
+//     function openAskGPT() {
+//         // Define the prompt to be sent to GPT
+//         var prompt = "";
+//         var exp= document.getElementById("expsection");
+// 		var expString = exp.innerText; //exp section
+// 		var livein= document.getElementById("liveinexpsection");
+// 		var liveinString = livein.innerText; //live-ins
+// 		var liveout= document.getElementById("liveoutexpsection");
+// 		var liveoutString = liveout.innerText; //live-outs		
+// 		prompt= "you have the role of C code optimizer. The optimizations you suggest are for C codes and it can be related to data structure changes,"+ 
+// 		"algorithmic changes, or adding OpenMP pragmas for parallelizing teh code."+
+// 		" Here is the code section that needs to be optimized:"+  expString +
+// 		" I also provide you the live-in variables that are used in that code section. In the form of ‘type of variable: variable name: variable size’."+
+// 		"For example ‘In=int:i,int:l,double:q:10,’  means live-in variables are int i; int l; double q[10]; "+ "Here are live-in variables: "+ liveinString +
+// 		"I also provide live-out variables in the same format as live-in variables. Here is an example:  Out=double:q:10,double:sx,double:sy,"+
+// 		"Notice that live-out variables are the variables that their values should not change during the optimization process. "+"Here are live-out variables:"+
+// 		liveoutString+ "Give me only the optimized version of the code. No explanation is needed. Give me the entire code and do not shorten the code." ;
 		
-        // Encode the prompt to be included in the URL
-        var encodedPrompt = encodeURIComponent(prompt);
-        // Construct the URL with the encoded prompt
-        var url = "https://chat.openai.com/?prompt=" + encodedPrompt;
+//         // Encode the prompt to be included in the URL
+//         var encodedPrompt = encodeURIComponent(prompt);
+//         // Construct the URL with the encoded prompt
+//         var url = "https://chat.openai.com/?prompt=" + encodedPrompt;
 
-        // Open the URL in a new window
-        window.open(url, "_blank");
-    }
+//         // Open the URL in a new window
+//         window.open(url, "_blank");
+//     }
 	
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");

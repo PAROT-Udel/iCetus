@@ -348,6 +348,50 @@ public class UserServlet extends HttpServlet {
 		// Setting Cetus Options,Storing all passed parameters by the request
 		// Default settings for iCetus based on the server settings
 		// cetusOptionSet[0] = "-preprocessor=cpp.exe"; // for windows
+		
+		if(gridRadios.equals("AskGPT")) {
+			String expSection = request.getParameter("expsectionpara");
+		    String liveInData = request.getParameter("liveinpara");
+		    String liveOutData = request.getParameter("liveoutpara");
+		    String message = "Optimize the following C code using OpenMP pragmas: " + expSection;
+			//Send Request to GPT API
+		    String gptUrl = "https://api.openai.com/v1/completions";
+		    String apiKey = "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"; //API added https://platform.openai.com/api-keys
+		    String requestBody = "{ \"model\": \"gpt-3.5-turbo\", \"prompt\": \"" + message + "\" }";
+		    System.out.println("Request Body: " + requestBody);
+		   try { 
+		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+		    connection.setRequestProperty("Content-Type", "application/json");
+		    connection.setDoOutput(true);
+//sending the JSON-formatted request body to the server over the HTTP connection established earlier. 
+		    try (OutputStream os = connection.getOutputStream()) {
+		        byte[] input = requestBody.getBytes("utf-8");
+		        os.write(input, 0, input.length);
+		    }
+		 // Code to handle response from GPT API
+		    //reads the response from the server line by line and appends
+		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+		        StringBuilder responseBuilder = new StringBuilder();
+		        String responseLine = null;
+		        while ((responseLine = br.readLine()) != null) {
+		            responseBuilder.append(responseLine.trim());
+		        }
+		        String gptResponse = responseBuilder.toString();
+			    System.out.println("Response from OpenAI API: " + gptResponse);
+		        //br.close();
+		    }
+		  // Code to extract optimized code from response
+		    }catch (IOException e) {
+		        System.out.println("Error reading response from OpenAI API: " + e.getMessage());
+		        e.printStackTrace(); // Log stack trace for debugging
+		    }
+		    
+		}
+		
+		
+		
 		cetusOptionSet[0] = "-preprocessor=cpp -C -I."; // for linux and Mac
 		// what if I set no preprocessor? what if I set the default one?
 		// if verbosity is set by the user then I would take it. Otherwise I would like
@@ -617,38 +661,7 @@ public class UserServlet extends HttpServlet {
 		// Running Cetus in auto mode
 		System.out.println("setting Cetus options");
 		
-		if(gridRadios.equals("AskGPT")) {
-			String expSection = request.getParameter("expsectionpara");
-		    String liveInData = request.getParameter("liveinpara");
-		    String liveOutData = request.getParameter("liveoutpara");
-			//Send Request to GPT API
-		    String gptUrl = "https://api.openai.com/v1/completions";
-		    String apiKey = "YOUR_API_KEY";
-		    String requestBody = "{ \"model\": \"text-davinci-002\", \"prompt\": \"" + liveInData + expSection + liveOutData +"\", \"max_tokens\": 100 }";
-
-		    HttpURLConnection connection = (HttpURLConnection) new URL(gptUrl).openConnection();
-		    connection.setRequestMethod("POST");
-		    connection.setRequestProperty("Authorization", "Bearer " + apiKey);
-		    connection.setRequestProperty("Content-Type", "application/json");
-		    connection.setDoOutput(true);
-
-		    try (OutputStream os = connection.getOutputStream()) {
-		        byte[] input = requestBody.getBytes("utf-8");
-		        os.write(input, 0, input.length);
-		    }
-		 // Code to handle response from GPT API
-		    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-		        StringBuilder responseBuilder = new StringBuilder();
-		        String responseLine = null;
-		        while ((responseLine = br.readLine()) != null) {
-		            responseBuilder.append(responseLine.trim());
-		        }
-		        String gptResponse = responseBuilder.toString();
-
-		  // Code to extract optimized code from response
-		    }
-		    
-		}else if (gridRadios.equals("AskCetus")) {
+		if (gridRadios.equals("AskCetus")) {
 			String[] args = null;
 			args = new String[6];
 			cetusOptionSet[1] = "-verbosity=2";
