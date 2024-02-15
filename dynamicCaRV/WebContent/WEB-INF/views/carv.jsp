@@ -211,7 +211,7 @@ font-weight: bold;
 /* 	white-space: pre-line; /* for /n */ */
 }
 
-#expsection, #replayExp, #replayPerf{
+#expsection, #replayExp, #replayPerf, #expsectionLLM{
 	word-wrap: break-word;
 	cursor: text;
 	overflow: auto;
@@ -1186,28 +1186,28 @@ request.setAttribute("filepathPara",pathToFile);  */
 				<!-- --------------------------  -->
 				<!-- Advisor div -->
 				<!-- --------------------------  -->
-					<div class="row" id="LLMResult" >
-							<div class="column">
-								<div class="form-row">
-									<div align="left">
-<!-- 										<h4>Advisor</h4> -->
-									</div>
-								</div>
-								<div class="form-row">
-									<div align="left">
-										<div class="container">
-<!-- 											<div id="AdvisorDiv" rows="12" -->
-<%-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre> --%>
-<!-- 											</div> -->
-									<code class="prettyprint lang-c" id="expsectionLLM" rows="8"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"><%= request.getAttribute("gptOutput") %>
-									</code>
-<!-- 											<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. -->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+<!-- 					<div class="row" id="LLMResult" > -->
+<!-- 							<div class="column"> -->
+<!-- 								<div class="form-row"> -->
+<!-- 									<div align="left"> -->
+<!--  										<h4>Advisor</h4> --> 
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="form-row"> -->
+<!-- 									<div align="left"> -->
+<!-- 										<div class="container"> -->
+<!--  											<div id="AdvisorDiv" rows="12" --> 
+<%-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre> --%> 
+<!--  											</div> --> 
+<%-- 									<code class="prettyprint lang-c" id="expsectionLLM" rows="8" --%>
+<%-- 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"><%= request.getAttribute("gptOutput") %> --%>
+<%-- 									</code> --%>
+<!-- 										<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. --> 
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
 
 						<!-- -------------------  -->
 						<!-- Add some space here  -->
@@ -1345,18 +1345,20 @@ $(function() {
 		PR.prettyPrint();
 <%--   	    var expFinalString = <%=expFinalString%>; //null  or strats with +"" --%>
  	   	var expFinalSection = <%=expFinalString%>;
-		var expgptoutput= <%=gptOutput%>;
+		var expgptoutput= "<%=gptOutput%>";
  		console.log("expFinalSection:"+expFinalSection);
 //  		console.log("expFinalString:"+expFinalString);
 		var expoutput= document.getElementById("expsection");
         // Retrieve the attribute from the request object
   	
     	
-        if(expgptoutput !==null){
-        	expoutput.innerHTML = expgptoutput;  //if gpt output is back then load it to exp section
+        if(expgptoutput !==null && expgptoutput !== "null"){
+         	expoutput.innerHTML = "<%=gptOutput%>";  //if gpt output is back then load it to exp section
         }else if (expFinalSection !== null) { 
              expoutput.innerHTML = expFinalSection;
-        }else{expoutput.innerHTML = ""<%=ExperimentalSectionFinalString%>;}
+        }else{
+        	expoutput.innerHTML = ""<%=ExperimentalSectionFinalString%>;
+        }
 
         
 		document.getElementById("liveinexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveInExtractedLine%>;
