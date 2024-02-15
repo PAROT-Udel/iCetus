@@ -412,18 +412,14 @@ public class UserServlet extends HttpServlet {
 		if(gridRadios.equals("AskGPT")) {
 			String expSection = request.getParameter("expsectionpara");
 			// Split the expSection string into lines
-			String[] lines = expSection.split("\\r\\n");
-			// Create a StringBuilder to store the concatenated lines
-			StringBuilder concatenatedLines = new StringBuilder();
-			// Iterate through the lines array and concatenate each line
-			for (String line : lines) {
-			    concatenatedLines.append(line).append(" "); // Append each line followed by a space
-			}
+			//StringBuilder concatenatedLines = 
 			// Convert the StringBuilder to a single string
-			String expSectionresult = concatenatedLines.toString().trim(); // Trim to remove trailing space
+			String expSectionresult = textToString(expSection);//concatenatedLines.toString().trim(); // Trim to remove trailing space
 		    String liveInData = request.getParameter("liveinpara");
 		    String liveOutData = request.getParameter("liveoutpara");
-		    String message = "Optimize the C code using OpenMP. Return only the optimized code without any explanation. " + expSectionresult;
+		    String message = "Optimize this C code section using OpenMP. Return only the optimized code without any explanation. " + expSectionresult+
+		    		"These are live-in variable in the code section type:name:size"+textToString(liveInData)+ 
+		    		"These are live-out variables from the code section that their values should not change because of optimization: "+textToString(liveOutData);
 		    String gptFinalResponse="";
 		    String url = "https://api.openai.com/v1/chat/completions";
 	        String apiKey = "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"; // API key goes here
@@ -1513,6 +1509,21 @@ public class UserServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 
 		// response.sendRedirect("employeedetails.jsp");
+	}
+
+	/**
+	 * @param txt
+	 * @return
+	 */
+	private String textToString(String txt) {
+		String[] lines = txt.split("\\r\\n");
+		// Create a StringBuilder to store the concatenated lines
+		StringBuilder concatenatedLines = new StringBuilder();
+		// Iterate through the lines array and concatenate each line
+		for (String line : lines) {
+		    concatenatedLines.append(line).append(" "); // Append each line followed by a space
+		}
+		return concatenatedLines.toString().trim();
 	}
 	
 //	private String extractExperimentalSection(String content) {

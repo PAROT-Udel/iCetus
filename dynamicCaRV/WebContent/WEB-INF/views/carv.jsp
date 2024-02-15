@@ -1057,7 +1057,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 								data-placement="top" class="fa fa-question-circle"></i></span>
 								
 							<button type="button" id="copyToInput" class="btn btn-primary buttonwide"
-								onclick="copytoInput()">Copy Exp section into Input</button>
+								onclick="copytoInputFunction()">Copy Exp section into Input</button>
 							&nbsp;<span><i data-content="To copy the experimental section to the input code."
 								data-placement="top" class="fa fa-question-circle"></i></span>
 								
@@ -1120,16 +1120,13 @@ request.setAttribute("filepathPara",pathToFile);  */
 									data-placement="top" class="fa fa-question-circle"></i></span>
 									
 								<button type="submit" id="AskGPT" name="action" value="AskGPT"
-									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>  
-								&nbsp;<span><i id="helpAskGPT"
+									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>&nbsp;<span><i id="helpAskGPT"
 									data-content="GPT offers optimization techniques applicable to your code."
 									data-placement="top" class="fa fa-question-circle"></i></span>
 								<!-- to use the API use this function "setPromptParasforservlet()" -->
-								<button type="button" id="displayoutput"
-									class="btn btn-primary buttonwide" onclick="displayOutput()">Display
-									Output</button>
-								&nbsp;<span><i
-									data-content="Use this button to chcek out the generated Output file."
+								
+								<button type="button" id="displayoutput" class="btn btn-primary buttonwide" onclick="displayOutputFunction()">Display Output</button>&nbsp;<span>
+								<i id="helpdisplayoutput" data-content="Use this button to chcek out the generated Output file."
 									data-placement="top" class="fa fa-question-circle"></i></span>
 							</div>
 						</div>
@@ -1199,9 +1196,9 @@ request.setAttribute("filepathPara",pathToFile);  */
 								<div class="form-row">
 									<div align="left">
 										<div class="container">
-											<div id="AdvisorDiv" rows="12"
-												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre>
-											</div>
+<!-- 											<div id="AdvisorDiv" rows="12" -->
+<%-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre> --%>
+<!-- 											</div> -->
 									<code class="prettyprint lang-c" id="expsection" rows="8"
 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"><%= request.getAttribute("gptOutput") %>
 									</code>
@@ -1391,7 +1388,7 @@ $(function() {
 		document.getElementById("executeOnly").value="Execute"; 
 	}
 	
-	function copytoInput(){
+	function copytoInputFunction(){
 		var divInput= document.getElementById("cetusinput");
 		var exp= document.getElementById("expsection");
 		//get the content of teh Experimental section code element
@@ -1594,7 +1591,7 @@ $(function() {
 	
 
 	
-	function displayOutput(){
+	function displayOutputFunction(){
 		var expoutput= document.getElementById("expsection");  //experimental section
 		var divOutput= document.getElementById("cetusoutput"); //CaRV output
 		var displayText = document.getElementById("displayoutput").textContent;
