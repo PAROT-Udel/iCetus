@@ -1424,7 +1424,7 @@ $(function() {
 
 	var displayText = document.getElementById("copyToInput").textContent;
 	
-	if(displayText === "Copy the experimental section into Input"){
+	if(displayText === "Copy Exp section into Input"){
 		document.getElementById("cetusinput").style.display = "none"; //hide
 		document.getElementById("pluggedininput").style.display = ""; //show
 		document.getElementById("copyToInput").textContent = "Load the main Input file";
@@ -1435,7 +1435,7 @@ $(function() {
 	}else if(displayText ==="Load the main Input file"){
 		document.getElementById("cetusinput").style.display = "";
 		document.getElementById("pluggedininput").style.display = "none"; //hide
-		document.getElementById("copyToInput").textContent = "Copy the experimental section into Input";
+		document.getElementById("copyToInput").textContent = "Copy Exp section into Input";
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
 	}
