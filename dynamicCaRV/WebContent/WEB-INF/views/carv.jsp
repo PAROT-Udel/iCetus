@@ -543,7 +543,7 @@ String gptOutput=(String)request.getAttribute("gptResponse");
 if(gptOutput!= null){
 gptOutput= gptOutput.replace("\\n", "<br>");
 }
-request.setAttribute("gptOutput", gptOutput);
+request.setAttribute("gptOutput", gptOutput);//when gpt is executed on the exp section
 String carvExpSection= (String)request.getAttribute("carvExpSection");
 System.out.println("\n\n\n carvExpSection  "+carvExpSection);
 //int ReplayIndex=0;
@@ -1199,7 +1199,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 <!-- 											<div id="AdvisorDiv" rows="12" -->
 <%-- 												style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;"><pre><code><%= request.getAttribute("gptResponse") %></code></pre> --%>
 <!-- 											</div> -->
-									<code class="prettyprint lang-c" id="expsection" rows="8"
+									<code class="prettyprint lang-c" id="expsectionLLM" rows="8"
 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"><%= request.getAttribute("gptOutput") %>
 									</code>
 <!-- 											<iframe src="https://chat.openai.com/" width="800" height="800"></iframe>  //  there isn't an iframe-compatible version of GPT provided by OpenAI or any other organization. -->
@@ -1345,14 +1345,16 @@ $(function() {
 		PR.prettyPrint();
 <%--   	    var expFinalString = <%=expFinalString%>; //null  or strats with +"" --%>
  	   	var expFinalSection = <%=expFinalString%>;
-
+		var expgptoutput= <%=gptOutput%>;
  		console.log("expFinalSection:"+expFinalSection);
 //  		console.log("expFinalString:"+expFinalString);
 		var expoutput= document.getElementById("expsection");
         // Retrieve the attribute from the request object
   	
     	
-         if (expFinalSection !== null) {
+        if(expgptoutput !==null){
+        	expoutput.innerHTML = expgptoutput;  //if gpt output is back then load it to exp section
+        }else if (expFinalSection !== null) { 
              expoutput.innerHTML = expFinalSection;
         }else{expoutput.innerHTML = ""<%=ExperimentalSectionFinalString%>;}
 
