@@ -424,7 +424,8 @@ public class UserServlet extends HttpServlet {
 		    String url = "https://api.openai.com/v1/chat/completions";
 	        String apiKey = "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"; // API key goes here
 	        String model = "gpt-3.5-turbo"; // current model of chatgpt api
-
+	     // Measure the time before sending the request
+	        long startTime = System.currentTimeMillis();
 	        try {
 	            // Create the HTTP POST request
 	            URL obj = new URL(url);
@@ -450,9 +451,17 @@ public class UserServlet extends HttpServlet {
 	            }
 	            in.close();
 
-	            // returns the extracted contents of the response.
+	        // returns the extracted contents of the response.
 	           gptFinalResponse= extractContentFromResponse(gptresponse.toString());
+		    // Measure the time after receiving the response
+		       long endTime = System.currentTimeMillis();
+	        // Calculate the elapsed time
+	           long elapsedTime = endTime - startTime;
+	        // Convert elapsed time to seconds
+	           double elapsedTimeInSeconds = elapsedTime / 1000.0;
 	           System.out.println( gptFinalResponse);
+	           System.out.printf( "gpt request took %.2f (s) to be responded",elapsedTimeInSeconds );
+	           request.setAttribute("gptResponseTime", elapsedTimeInSeconds);
 	           request.setAttribute("gptResponse", gptFinalResponse);
 
 	        } catch (IOException e) {
