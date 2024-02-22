@@ -461,7 +461,7 @@ public class UserServlet extends HttpServlet {
 	           double elapsedTimeInSeconds = elapsedTime / 1000.0;
 	           System.out.println( gptFinalResponse);
 	           System.out.printf( "gpt request took %.2f (s) to be responded",elapsedTimeInSeconds );
-	           request.setAttribute("gptResponseTime", elapsedTimeInSeconds);
+	           request.setAttribute("ResponseTime", elapsedTimeInSeconds);
 	           request.setAttribute("gptResponse", gptFinalResponse);
 
 	        } catch (IOException e) {
@@ -594,11 +594,12 @@ public class UserServlet extends HttpServlet {
 			args[4] = output;
 			args[5] = inputPrg;
 
-			System.out.println("Cetus options in " + gridRadios + " mode are set to: ");
-			for (int i = 0; i < args.length; i++) {
-				System.out.println("args[" + i + "]" + args[i]);
-			}
-
+//			System.out.println("Cetus options in " + gridRadios + " mode are set to: ");
+//			for (int i = 0; i < args.length; i++) {
+//				System.out.println("args[" + i + "]" + args[i]);
+//			}
+			 // Measure the time before sending the request
+	        long startTime = System.currentTimeMillis();
 			// getting the filename from the path
 			File f = new File(inputPrg);
 			String fileName = f.getName();
@@ -670,6 +671,16 @@ public class UserServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 
+		    // Measure the time after receiving the response
+		       long endTime = System.currentTimeMillis();
+	        // Calculate the elapsed time
+	           long elapsedTime = endTime - startTime;
+	        // Convert elapsed time to seconds
+	           double elapsedTimeInSeconds = elapsedTime / 1000.0;
+	           System.out.printf( "Cetus request took %.2f (s) to be responded",elapsedTimeInSeconds );
+	           request.setAttribute("ResponseTime", elapsedTimeInSeconds);
+			
+			
 			RedirectPage = "/WEB-INF/views/carv.jsp";
 			// insert the request to Cetus DB including the userDB index, path to input, input content,Cetus options, path to output, output content, exp section
 			

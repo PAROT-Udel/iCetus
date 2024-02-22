@@ -545,9 +545,9 @@ gptOutput= gptOutput.replace("\\n", "<br>");
 }
 request.setAttribute("gptOutput", gptOutput);//when gpt is executed on the exp section
 
-Double gptResponseTime= (Double)request.getAttribute("gptResponseTime");
-if (gptResponseTime == null) {
-    gptResponseTime = null; // or whatever default value you want to set
+Double ResponseTime= (Double)request.getAttribute("ResponseTime");
+if (ResponseTime == null) {
+    ResponseTime = null; // or whatever default value you want to set
 }
 String carvExpSection= (String)request.getAttribute("carvExpSection");
 System.out.println("\n\n\n carvExpSection  "+carvExpSection);
@@ -1019,7 +1019,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 						</div>
 						<div class="form-row">
 							<div align="left">
-								<h4 id="modifiableOutput">Experimental Section</h4> <h6 id="ShowgptResponseTime"><%=gptResponseTime%></h6>
+								<h4 id="modifiableOutput">Experimental Section</h4> <h6 id="ShowgptResponseTime"><%=ResponseTime%></h6>
 							</div>
 						</div>
 						<div class="form-row">
