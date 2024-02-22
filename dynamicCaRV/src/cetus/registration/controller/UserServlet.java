@@ -1489,7 +1489,7 @@ public class UserServlet extends HttpServlet {
 			int numThreads = 4; 
 			File execFile = new File(inputPrg);
 			String execFilePath = execFile.getAbsolutePath();
-			//modifyFile(execFilePath, "#define Initial","#define Experimental"); 
+			modifyFile(execFilePath, "#include <stdio.h>","#include <stdio.h> \n#include <omp.h>"); 
 			//compile the file
 
 			File paraFile = execute.compileCFile(execFile, 1); 
