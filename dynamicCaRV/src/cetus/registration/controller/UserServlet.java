@@ -316,7 +316,7 @@ public class UserServlet extends HttpServlet {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 	
 			inputProgramCode=removeCommentsEmptyLinesfromContent(inputProgramCode);
-			System.out.println("\n\n inputProgramCode"+inputProgramCode);
+			//System.out.println("\n\n inputProgramCode"+inputProgramCode);
 			bw.write(inputProgramCode+" \n");
 			//bw.newLine();
 			bw.close();
@@ -1403,6 +1403,9 @@ public class UserServlet extends HttpServlet {
 				//Compiling the file with -fopenmp flag, and running it with 4 thredas if it is parallel.
 				int numThreads = 4; 
 				File execFile = new File(inputPrg);
+				String execFilePath = execFile.getAbsolutePath();
+				modifyFile(execFilePath, "#include <stdio.h>","#include <stdio.h> \n#include <omp.h>"); 
+				
 				File paraFile = execute.compileCFile(execFile, 1); //1compile using -fopenmp
 				//double parRunTime4 = execute.runExe(paraFile, 4); //4run it using 4 threads
 				//System.out.println("parRunTime4   \n"+ parRunTime4  ); //run time

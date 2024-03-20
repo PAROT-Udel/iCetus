@@ -26,7 +26,7 @@
 <!-- pre initialization of servlet , servlet is loaded at first request. That means it consumes more time at first request. If you specify the load-on-startup in web.xml, servlet will be loaded at project deployment time or server start. So, it will take less time for responding to first request. -->
   <servlet>  
    <servlet-name>UserServlet</servlet-name>  
-   <servlet-class>cetus.registration.controller.UserServlet</servlet-class>  
+   <servlet-class>cetus.registration.controller.UserServlet</servlet-class> 
    <!--If you pass the positive value, the lower integer value servlet will be loaded before the higher integer value servlet. In other words, container loads the servlets in ascending integer value.   -->
    <load-on-startup>0</load-on-startup>  
   </servlet>

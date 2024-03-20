@@ -33,9 +33,7 @@
 	gtag('config', 'G-J9XNTHF4C4');
 </script>
 
-<link
-	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
-	rel="stylesheet" type="text/css" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	
 <!-- <link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" -->
 <!-- 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" -->
@@ -58,6 +56,7 @@
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 
@@ -306,8 +305,7 @@ font-weight: bold;
 
 
 /* pageloader */
-#pageloader
-{
+#pageloader{
   background: rgba( 255, 255, 255, 0.8 );
   display: none;
   height: 100%;
@@ -316,16 +314,14 @@ font-weight: bold;
   z-index: 9999;
 }
 
-#pageloader img
-{
+#pageloader img{
   left: 50%;
   margin-left: -32px;
   margin-top: -32px;
   position: absolute;
   top: 50%;
 }
-#pageloader label
-{
+#pageloader label{
   left: 42%;
   margin-left: -32px;
   margin-top: -32px;
@@ -532,41 +528,51 @@ try {
         }
     %>
 
+<!-- <script> -->
+<!--     // Set replayList as a global variable -->
+<%--      var replayList = ${JSON.stringify(replayList)};// ${replayList}; // Assuming replayList is a JSON array // ${replayList};  --%>
+<!-- </script> -->
 <script>
-    // Set replayList as a global variable
-    var replayList = ${JSON.stringify(replayList)};// ${replayList}; // Assuming replayList is a JSON array // ${replayList}; 
+    <% if (replayList != null) { %>
+        var replayList = ${replayList}; // Assuming replayList is a JSON array
+    <% } else { %>
+        var replayList = []; // Set replayList as an empty array if it's null
+    <% } %>
 </script>
 
 <%
-
-String gptOutput=(String)request.getAttribute("gptResponse");
-if(gptOutput!= null){
-gptOutput= gptOutput.replace("\\n", "<br>");
+String gptOutput = (String) request.getAttribute("gptResponse");
+if (gptOutput != null) {
+	gptOutput = gptOutput.replace("\\n", "<br>");
 }
 request.setAttribute("gptOutput", gptOutput);//when gpt is executed on the exp section
 
-Double ResponseTime= (Double)request.getAttribute("ResponseTime");
+Double ResponseTime = (Double) request.getAttribute("ResponseTime");
 if (ResponseTime == null) {
-    ResponseTime = null; // or whatever default value you want to set
+	ResponseTime = null; // or whatever default value you want to set
 }
-String carvExpSection= (String)request.getAttribute("carvExpSection");
-System.out.println("\n\n\n carvExpSection  "+carvExpSection);
+String carvExpSection = (String) request.getAttribute("carvExpSection");
+System.out.println("\n\n\n carvExpSection  " + carvExpSection);
 //int ReplayIndex=0;
 //reads from the files saved on the server -These are all file paths that we need for redaing them and writing to them in case of recompiling
 String inputContent = user.getFileOutput(resultSet.getString("input_code"));
-//System.out.println("\n\n\n inputContent"+inputContent);
+System.out.println("\n\n\n inputContent" + inputContent);
 request.setAttribute("inputContent", inputContent);//To be used in JavaScript code		
-		
+
 String outputContent = user.getFileOutput(resultSet.getString("cetus_output_filepath"));
 //System.out.println("\n\n\n outputContent"+outputContent);
 //reading Analysis file content from the server not the Database file content.
 String analysisContent = user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"));
-String analysis2=resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
+System.out.println("analysisContent  " + analysisContent);
+String analysis2 = resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
+System.out.println("analysis2  " + analysis2);
 //Path analysisCetus = Path.of(resultSet.getString("cetus_Analysis_filepath"));
 //String analysisContent = Files.readString(analysisCetus);
 String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
+System.out.println("passesContent  " + passesContent);
 //String analysis2=(resultSet.getString("cetus_Analysis_content"));
-String cetusOptions= (resultSet.getString("cetus_option_set"));
+String cetusOptions = (resultSet.getString("cetus_option_set"));
+System.out.println("cetusOptions  " + cetusOptions);
 //System.out.println("\n\n\n cetusOptions set"+cetusOptions);
 //System.out.println("analysis content from DB not from the file: "+analysis2);
 String inputPath = resultSet.getString("input_code");
@@ -576,11 +582,10 @@ Path p = Paths.get(inputPath);
 String file = p.getFileName().toString();
 //System.out.println("\n\n \n inputfile name:" + file);
 
-StringBuilder sb= new StringBuilder();
+StringBuilder sb = new StringBuilder();
 sb = servlet.seperateOptions(cetusOptions, sb);
-String allOptions= sb.toString();
+String allOptions = sb.toString();
 //System.out.println("\n\n \n AllOptions:" + sb.toString());
-
 
 String inputFinalString = null;
 String cetusOutContenet = null;
@@ -588,53 +593,39 @@ String FormatedAnalysis = null;
 String DDTfinalString = null;
 String outputFinalString = null;
 String outputcetusFinalString = null;
-String ExperimentalSectionFinalString= null;
-String ExperimentalSectionInputFinalString=null;
-String extractedText=null;
-String extractedInputText=null;
-String expFinalString =null;
-// String RangefinalString = null;
-// String cfgfinalString = null;
-// String ipafinalString = null;
-// String reductionfinalString = null;
-// String branchEfinalString = null;
-// String callGfinalString = null;
-// String ivfinalString = null;
-// 
-// 
-// String privatefinalString = null;
-// String outputContent1 = null;
-// String cfghelp = null;
-// String callGhelp =null;
-// String ddthelp= null;
-// String callgOutput= null;
-// String profilerhelp= null;
-// String exeResulthelp=null;
+String ExperimentalSectionFinalString = null;
+String ExperimentalSectionInputFinalString = null;
+String extractedText = null;
+String extractedInputText = null;
+String expFinalString = null;
+
 %>
 <%
 /*Cetus Input in div section =========================================================================================*/
 System.out.println("Creating Cetus input");
 StringBuilder finalinputStringBuilder = new StringBuilder("");
 String[] inlines = inputContent.split("\n");
-inlines= servlet.makeHTMLqualified(inlines,finalinputStringBuilder);
+inlines = servlet.makeHTMLqualified(inlines, finalinputStringBuilder);
 inputFinalString = finalinputStringBuilder.toString();
-request.setAttribute("inputFinalString", inputFinalString);//To be used in JavaScripot code		
+request.setAttribute("inputFinalString", inputFinalString);//To be used in JavaScript code		
 System.out.println("\n\n \n inputFinalString:" + inputFinalString);
 System.out.println("Cetus input created");
 
 //make carvExpSection ready for html view===============================================================================
-if(carvExpSection !=null){
-System.out.println("Creating CarvExpSection");
-System.out.println("carvExpSection: "+ carvExpSection);
-StringBuilder finalExpStringBuilder = new StringBuilder("");
-String[] Explines = carvExpSection.split("\n");
-Explines= servlet.makeHTMLqualified(Explines,finalExpStringBuilder );
-expFinalString = finalExpStringBuilder.toString().substring(1); //removing the first +
-request.setAttribute("expFinalString", expFinalString);//To be used in JavaScripot code		
-//expFinalString= "+\""+expFinalString+"\""; 
-System.out.println("\n\n \n expFinalString:" + expFinalString);
-System.out.println("carvExpSection created");
-}else{request.setAttribute("expFinalString", null);}
+if (carvExpSection != null) {
+	System.out.println("Creating CarvExpSection");
+	System.out.println("carvExpSection: " + carvExpSection);
+	StringBuilder finalExpStringBuilder = new StringBuilder("");
+	String[] Explines = carvExpSection.split("\n");
+	Explines = servlet.makeHTMLqualified(Explines, finalExpStringBuilder);
+	expFinalString = finalExpStringBuilder.toString().substring(1); //removing the first +
+	request.setAttribute("expFinalString", expFinalString);//To be used in JavaScripot code		
+	//expFinalString= "+\""+expFinalString+"\""; 
+	System.out.println("\n\n \n expFinalString:" + expFinalString);
+	System.out.println("carvExpSection created");
+} else {
+	request.setAttribute("expFinalString", null);
+}
 
 /* Cetus Output for queries, div section ===================================================================================== */
 System.out.println("Creating Cetus output");
@@ -649,7 +640,7 @@ outputContent2 = outputContent.replaceAll("(?m)^\\s*$[\n\r]{1,}", "");
 String[] dlines = outputContent2.split("\n");
 //Make it HTML Ready
 
- for (int i = 0; i < dlines.length; i++) {
+for (int i = 0; i < dlines.length; i++) {
 	if (dlines[i].contains("&")) {
 		dlines[i] = dlines[i].replaceAll("&", "&amp;");
 	}
@@ -670,32 +661,32 @@ String[] dlines = outputContent2.split("\n");
 	}
 	if (dlines[i].contains("'")) {
 		dlines[i] = dlines[i].replaceAll("'", " &apos;");
-	}	
-	 if (dlines[i].contains("\\n")) { 
-		 //System.out.println("matched"+lines[i]);
-		 dlines[i] = dlines[i].replaceAll("\\\\n", "&#92;n"); 
+	}
+	if (dlines[i].contains("\\n")) {
+		//System.out.println("matched"+lines[i]);
+		dlines[i] = dlines[i].replaceAll("\\\\n", "&#92;n");
 		// System.out.println("matched statement"+lines[i]);
 	}
-	
- 	if (dlines[i].contains("\\0")) { 
-	 //System.out.println("matched"+lines[i]);
-	 dlines[i] = dlines[i].replaceAll("\\\\0", "&#92;0"); 
-	// System.out.println("matched statement"+lines[i]);
+
+	if (dlines[i].contains("\\0")) {
+		//System.out.println("matched"+lines[i]);
+		dlines[i] = dlines[i].replaceAll("\\\\0", "&#92;0");
+		// System.out.println("matched statement"+lines[i]);
 	}
 
-	} 
+}
 
 for (String s : dlines) {
-	if ( s.contains("#pragma loop name")) {
+	if (s.contains("#pragma loop name")) {
 		finaldivStringBuilder.append("+\"<i style=\'color:orange\'>").append(s).append("</i>").append("<br>\"")
 		.append(System.getProperty("line.separator"));
-	} else if ( s.contains("#pragma omp")) {
+	} else if (s.contains("#pragma omp")) {
 		finaldivStringBuilder.append("+\"<i style=\'color:blue\'>").append(s).append("</i>").append("<br>\"")
 		.append(System.getProperty("line.separator"));
-	} else if ( s.contains("#pragma cetus")) {
+	} else if (s.contains("#pragma cetus")) {
 		finaldivStringBuilder.append("+\"<i style=\'color:grey\'>").append(s).append("</i>").append("<br>\"")
 		.append(System.getProperty("line.separator"));
-	}else if (!s.equals("")) {
+	} else if (!s.equals("")) {
 		finaldivStringBuilder.append("+\"").append(s).append("<br>\"").append(System.getProperty("line.separator"));
 	}
 }
@@ -705,30 +696,31 @@ outputDivString = finaldivStringBuilder.toString();
 System.out.println("Cetus output created");
 
 //Extract the Experimental Section from the Output in code element===============================================================================================
-System.out.println("Output String: "+ outputDivString);
+System.out.println("Output String: " + outputDivString);
 
 int expStartIdx = outputDivString.indexOf("gettimeofday(&amp;startexp, NULL);", 0);
-System.out.println("index of the start of the experimental section is: "+ expStartIdx);
+System.out.println("index of the start of the experimental section is: " + expStartIdx);
 int expStopIdx = outputDivString.indexOf("#pragma experimental section stop", expStartIdx);
-System.out.println("index of the end of the experimental section is: "+ expStartIdx);
+System.out.println("index of the end of the experimental section is: " + expStartIdx);
 
-if (expStartIdx >0 && expStopIdx >0) {
-    // Ensure endIndex is greater than startIndex
-    if (expStopIdx > expStartIdx && expStopIdx <= outputDivString.length()) {
-        // Extract the text between the specified indices
-        extractedText = outputDivString.substring((expStartIdx+38), (expStopIdx-1)).trim();
+if (expStartIdx > 0 && expStopIdx > 0) {
+	// Ensure endIndex is greater than startIndex
+	if (expStopIdx > expStartIdx && expStopIdx <= outputDivString.length()) {
+		// Extract the text between the specified indices
+		extractedText = outputDivString.substring((expStartIdx + 38), (expStopIdx - 1)).trim();
 
-        // Print the extracted text
-        System.out.println("Extracted Text:" + extractedText);
-        ExperimentalSectionFinalString="+\""+extractedText+"\"";   //This is the Experimental section 
-        
-    } else {
-    	ExperimentalSectionFinalString="+ \"The user has not specified the correct placement of the start and end pragmas in the input code to define the experimental section.\""; 
-        System.out.println("Invalid indices. End index should be greater than start index and within the string length.");
-    }
+		// Print the extracted text
+		System.out.println("Extracted Text:" + extractedText);
+		ExperimentalSectionFinalString = "+\"" + extractedText + "\""; //This is the Experimental section 
+
+	} else {
+		ExperimentalSectionFinalString = "+ \"The user has not specified the correct placement of the start and end pragmas in the input code to define the experimental section.\"";
+		System.out
+		.println("Invalid indices. End index should be greater than start index and within the string length.");
+	}
 } else {
-	ExperimentalSectionFinalString="+ \"The user has not specified an experimental section in the input code.\""; 
-    System.out.println("The user has not specified an experimental section.");
+	ExperimentalSectionFinalString = "+ \"The user has not specified an experimental section in the input code.\"";
+	System.out.println("The user has not specified an experimental section.");
 }
 
 //Extract the Experimental Section from the Input in code elemnet===============================================================================================
@@ -753,7 +745,7 @@ if (expStartIdx >0 && expStopIdx >0) {
 //         // Print the extracted text
 //         System.out.println("Extracted Experimental section in Input Text: " + extractedInputText );
 //         ExperimentalSectionInputFinalString="+\""+extractedInputText+"\"";   //This is the Experimental section 
-        
+
 //     } else {
 //     	ExperimentalSectionInputFinalString="+ \"The user has not specified the correct placement of the start and end pragmas in the input code to define the experimental section.\""; 
 //         System.out.println("Invalid indices. End index should be greater than start index and within the string length.");
@@ -763,78 +755,77 @@ if (expStartIdx >0 && expStopIdx >0) {
 //     System.out.println("The user has not specified an experimental section.");
 // }
 
-
 //Extract the live-out variables from the Output=================================================================================================
 
-String liveOutExtractedLine =null;
-String startString= "#pragma experimental section stop";
+String liveOutExtractedLine = null;
+String startString = "#pragma experimental section stop";
 int startexpIdx = outputDivString.indexOf(startString);
 //if the line is found
 if (startexpIdx != -1) {
-    // Find the end of the line
-    int endexpIdx = outputDivString.indexOf('\n', startexpIdx + startString.length());
+	// Find the end of the line
+	int endexpIdx = outputDivString.indexOf('\n', startexpIdx + startString.length());
 
-    // If the end of the line is found, extract the substring
-    if (endexpIdx != -1) {
-    	//extract the live-out section
-    	liveOutExtractedLine = "\""+outputDivString.substring(startexpIdx, endexpIdx).trim();
-    }else{
-    	liveOutExtractedLine = "";
-    }
+	// If the end of the line is found, extract the substring
+	if (endexpIdx != -1) {
+		//extract the live-out section
+		liveOutExtractedLine = "\"" + outputDivString.substring(startexpIdx, endexpIdx).trim();
+	} else {
+		liveOutExtractedLine = "";
+	}
 }
 
 //Extract the live-in variables from the Output=================================================================================================
 
-String liveInExtractedLine =null;
-String startexpString= "#pragma experimental section start";
+String liveInExtractedLine = null;
+String startexpString = "#pragma experimental section start";
 int startexpIndex = outputDivString.indexOf(startexpString);
 //if the line is found
 if (startexpIndex != -1) {
-  // Find the end of the line
-  int endexpIndex = outputDivString.indexOf('\n', startexpIndex + startexpString.length());
+	// Find the end of the line
+	int endexpIndex = outputDivString.indexOf('\n', startexpIndex + startexpString.length());
 
-  // If the end of the line is found, extract the substring
-  if (endexpIndex  != -1) {
-  	//extract the live-out section
-  	liveInExtractedLine = "\""+outputDivString.substring(startexpIndex, endexpIndex).trim();
-  }else{
-	liveInExtractedLine = "";
-  }
+	// If the end of the line is found, extract the substring
+	if (endexpIndex != -1) {
+		//extract the live-out section
+		liveInExtractedLine = "\"" + outputDivString.substring(startexpIndex, endexpIndex).trim();
+	} else {
+		liveInExtractedLine = "";
+	}
 }
 //extract Execution Results from the cetus_Analysis_content======================================================================================//
-System.out.println("Analysis Results "+analysis2);
-String exeResultfinalString=null;
+System.out.println("Analysis Results " + analysis2);
+String exeResultfinalString = null;
 StringBuilder exeResultfinalStringBuilder = new StringBuilder("");
 //int exeresfromidx = analysis2.indexOf("[Capture]", 0);
 
 int captureIndex = analysis2.indexOf("[Capture]", 0);
 int indexIndex = analysis2.indexOf("[Input]", 0);
 //the execution result can start with Input of with Capture, it can also include both of these , or none of these.
-int exeresfromidx=0;  //from index. It can start with [Capture] or [Input]
-if (captureIndex >0 && indexIndex <0) {
-    exeresfromidx = captureIndex;
-} else if (indexIndex >0 && captureIndex <0) {
-    exeresfromidx = indexIndex;
-}else if (captureIndex >0 && indexIndex >0){
+int exeresfromidx = 0; //from index. It can start with [Capture] or [Input]
+if (captureIndex > 0 && indexIndex < 0) {
+	exeresfromidx = captureIndex;
+} else if (indexIndex > 0 && captureIndex < 0) {
+	exeresfromidx = indexIndex;
+} else if (captureIndex > 0 && indexIndex > 0) {
 	exeresfromidx = Math.min(captureIndex, indexIndex);
-}else if (captureIndex <0 && indexIndex <0){
-	exeresfromidx=-1;
+} else if (captureIndex < 0 && indexIndex < 0) {
+	exeresfromidx = -1;
 }
 
-if (exeresfromidx < 0 ) {
+if (exeresfromidx < 0) {
 	exeResultfinalString = "\nExecution result will be provided here.\n";
 	//System.out.println("\n\n\nExecution result report \t"+exeResultfinalString);
 	//exeResulthelp= "+\" \"";
-	FormatedAnalysis= exeResultfinalString;
+	FormatedAnalysis = exeResultfinalString;
 } else {
-	FormatedAnalysis = analysis2.substring(exeresfromidx );
+	FormatedAnalysis = analysis2.substring(exeresfromidx);
 	//exeResulthelp= "+\"The result displayed here is what is printed on standard output after compiling and running the serial code. \"";
-	System.out.println("\n\n\nExecution result report \t"+FormatedAnalysis);
+	System.out.println("\n\n\nExecution result report \t" + FormatedAnalysis);
 }
 //System.out.println("\n \n\n Before changes Execution: " + exeResultfinalString);
 //save it line by line
 String[] exereslines = FormatedAnalysis.split("\n");
-exereslines= servlet.makeHTMLqualifiedNoTriming(exereslines,exeResultfinalStringBuilder);
+exereslines = servlet.makeHTMLqualifiedNoTriming(exereslines, exeResultfinalStringBuilder);
 
 exeResultfinalString = exeResultfinalStringBuilder.toString();
 System.out.println("\n \n\n Execution: " + exeResultfinalString);
@@ -849,10 +840,12 @@ System.out.println("\n \n\n Execution: " + exeResultfinalString);
 		divoutput.innerHTML = ""<%=outputDivString%>; 
 		/* prettify the code */
 		PR.prettyPrint();
-				
+		console.log("Initial Load Line 860");
+	}			
 </script>
 </head>
 <body  onload="load()"  Style="background-color: rgba(192, 192, 192, 0.2);">
+
 <% 
 Path inputFilePath= Paths.get(resultSet.getString("input_code"));
 System.out.println("inputFilePath "+inputFilePath);
@@ -916,14 +909,14 @@ request.setAttribute("filepathPara",pathToFile);  */
 			while the process is being completed...</label>
 	</div>
 	<nav class="navbar navbar-dark bg-primary">
-		<a class="navbar-brand" href="#">
-			<p style="font-size: 24px;">
-				<img src="<%=request.getContextPath()%>/resources/img/iCetus.png"
-					width="70" height="70"
-					Style="vertical-align: middle; margin: 10px 10px;"
-					class="d-inline-block " alt="iCetus"> iCetus, A Source-to-Source Compiler Infrastructure for C Programs
-			</p>
-		</a>
+ 		<a class="navbar-brand" href="#">
+ 			<p style="font-size: 24px;"> 
+ 				<img src="<%=request.getContextPath()%>/resources/img/iCetus.png" 
+ 					width="70" height="70"
+ 					Style="vertical-align: middle; margin: 10px 10px;"
+ 					class="d-inline-block " alt="iCetus"> iCetus, A Source-to-Source Compiler Infrastructure for C Programs
+ 			</p> 
+		</a> 
 	</nav>
 	<br>
 
@@ -934,7 +927,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 		style="align: right; margin-right: 20px; margin-left: auto; float: right;"
 		onclick="cetus_report()">Show Flags</button>
 	<br>
-
+<%System.out.println("Line 945 "); %>
 	<form id="outputForm" autocomplete="off" action="<%=request.getContextPath()%>/" method="post" enctype="multipart/form-data">
 		<table style="width: 100%">
 			<p class="formfield">
@@ -974,7 +967,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 	     <input type="hidden" id="filepathPara" name="filepathPara" value="<%=pathToFile %>"> --%>
 			<%-- <%=allOptions%> --%>
 			</p>
-
+<%System.out.println("Line 985 "); %>
 			<div align="center">
 
 				<!-- --------------------  -->
@@ -1044,15 +1037,15 @@ request.setAttribute("filepathPara",pathToFile);  */
 					</div>
 				</div>
 
-
+<%System.out.println("Line 1055 "); %>
 				<!-- --------------------------  -->
 				<!--  Execution Buttons  -->
 				<!-- --------------------------  -->
 				<div class="row">
 
 					<div class="columnselect">
-					<a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a>
-					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a>
+ 					<a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a> 
+ 					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a> 
 						<div class="form-row">
 							<!-- same name has been assigned to get the parameter on the servlet section. input code should be rewritten- cetus options in case of ReCompile should be passed.
  -->
@@ -1089,7 +1082,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 
 					<div class="columnselect">
 
-						<a href="<%=pathWebcontent%>/download.jsp">Download output file</a>
+ 						<a href="<%=pathWebcontent%>/download.jsp">Download output file</a> 
 	
 						<div class="form-row">
 							<div align="left">
@@ -1137,6 +1130,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 						</div>
 					</div>
 				</div>
+				<%System.out.println("Line 1148 "); %>
 				<!-- --------------------------  -->
 				<!-- Obtained Results and  and Replay History    
 				<!-- --------------------------  -->
@@ -1188,6 +1182,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 								</div>
 							</div>
 						</div>
+						<%System.out.println("Line 1200 "); %>
 				<!-- --------------------------  -->
 				<!-- Advisor div -->
 				<!-- --------------------------  -->
@@ -1246,12 +1241,11 @@ request.setAttribute("filepathPara",pathToFile);  */
 								<div class="form-row">
 									<div align="left">
 										<!-- Cetus Passes Report Content: <br> -->
-										<textarea rows="15" readonly=" readonly" WRAP="off"
-											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea>
+ 										<textarea rows="15" readonly=" readonly" WRAP="off" 
+ 											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea> 
 									</div>
 								</div>
-								<a href="<%=pathWebcontent%>/downloadPasses.jsp">Download
-									Cetus Passes File</a>
+ 								<a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a> 
 							</div>
 							<div class="column">
 
@@ -1272,17 +1266,18 @@ request.setAttribute("filepathPara",pathToFile);  */
 								<div class="form-row">
 									<div align="left">
 										<!-- Cetus Analysis Report Content: <br> -->
-										<textarea rows="15" readonly=" readonly" WRAP="off"
-											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))%></textarea>
+ 										<textarea rows="15" readonly=" readonly" WRAP="off" 
+ 											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))%></textarea> 
 										<!-- user.getFileOutput(resultSet.getString("cetus_Analysis_filepath")) -->
 									</div>
 								</div>
-								<a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download
-									Cetus Analysis File</a>
+ 								<a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> 
 							</div>
 						</div>
-
+<%System.out.println("Line 1294 "); %>
 						<!-- <div class="row"  > -->
+<!-- 						<br> -->
+<!-- 						<button id="loadButton" type="button" onclick="load()">Load</button> -->
 						<br>
 						<button type="button" class="btn btn-primary btn-lg btn-block"
 							style="align: left; padding: 10px;" id="btn_result"
@@ -1291,6 +1286,10 @@ request.setAttribute("filepathPara",pathToFile);  */
 						<!-- </div> -->
 		</table>
 		<script>
+		
+
+
+		<%System.out.println("Line 1335 "); %>	
 //page loader functionality
 $(document).ready(function(){
 		$("#outputForm").on("submit", function(){
@@ -1298,7 +1297,7 @@ $(document).ready(function(){
 		});//submit
 });//document ready
 			
-
+<%System.out.println("Line 1342"); %>	
 
 /* 	hovering over question mark shows the popover contents	 */
 $(function() {
@@ -1307,7 +1306,7 @@ $(function() {
 		});
 	})
 	
-
+<%System.out.println("Line 1351 "); %>	
 
 </script>
 
@@ -1324,9 +1323,10 @@ $(function() {
 			document.getElementById("result_row").style.display = "none";
 			document.getElementById("btn_result").textContent = "Show Detailed Report";
 		}
+		console.log("btn_report Line 1338");
 
 	}
-	
+	<%System.out.println("Line 1339 "); %>	
 	function cetus_report(){
 		var flags_display = document.getElementById("cetus_row").style.display;
 		if (flags_display == "none") {
@@ -1337,17 +1337,23 @@ $(function() {
 			document.getElementById("cetus_row").style.display = "none";
 			document.getElementById("cetusFlags").textContent = "Show Flags";
 		}
+		
+		console.log("cetus_report Line 1353");
 	}
 	
  	function load(){
+ 		console.log("load Line 1387");
+ 		
 		var divInput= document.getElementById("cetusinput");
 		divInput.innerHTML = ""<%=inputFinalString%>; 
 		var divoutput= document.getElementById("cetusoutput");
 		divoutput.innerHTML = ""<%=outputDivString%>; 
 		// Hide the div
-		divoutput.style.display = "none";
+		divoutput.style.display = "";//make it none
 		/* prettify the code */
+		console.log("load Line 1364");
 		PR.prettyPrint();
+		console.log("load Line 1366");
 <%--   	    var expFinalString = <%=expFinalString%>; //null  or strats with +"" --%>
  	   	var expFinalSection = <%=expFinalString%>;
 		var expgptoutput= "<%=gptOutput%>";
@@ -1365,10 +1371,10 @@ $(function() {
         	expoutput.innerHTML = ""<%=ExperimentalSectionFinalString%>;
         }
 
-        
+        console.log("load Line 1384");
 		document.getElementById("liveinexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveInExtractedLine%>;
 		document.getElementById("liveoutexpsection").innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-out data of the experimental section is displayed in the format type:name[:size]."+"</span><br>"+<%=liveOutExtractedLine%>;
-	
+		 console.log("load Line 1387");
 		//expoutput.innerHTML = "<span class=\"highlighted-text-grey\">"+"//Live-in and live-out data are displayed in the format type:name[:size]."+"</span>"; 
 <%-- 		expoutput.innerHTML += "<br><span class=\"highlighted-text\"> /*"+<%=liveInExtractedLine%>+"*/</span><br>";  --%>
 <%-- 		expoutput.innerHTML += ""<%=ExperimentalSectionFinalString%>;  --%>
@@ -1376,16 +1382,18 @@ $(function() {
  		var executionResult=document.getElementById("ExecutionResultDiv");
  		executionResult.innerHTML = ""<%=exeResultfinalString%>; //Result of Execution in Capture and REplay wil be added here
  		document.getElementById("pluggedininput").style.display = "none"; //hide
-		document.getElementById("downloadinput").style.display = "";
-		document.getElementById("downloadpluggedinput").style.display = "none";//hide
+ 		document.getElementById("downloadinput").style.display = "";
+ 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
 		document.getElementById("replayExp").style.display = "";
  		document.getElementById("replayPerf").style.display = "none";
 		//document.getElementById("replaySelector").addEventListener("change", updateOtherFields);
  	// Execute the function as soon as the page loads
+ 	 console.log("load Line 1401");
  		  processContentChanges();		
+ 		 console.log("load Line 1403");
 	
 		} 
-
+ 	<%System.out.println("Line 1398 "); %>	
 	function setParasforExecutionTime(){  
 		var divOutput= document.getElementById("cetusoutput");
 		//read the file instead of the text that shows in the 
@@ -1395,6 +1403,7 @@ $(function() {
 		document.getElementById("codeRadios").value="code";
 		document.getElementById("gridRadios").value="Execute"; 
 		document.getElementById("executeOnly").value="Execute"; 
+		 console.log("load Line 1416");
 	}
 	
 	function copytoInputFunction(){
@@ -1407,6 +1416,7 @@ $(function() {
 		//var experimental= exp.textContent;  //experimental section
 		var modifiedCode = exp.innerHTML;             // Get the content of the experimental section code element
 		console.log("modifiedCode "+ modifiedCode);
+		 console.log("load Line 1429");
 		// Your existing code to get the start and end indexes of the experimental section
 		var inputContent= ""<%= request.getAttribute("inputFinalString") %>;
 		var expStartIdx = inputContent.indexOf("#pragma experimental section start", 0);
@@ -1415,6 +1425,7 @@ $(function() {
 		var length= brIndex + 4 - expStartIdx;
 		var expStopIdx = inputContent.indexOf("#pragma experimental section stop", expStartIdx);
 		console.log("expStopIdx  ",expStopIdx );
+		 console.log("load Line 1438");
 	    // Replace the experimental section in divOutput with the modified code<br>/br>
 	    var newInput = inputContent.substring(0,expStartIdx+length) +  
 	                  modifiedCode + 
@@ -1430,7 +1441,7 @@ $(function() {
 
 	//create the div for a new input code
 	document.getElementById("pluggedininput").innerHTML= newInput+"\n";  //I made this field for For tracking the main input file. but what if teh user wants to execute the file?
-
+	 console.log("load Line 1454");
 	var displayText = document.getElementById("copyToInput").textContent;
 	
 	if(displayText === "Copy Exp section into Input"){
@@ -1448,9 +1459,11 @@ $(function() {
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
 	}
-	
+	 console.log("load Line 1472");
 	//hide the previous input
 	}
+	
+	<%System.out.println("Line 1465 "); %>	
 	//Running Input file, which input should be executed teh main input or the plugged-in input. It depends on which one is not hidden.
 	function setInputparasforservlet(){
 		var divInput= document.getElementById("cetusinput");
@@ -1463,29 +1476,32 @@ $(function() {
 		}else if (document.getElementById("pluggedininput").style.display === ""){
 			inputParameter.value = document.getElementById("pluggedininput").innerText+"\n";
 		}
-		
+		 console.log("load Line 1489");
 		document.getElementById("codeRadios").value="passedFile"; //It's a file we are passing to the servlet
 		document.getElementById("gridRadios").value="CaRVExecute"; 
 		document.getElementById("CaRVPhase").value="Input";
+		 console.log("load Line 1493");
 	}
 	
 	function setCaptureParasforservlet(){
 
 		var divOutput= document.getElementById("cetusoutput");
 		var inputParameter= document.getElementById("usercode"); //setting the usercode field that is the hidden file to what should be passed. in this case is the output is set to be passed for execution
-		inputParameter.value=  divOutput.innerText+"\n"; 
-		
+		inputParameter.value=  document.getElementById("cetusoutput").innerText+"\n"; 
+		 console.log("load Line 1501");
 		document.getElementById("codeRadios").value="passedFile"; //It's a file we are passing to the servlet
 		document.getElementById("gridRadios").value="CaRVExecute"; //write a new RedirectPage to "/WEB-INF/views/CaRV.jsp";
 		document.getElementById("CaRVPhase").value="Capture"; // CaRVPhase can be set to Cature or Replay.
 		document.getElementById("DBRowId").value= generatedKey;
+		 console.log("load Line 1506");
 	}
-	
+	<%System.out.println("Line 1495 "); %>	
 	function setReplayParasforservlet(){
 		var divOutput= document.getElementById("cetusoutput");
 		var outputDivString = divOutput.innerText;
 		var expOutput= document.getElementById("expsection");
 		var modifiedCode = expOutput.innerText;  //exp section code
+		 console.log("load Line 1514");
 		console.log("modifiedCode: \n "+modifiedCode);
 		// Your existing code to get the start and end indexes of the experimental section
 		var expStartIdx = outputDivString.indexOf("gettimeofday(&startexp, NULL);", 0);
@@ -1503,14 +1519,14 @@ $(function() {
 		var expParameter= document.getElementById("expsectionpara"); //setting the exp section that should be passed
 		expParameter.value=  modifiedCode; //the experimental section
 		
-
+		 console.log("load Line 1532");
 		document.getElementById("codeRadios").value="passedFile"; //It's a file we are passing to the servlet
 		document.getElementById("gridRadios").value="CaRVExecute"; //write a new RedirectPage to "/WEB-INF/views/CaRV.jsp";
 		document.getElementById("CaRVPhase").value="Replay"; // CaRVPhase can be set to Cature or Replay.
 		//ReplayIndex++;
 	}
 
-	
+	<%System.out.println("Line 1525 "); %>	
 	//Ask Cetus
 	function setDefaultCetusParasforservlet(){
 		//get input code
@@ -1534,7 +1550,7 @@ $(function() {
 			
 	}
 
-	
+	<%System.out.println("Line 1549 "); %>	
 	//Ask GPT for API
 	function setPromptParasforservlet(){
 		var exp= document.getElementById("expsection");
@@ -1585,7 +1601,7 @@ $(function() {
 	function changeExpSection(){
 		var divInput= document.getElementById("cetusinput");
 		var divOutput= document.getElementById("cetusoutput");
-		divOutput.style.display = "none";
+		divOutput.style.display = "";
 		var divExp= document.getElementById("expsection");
 		divExp.style.display = "";
 		divExp.style.background="rgba(255,255,255, 0.9)";
@@ -1597,7 +1613,7 @@ $(function() {
 <%-- 		divOutput.innerHTML = ""<%=outputcetusFinalString%>;  --%>
 		document.getElementById("modifiableOutput").innerHTML="Experimental Section (Modifiable)";
 	}
-	
+	<%System.out.println("Line 1612 "); %>	
 
 	
 	function displayOutputFunction(){
@@ -1624,7 +1640,7 @@ $(function() {
 		}
 		PR.prettyPrint();
 	}
-
+	<%System.out.println("Line 1639 "); %>	
 	function processContentChanges() {
 	    var content = document.getElementById("ExecutionResultDiv");
 	    // Get the inner HTML content of the Execution results
@@ -1662,10 +1678,13 @@ $(function() {
 	    // Update the content with collapsible sections
 	    console.log("text:::: "+text);
 	    content.innerHTML = text;
+	    console.log("text:::: Line 1726 ");
+	   //load();
+	    console.log("text:::: Line 1728 ");
 	  }
 
 	
-	
+	<%System.out.println("Line 1680 "); %>	
 	 function createCollapsibleSection(title, content, index) {
 		 content = content.trim();//.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
 		 
@@ -1679,6 +1698,7 @@ $(function() {
 		             content +
 		             '</div>' +
 		             '</div>';
+		    console.log("collapsible Line 1740 ");
 	}
 	 
 	 function toggleCollapse(sectionId) {
@@ -1688,9 +1708,12 @@ $(function() {
 		    } else {
 		        section.style.display = 'none';
 		    }
+		    console.log("toggleCollapse Line 1750 ");
 		}
+	 console.log("collapsible Line 1756 ");
 	 processContentChanges();
-
+	
+	 console.log("collapsible Line 1758 ");
 </script>
 
 <!-- JavaScript block to handle replay selection -->
@@ -1756,28 +1779,30 @@ $(function() {
 // });
 </script>
 
-
+<%System.out.println("Line 1771 "); %>	
 <!-- Add the necessary Bootstrap and jQuery scripts -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<%System.out.println("Line 1774 "); %>	
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
 	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
 	crossorigin="anonymous"></script>
-	
+<%System.out.println("Line 1780 "); %>		
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
 	<!-- code prettifier -->
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=c&amp;skin=default"></script> 
-
+<%System.out.println("Line 1784 "); %>	
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
-
+<%System.out.println("Line 1787 "); %>	
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Bootstrap JS and Popper.js -->
-
+<%System.out.println("Line 1791 "); %>	
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<%System.out.println("Line 1794 "); %>	
 </body>
 </html>
 
@@ -1787,3 +1812,4 @@ $(function() {
 e.printStackTrace();
 }
 %>
+<%System.out.println("Line 1804 "); %>	
