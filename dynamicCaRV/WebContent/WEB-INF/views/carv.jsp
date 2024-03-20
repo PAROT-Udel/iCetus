@@ -909,14 +909,14 @@ request.setAttribute("filepathPara",pathToFile);  */
 			while the process is being completed...</label>
 	</div>
 	<nav class="navbar navbar-dark bg-primary">
- 		<a class="navbar-brand" href="#">
- 			<p style="font-size: 24px;"> 
- 				<img src="<%=request.getContextPath()%>/resources/img/iCetus.png" 
- 					width="70" height="70"
- 					Style="vertical-align: middle; margin: 10px 10px;"
- 					class="d-inline-block " alt="iCetus"> iCetus, A Source-to-Source Compiler Infrastructure for C Programs
- 			</p> 
-		</a> 
+		<a class="navbar-brand" href="#">
+			<p style="font-size: 24px;">
+				<img src="<%=request.getContextPath()%>/resources/img/iCetus.png"
+					width="70" height="70"
+					Style="vertical-align: middle; margin: 10px 10px;"
+					class="d-inline-block " alt="iCetus"> iCetus, A Source-to-Source Compiler Infrastructure for C Programs
+			</p>
+		</a>
 	</nav>
 	<br>
 
@@ -1045,7 +1045,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 
 					<div class="columnselect">
  					<a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a> 
- 					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a> 
+					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a> 
 						<div class="form-row">
 							<!-- same name has been assigned to get the parameter on the servlet section. input code should be rewritten- cetus options in case of ReCompile should be passed.
  -->
@@ -1245,7 +1245,7 @@ request.setAttribute("filepathPara",pathToFile);  */
  											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea> 
 									</div>
 								</div>
- 								<a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a> 
+								<a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a> 
 							</div>
 							<div class="column">
 
@@ -1267,11 +1267,11 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<div align="left">
 										<!-- Cetus Analysis Report Content: <br> -->
  										<textarea rows="15" readonly=" readonly" WRAP="off" 
- 											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))%></textarea> 
+											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))%></textarea> 
 										<!-- user.getFileOutput(resultSet.getString("cetus_Analysis_filepath")) -->
 									</div>
 								</div>
- 								<a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> 
+								<a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> 
 							</div>
 						</div>
 <%System.out.println("Line 1294 "); %>
