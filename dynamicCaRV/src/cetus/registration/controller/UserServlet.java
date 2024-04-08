@@ -417,13 +417,14 @@ public class UserServlet extends HttpServlet {
 			String expSectionresult = textToString(expSection);//concatenatedLines.toString().trim(); // Trim to remove trailing space
 		    String liveInData = request.getParameter("liveinpara");
 		    String liveOutData = request.getParameter("liveoutpara");
-		    String message = "Optimize this C code section using OpenMP. Return only the optimized code without any explanation. " + expSectionresult+
-		    		"These are live-in variable in the code section type:name:size"+textToString(liveInData)+ 
-		    		"These are live-out variables from the code section that their values should not change because of optimization: "+textToString(liveOutData);
+		    String message = "Your role is to Optimize this C code section using OpenMP.  " + expSectionresult+
+		    		"Live-in variable in the code section are presented in the format of type:name:size"+textToString(liveInData)+ 
+		    		"Live-out variables, whose values must remain unchanged after optimization, are presented in the same format as Live-in Variables: "+textToString(liveOutData)+
+		    		"Ensure that the optimization maintains the integrity of the live-out variables' values. Return only the optimized code without any explanation or text.";
 		    String gptFinalResponse="";
 		    String url = "https://api.openai.com/v1/chat/completions";
 	        String apiKey = "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"; // API key goes here
-	        String model = "gpt-3.5-turbo"; // current model of chatgpt api
+	        String model = "gpt-4";//"gpt-3.5-turbo";//"gpt-4";//"gpt-3.5-turbo"; // current model of chatgpt api
 	     // Measure the time before sending the request
 	        long startTime = System.currentTimeMillis();
 	        try {
@@ -1396,12 +1397,12 @@ public class UserServlet extends HttpServlet {
 			
 		}else if(gridRadios.equals("CaRVExecute")) {
 			
-			//check a flag to see if which hase should be executed
+			//check a flag to see if which case should be executed
 			if (carvPhase.equals("Capture")) {
 				System.out.println("Capture phase");
 				//if capture phase should be executed, compile and execute the entire code with omp.h library added to it and and compiling with -fopenmp, tehn execute it using 4 threads.
 				//Compiling the file with -fopenmp flag, and running it with 4 thredas if it is parallel.
-				int numThreads = 4; 
+				int numThreads = 16;//4; 
 				File execFile = new File(inputPrg);
 				String execFilePath = execFile.getAbsolutePath();
 				modifyFile(execFilePath, "#include <stdio.h>","#include <stdio.h> \n#include <omp.h>"); 
@@ -1425,7 +1426,7 @@ public class UserServlet extends HttpServlet {
 			}else if(carvPhase.equals("Replay")){
 			System.out.println("Replay phase");
 			//if replay phase is executed. replace the define parameter, and then compile and execute the code how you compiled and executed the capture phase file.
-			int numThreads = 4; 
+			int numThreads = 16; //4; 
 			CarvreplayDAO carvreplayDAO = new CarvreplayDAO();
 			int lastReplayId=0;
 			//gets the last replay Id the one taht will be inserted to DB will be lastReplayId+1
@@ -1489,7 +1490,7 @@ public class UserServlet extends HttpServlet {
 			}else if(carvPhase.equals("Input")){
 			System.out.println("carvPhase-Input Run phase");
 			//if replay phase is executed. replace the define parameter, and then compile and execute the code how you compiled and executed the capture phase file.
-			int numThreads = 4; 
+			int numThreads = 16; //4; 
 			File execFile = new File(inputPrg);
 			String execFilePath = execFile.getAbsolutePath();
 			modifyFile(execFilePath, "#include <stdio.h>","#include <stdio.h> \n#include <omp.h>"); 
