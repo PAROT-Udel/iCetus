@@ -418,9 +418,9 @@ public class UserServlet extends HttpServlet {
 		    String liveInData = request.getParameter("liveinpara");
 		    String liveOutData = request.getParameter("liveoutpara");
 		    String message = "Your role is to Optimize this C code section using OpenMP.  " + expSectionresult+
-		    		"Live-in variable in the code section are presented in the format of type:name:size"+textToString(liveInData)+ 
-		    		"Live-out variables, whose values must remain unchanged after optimization, are presented in the same format as Live-in Variables: "+textToString(liveOutData)+
-		    		"Ensure that the optimization maintains the integrity of the live-out variables' values. Return only the optimized code without any explanation or text.";
+		    		"Live-in variables format type:name:size"+textToString(liveInData)+ 
+		    		"Live-out variables (to remain unchanged post-optimization, same format as Live-in Variables): "+textToString(liveOutData)+
+		    		"Your task: Integrate OpenMP pragmas to enhance this code's efficiency. Ensure all live-out variables' values are preserved. Please provide only the optimized C code in your response, with no explanations or additional text.";
 		    String gptFinalResponse="";
 		    String url = "https://api.openai.com/v1/chat/completions";
 	        String apiKey = "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"; // API key goes here
@@ -454,6 +454,11 @@ public class UserServlet extends HttpServlet {
 
 	        // returns the extracted contents of the response.
 	           gptFinalResponse= extractContentFromResponse(gptresponse.toString());
+	           //removes if the code starts with ```c and ends with '''
+	           if (gptFinalResponse.startsWith("```C") && gptFinalResponse.endsWith("```")) {
+	        	    // Remove the starting "```C" and ending "```"
+	        	   gptFinalResponse = gptFinalResponse.substring(4, gptFinalResponse.length() - 3).trim();
+	        	}
 		    // Measure the time after receiving the response
 		       long endTime = System.currentTimeMillis();
 	        // Calculate the elapsed time
