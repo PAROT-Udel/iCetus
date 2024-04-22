@@ -592,7 +592,7 @@ public class UserServlet extends HttpServlet {
 		if (gridRadios.equals("AskCetus")) {
 			String[] args = null;
 			args = new String[6];
-			cetusOptionSet[1] = "-verbosity=2";
+			cetusOptionSet[1] = "-verbosity=0";
 			args[0] = cetusOptionSet[0]; // preprocessor
 			args[1] = cetusOptionSet[1]; // verbosity set to 4
 			args[2] = "-callgraph";
@@ -693,7 +693,7 @@ public class UserServlet extends HttpServlet {
 		}else if (gridRadios.equals("CaRV")) {
 			String[] args = null;
 			args = new String[7];
-			cetusOptionSet[1] = "-verbosity=2";
+			cetusOptionSet[1] = "-verbosity=0";
 			args[0] = cetusOptionSet[0]; // preprocessor
 			args[1] = cetusOptionSet[1]; // verbosity set to 4
 			args[2] = "-callgraph";
@@ -1430,6 +1430,7 @@ public class UserServlet extends HttpServlet {
 					}
 			}else if(carvPhase.equals("Replay")){
 			System.out.println("Replay phase");
+			
 			//if replay phase is executed. replace the define parameter, and then compile and execute the code how you compiled and executed the capture phase file.
 			int numThreads = 16; //4; 
 			CarvreplayDAO carvreplayDAO = new CarvreplayDAO();
@@ -1446,6 +1447,7 @@ public class UserServlet extends HttpServlet {
 			File execFile = new File(inputPrg);
 			String execFilePath = execFile.getAbsolutePath();
 			modifyFile(execFilePath, "#define Initial","#define Experimental"); 
+			
 			//compile the file
 
 			File paraFile = execute.compileCFile(execFile, 1); 

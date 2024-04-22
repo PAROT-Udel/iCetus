@@ -31,7 +31,7 @@ public class ExperimentalTimer extends TransformPass {
 	/** Pass name */
 	private static final String pass_name = "[ExperimentalSectionTimer]";
 
-	private static int debug_level = 1;//PrintTools.getVerbosity();
+	private static int debug_level = 0;//PrintTools.getVerbosity();
 
 	/** Heading string for result printing */
 	private static final String header = "Initial";
@@ -1284,7 +1284,7 @@ public class ExperimentalTimer extends TransformPass {
 												"FILE* initialExperimentalSectionRunTime"+expname+"= fopen(\"initialExperimentalSectionRunTime"+expname+"\",\"w\");"+ NEWLINE+
 												//"fprintf(initialExperimentalSectionRunTime,\"exp_time_used %f\",exp_time_used); "+ NEWLINE+
 												"write_var_to_file(\"exp_time_used\", &exp_time_used, sizeof(double), 1, initialExperimentalSectionRunTime"+expname+");"+NEWLINE+
-												"if(verbosity > 0) {printf(\"The original experimental code section took %.6lf seconds to run.\\n\", exp_time_used);}"+ NEWLINE +
+												"if(verbosity >= 0) {printf(\"The original experimental code section took %.6lf seconds to run.\\n\", exp_time_used);}"+ NEWLINE +
 												//"fclose(initialExperimentalSectionRunTime);"+ NEWLINE+
 												"gettimeofday(&captureStartOutputWrite, NULL);"+NEWLINE+
 												saveOutputValuesinFile(cetusOutputSet,"initialOutputStateFile"+expname)+ 
@@ -1320,7 +1320,7 @@ public class ExperimentalTimer extends TransformPass {
 												"printf(\"\\n\\nValues of output variables after modification:\\n\");"+NEWLINE+
 												"fseek(modifiedOutputStateFile"+expname+", 0, SEEK_SET);"+NEWLINE+
 												read_output_vars_from_file(cetusOutputSet,"modifiedOutputStateFile"+expname)+NEWLINE+
-												"}//end of if"+NEWLINE+
+												"} //end of if"+NEWLINE+
 												/* Seek to the beginning of the file */
 												// "fseek(initialOutputStateFile, 0, SEEK_SET);"+NEWLINE+
 												"printf(\"\\n\\nComparing the output variables of the experimental section before and after modification:\\n\");"+NEWLINE+
@@ -1368,7 +1368,7 @@ public class ExperimentalTimer extends TransformPass {
 								"FILE* initialExperimentalSectionRunTime"+expname+"= fopen(\"initialExperimentalSectionRunTime"+expname+"\",\"w\");"+ NEWLINE+
 								//"fprintf(initialExperimentalSectionRunTime,\"exp_time_used %f\",exp_time_used); "+ NEWLINE+
 								"write_var_to_file(\"exp_time_used\", &exp_time_used, sizeof(double), 1, initialExperimentalSectionRunTime"+expname+");"+NEWLINE+
-								"if(verbosity > 0) {printf(\"The original experimental code section took %.6lf seconds to run.\\n\", exp_time_used);}"+ NEWLINE +
+								"if(verbosity >= 0) {printf(\"The original experimental code section took %.6lf seconds to run.\\n\", exp_time_used);}"+ NEWLINE +
 								"gettimeofday(&captureStartOutputWrite, NULL);"+ NEWLINE +
 								//"fclose(initialExperimentalSectionRunTime);"+ NEWLINE+
 								saveOutputValuesinFile(event.getOutput(),"initialOutputStateFile"+expname)+ 
@@ -1404,7 +1404,7 @@ public class ExperimentalTimer extends TransformPass {
 								"printf(\"\\n\\nValues of output variables after modification:\\n\");"+NEWLINE+
 								"fseek(modifiedOutputStateFile"+expname+", 0, SEEK_SET);"+NEWLINE+
 								read_output_vars_from_file(event.getOutput(),"modifiedOutputStateFile"+expname)+NEWLINE+
-								"}//end of if"+NEWLINE+
+								"} //end of if"+NEWLINE+
 								/* Seek to the beginning of the file */
 								// "fseek(initialOutputStateFile, 0, SEEK_SET);"+NEWLINE+
 								"printf(\"\\n\\nComparing the output variables of the experimental section before and after modification:\\n\");"+NEWLINE+
