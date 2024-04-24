@@ -2176,14 +2176,58 @@ public class ExperimentalTimer extends TransformPass {
 					if(varSize.contains("XIndex")) {
 						String[] parts = varSize.split("\\*"); // Split the input string by '*'
 
+						//instead of creating large arrays on the stack, we created them on the heap. 
+						// Start building the variable declaration for a pointer to an array
+					    StringBuilder mallocString = new StringBuilder(varType + " (*").append(varName).append(")");
+					    for (int i = 1; i < parts.length; i++) { // Start from 1 to skip the first dimension in pointer declaration
+					        mallocString.append("[").append(parts[i]).append("]");
+					    }
+					    mallocString.append(" = malloc(sizeof(").append(varType);
+					    
+					    // Construct the size portion of the malloc call including all dimensions
+					    for (String part : parts) {
+					        mallocString.append("[").append(part).append("]");
+					    }
+					    mallocString.append("));");
+
+					    // Append the constructed declaration to the StringBuilder
+					    stb.append(mallocString.toString());
+					    stb.append(NEWLINE);
+					    
+					    
+//						// Start building the variable declaration for a pointer to an array
+//					    StringBuilder mallocString = new StringBuilder(varType + " ");
+//					    for (int i = 0; i < parts.length; i++) {
+//					        if (i == 0) {
+//					            mallocString.append("(*").append(varName);
+//					        }
+//					        mallocString.append("[");
+//					        mallocString.append(parts[i]);
+//					        mallocString.append("]");
+//					        if (i == 0) {
+//					            mallocString.append(")");
+//					        }
+//					    }
+//					    mallocString.append(" = malloc(sizeof(").append(varType);
+//
+//					    // Construct the size portion of the malloc call
+//					    for (String part : parts) {
+//					        mallocString.append("[").append(part).append("]");
+//					    }
+//					    mallocString.append("));");
+//
+//					    // Append the constructed declaration to the StringBuilder
+//					    stb.append(mallocString.toString());
+//					    stb.append(NEWLINE);
+					//}
 						// Create the converted string by iterating through the parts
-				        StringBuilder convertedString = new StringBuilder();
-				        for (int i = 0; i < parts.length; i++) {
-				            convertedString.append("[").append(parts[i]).append("]");
-				        }
+				        //StringBuilder convertedString = new StringBuilder();
+				        //for (int i = 0; i < parts.length; i++) {
+				        //    convertedString.append("[").append(parts[i]).append("]");
+				        //}
 				        
-				        stb.append(varType+" "+varName+convertedString.toString()+";" ); //added
-				        stb.append( NEWLINE);
+				        //stb.append(varType+" "+varName+convertedString.toString()+";" ); //added
+				        //stb.append( NEWLINE);
 					}
 					stb.append("read_var_from_file(\""+varName+"\","+ varName +", sizeof("+varType+ "), "+varSize+",initialInputStateFile"+expname+" );" );
 					stb.append( NEWLINE);
