@@ -77,6 +77,62 @@
 	padding: 2px;
 }
 
+/* Grouping Buttons  */
+.button-group-column {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+.button-pair {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Space between button pairs */
+}
+
+.button-pair label {
+  margin-right: 10px; /* Space between label and button */
+}
+
+.button-pair button {
+  margin-right: 10px; /* Space between button and help icon */
+}
+
+ .button-pair span { 
+   margin-left: 10px; /* Space between button and help icon */ 
+ } 
+
+.button-group {
+margin-top: 30px; /* Space between the title and the buttons */
+box-sizing: border-box; 
+max-width: 47vw; 
+align: center;
+margin-bottom: 10px;
+}
+
+.operation-group {
+  border: 2px solid #000; /* Black border */
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px; /* Optional: to make corners rounded */
+  background-color: #f7f7f7; /* Optional: to add a background color */
+  text-align: left; /* Center align all content within the group */
+  position: relative; /* Ensures the title can be positioned correctly */
+  width: 100%;
+}
+
+.operation-title {
+  display: inline-block; /* Ensures the title is inline for centering */
+  background-color: #f9f9f9; /* Match the background color of the group */
+  padding: 0 10px; /* Padding around the title text */
+  font-weight: bold; /* Make the title text bold */
+  position: absolute; /* Position the title absolutely */
+  top: -12px; /* Adjust this value to position the title within the border */
+  left: 50%;
+  transform: translateX(-50%); /* Center the title horizontally */
+}
+
+
+
 .col-form-label {
 	vertical-align: middle;
 	font-size: 16px;
@@ -250,7 +306,7 @@ font-weight: bold;
 	word-wrap: break-word;
 	cursor: text;
 	overflow: auto;
-	height: 65px;
+	height: 112px;
 	overflow: auto;
 	resize: both;
 	-moz-box-shadow: inset 0px 1px 2px #ccc;
@@ -996,8 +1052,20 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<code class="prettyprint lang-c" id="cetusinput" rows="12"
 										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
+									<div align="center"><a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a> </div>
+																	
 									<code class="prettyprint lang-c" id="pluggedininput" rows="12"
 										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
+									</code>
+									<div align="center"><a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a> </div>
+									
+									<h4 id="liveInData">Live-in Data</h4>
+									<code class="highlighted-text" id="liveinexpsection" rows="5"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
+									</code>
+									<h4 id="liveOutData">Live-out Data</h4>
+									<code class="highlighted-text" id="liveoutexpsection" rows="5"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
 								</div>
 							</div>
@@ -1012,24 +1080,31 @@ request.setAttribute("filepathPara",pathToFile);  */
 						</div>
 						<div class="form-row">
 							<div align="left">
-								<h4 id="modifiableOutput">Experimental Section</h4> <h6 id="ShowgptResponseTime"><%=ResponseTime%></h6>
+							<h4 id="Output" style="float: left; ">Output File</h4>
+
 							</div>
 						</div>
 						<div class="form-row">
 							<div align="left">
 								<div class="container">
 									<code class="prettyprint lang-c" id="cetusoutput" rows="12"
-										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box;">
+										style="border-radius: 10px; width: 100%; padding: 25px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
-									<code class="highlighted-text" id="liveinexpsection" rows="3"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
-									</code>
+									<div align="center">
+									<a  href="<%=pathWebcontent%>/download.jsp"  style="text-align: center;">Download output file</a> 
+									</div>
+<%-- 									<code class="highlighted-text" id="liveinexpsection" rows="3" --%>
+<%-- 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"> --%>
+<%-- 									</code> --%>
+									<div align="left">
+								    <h4 id="modifiableOutput" style="display: inline-block; margin-right: 10px; ">Experimental Section</h4> <h6 id="ShowgptResponseTime" style="display: inline-block;">  (Process Time = <%=ResponseTime%>(s))</h6>
+								    </div>
 									<code class="prettyprint lang-c" id="expsection" rows="8"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; max-width: 47vw; overflow: scroll;">
 									</code>
-									<code class="highlighted-text" id="liveoutexpsection" rows="3"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">
-									</code>
+<%-- 									<code class="highlighted-text" id="liveoutexpsection" rows="3" --%>
+<%-- 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"> --%>
+<%-- 									</code> --%>
 
 								</div>
 							</div>
@@ -1044,21 +1119,37 @@ request.setAttribute("filepathPara",pathToFile);  */
 				<div class="row">
 
 					<div class="columnselect">
- 					<a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a> 
-					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a> 
+<%--  					<a id="downloadinput" href="<%=pathWebcontent%>/downloadInput.jsp">Download Input file</a>  --%>
+<%-- 					<a id="downloadpluggedinput" href="<%=pathWebcontent%>/downloadPluggedInput.jsp">Download Input file</a>  --%>
 						<div class="form-row">
 							<!-- same name has been assigned to get the parameter on the servlet section. input code should be rewritten- cetus options in case of ReCompile should be passed.
  -->
+<!--  <fieldset class="operation-group"> -->
+<!--   <legend>Operations on Input File</legend>                         -->
+<!-- <h5 style="display: inline-block;">Operations on Input File</h5> -->
+<div class="button-group-column">
+<div class="operation-group">
+  <h5 class="operation-title">Overall Impact of Optimization on Application</h5>
+ 							<div class="button-group">
+ 							<label for="executeInput"> <h6> 1 - Baseline / Optimized Code&nbsp;&nbsp;  </h6> </label>
  							<button type="submit" id="executeInput" class="btn btn-primary"
 								onclick="setInputparasforservlet()">Run Input</button>
 							&nbsp;<span><i data-content="To execute the input code."
 								data-placement="top" class="fa fa-question-circle"></i></span>
-								
+							</div>
+							
+							<div class="button-group">
+							 <label for="copyToInput"> <h6> 2 - Apply Optimization to Application&nbsp;&nbsp;  </h6> </label>	
 							<button type="button" id="copyToInput" class="btn btn-primary buttonwide"
 								onclick="copytoInputFunction()">Copy Exp section into Input</button>
 							&nbsp;<span><i data-content="To copy the experimental section to the input code."
-								data-placement="top" class="fa fa-question-circle"></i></span>
-								
+								data-placement="top" class="fa fa-question-circle"></i></span><div id="optCopied"></div>
+							</div>
+							
+							</div>
+							</div>
+							</div>
+<!-- 						</fieldset>	 -->
 <!-- 							<button type="button" id="modifyInput" class="btn btn-primary" -->
 <!-- 								onclick="changeInput()">Modify Input</button> -->
 <!-- 							&nbsp;<span><i data-content="To modify the input code." -->
@@ -1077,57 +1168,87 @@ request.setAttribute("filepathPara",pathToFile);  */
 <!-- 								data-placement="top" class="fa fa-question-circle"></i></span> <br> -->
 <!-- 							<span align="left" id="codeModified" style="margin-left: 0px;"></span> -->
 						</div>
-					</div>
+					
 					</form>
 
 					<div class="columnselect">
 
- 						<a href="<%=pathWebcontent%>/download.jsp">Download output file</a> 
+<%--  						<a href="<%=pathWebcontent%>/download.jsp">Download output file</a>  --%>
 	
 						<div class="form-row">
-							<div align="left">
-								
+<!-- 							<div align="left"> -->
+<div class="button-group-column">
+							<div class="operation-group">
+  							<h5 class="operation-title">Code Section Optimization</h5>
+  							
+ 							<div class="button-group">
+ 							  <label for="Capture"> <h6> 1 - Baseline&nbsp;&nbsp;  </h6> </label>
 								<button type="submit" id="Capture" name="action" value="Capture"
-									class="btn btn-primary" onclick="setCaptureParasforservlet()">Capture</button>
+									class="btn btn-primary buttonwide" onclick="setCaptureParasforservlet()">Capture</button>
 								&nbsp;<span><i id="helpCapture"
 									data-content="Compile and execute the output file in Capture mode."
 									data-placement="top" class="fa fa-question-circle"></i></span>
-
+								</div>
+								
+								<div class="button-group">
+								<label for="modifyExpSection"> <h6> 2 - Optimize </h6> </label>
 								<button type="button" id="modifyExpSection"
 									class="btn btn-primary buttonwide" onclick="changeExpSection()">Modify
 									Exp Section</button>
 								&nbsp;<span><i
 									data-content="Use this button to manually further optimize the experimental section of the code. Then run the code in Replay mode to check its validity."
 									data-placement="top" class="fa fa-question-circle"></i></span>
-
+								
+								<button type="submit" id="AskCetus" name="action" value="AskCetus"
+									class="btn btn-primary" onclick="setDefaultCetusParasforservlet()">Ask Cetus</button>
+								&nbsp;<span><i id="helpAskCetus"
+									data-content="Cetus Auto-parallelizer offers parallelization techniques applicable to the experimental section."
+									data-placement="top" class="fa fa-question-circle"></i></span>
+								
+								<button type="submit" id="AskGPT" name="action" value="AskGPT"
+									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>&nbsp;<span><i id="helpAskGPT"
+									data-content="GPT offers optimization techniques applicable to your code."
+									data-placement="top" class="fa fa-question-circle"></i></span>
+								
+								</div>
+								<div class="button-group">
+								
+								<label for="Replay"> <h6> 3 - Validate&nbsp;&nbsp; </h6>  </label>
 								<button type="submit" id="Replay" name="action"
 									value="Replay" class="btn btn-primary buttonwide"
 									onclick="setReplayParasforservlet()">Replay & Validate</button>
 								&nbsp;<span><i id="helpReplay"
 									data-content="Compile and execute the experimental section in Replay mode. It also reports on the verification of the applied optimization."
 									data-placement="top" class="fa fa-question-circle"></i></span>
+								
+								</div>
 							</div>
+							</div>		
+							
 						</div>
 
-						<div class="form-row">
-							<div align="left">
-								<button type="submit" id="AskCetus" name="action" value="AskCetus"
-									class="btn btn-primary" onclick="setDefaultCetusParasforservlet()">Ask Cetus</button>
-								&nbsp;<span><i id="helpAskCetus"
-									data-content="Cetus Auto-parallelizer offers parallelization techniques applicable to the experimental section."
-									data-placement="top" class="fa fa-question-circle"></i></span>
+<!-- 						<div class="form-row"> -->
+<!-- 							<div class="operation-group"> -->
+<!--   							<h5 class="operation-title">Optimization Insights</h5> -->
+<!--  							<div class="button-group"> -->
+<!-- <!-- 								<button type="submit" id="AskCetus" name="action" value="AskCetus" --> 
+<!-- <!-- 									class="btn btn-primary" onclick="setDefaultCetusParasforservlet()">Ask Cetus</button> --> 
+<!-- <!-- 								&nbsp;<span><i id="helpAskCetus" --> 
+<!-- <!-- 									data-content="Cetus Auto-parallelizer offers parallelization techniques applicable to the experimental section." --> 
+<!-- <!-- 									data-placement="top" class="fa fa-question-circle"></i></span> -->
 									
-								<button type="submit" id="AskGPT" name="action" value="AskGPT"
-									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>&nbsp;<span><i id="helpAskGPT"
-									data-content="GPT offers optimization techniques applicable to your code."
-									data-placement="top" class="fa fa-question-circle"></i></span>
-								<!-- to use the API use this function "setPromptParasforservlet()" -->
+<!-- <!-- 								<button type="submit" id="AskGPT" name="action" value="AskGPT" --> 
+<!-- <!-- 									class="btn btn-primary" onclick="setPromptParasforservlet()">Ask GPT</button>&nbsp;<span><i id="helpAskGPT" --> 
+<!-- <!-- 									data-content="GPT offers optimization techniques applicable to your code." --> 
+<!-- <!-- 									data-placement="top" class="fa fa-question-circle"></i></span> --> 
+<!-- 								to use the API use this function "setPromptParasforservlet()" -->
 								
-								<button type="button" id="displayoutput" class="btn btn-primary buttonwide" onclick="displayOutputFunction()">Display Output</button>&nbsp;<span>
-								<i id="helpdisplayoutput" data-content="Use this button to chcek out the generated Output file."
-									data-placement="top" class="fa fa-question-circle"></i></span>
-							</div>
-						</div>
+<!-- <!-- 								<button type="button" id="displayoutput" class="btn btn-primary buttonwide" onclick="displayOutputFunction()">Display Output</button>&nbsp;<span> --> 
+<!-- <!-- 								<i id="helpdisplayoutput" data-content="Use this button to chcek out the generated Output file." --> 
+<!-- <!-- 									data-placement="top" class="fa fa-question-circle"></i></span> --> 
+<!-- 						</div> -->
+<!-- 						</div>	 -->
+<!-- 						</div> -->
 					</div>
 				</div>
 				<%System.out.println("Line 1148 "); %>
@@ -1155,14 +1276,14 @@ request.setAttribute("filepathPara",pathToFile);  */
 								</div>
 							<div class="column" >
 								<div class="form-row">
-									<div align="left">
-										<h4>Replay History</h4>
-									</div>
-								</div>
-								<div class="form-row">
-								<div align="left">
-								<label for="replaySelector">Select a Replay:</label> 
-							    <select id="replaySelector" onclick="updateReplayDetails()">
+									<div align="left"> 
+										<h4 style="display: inline-block; margin-right: 10px; ">Replay History</h4>
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="form-row"> -->
+<!-- 								<div align="left"> -->
+								<label for="replaySelector" style="display: inline-block; margin-right: 10px;" >Select a Replay ID:</label> 
+							    <select style="display: inline-block;" id="replaySelector" onclick="updateReplayDetails()">
 							        <!-- Populate the dropdown dynamically based on the data retrieved from the database -->
 								    <c:forEach var="replay" items="${replayList}">
 								        <option value="${replay.replayid}">
@@ -1170,14 +1291,15 @@ request.setAttribute("filepathPara",pathToFile);  */
 								        </option> 
 								    </c:forEach>
 							    </select>	
+ 							    </div> 
 							    </div>
 							    <div  align="left" class="form-row">
-							    	<code class="prettyprint lang-c" id="replayExp" rows="10"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; height: 380px;">
+							    	<code class="prettyprint lang-c" id="replayExp" rows="12"
+										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; max-width: 47vw; overflow: scroll; height: 415px;">
 									</code>
-									<code class="" id="replayPerf" rows="7"
-										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;"> 
-									</code> 
+<%-- 									<code class="" id="replayPerf" rows="7" --%>
+<%-- 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box;">  --%>
+<%-- 									</code>  --%>
 								</div>
 								</div>
 							</div>
@@ -1245,7 +1367,7 @@ request.setAttribute("filepathPara",pathToFile);  */
  											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea> 
 									</div>
 								</div>
-								<a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a> 
+								<div align="center"><a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a></div> 
 							</div>
 							<div class="column">
 
@@ -1271,7 +1393,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 										<!-- user.getFileOutput(resultSet.getString("cetus_Analysis_filepath")) -->
 									</div>
 								</div>
-								<a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> 
+								<div align="center"><a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> </div>
 							</div>
 						</div>
 <%System.out.println("Line 1294 "); %>
@@ -1310,6 +1432,14 @@ $(function() {
 
 </script>
 
+<%-- <%-- <script> --%>
+<%--     window.addEventListener('DOMContentLoaded', (event) => { --%>
+<%--         const responseTime = '<%= ResponseTime %>'; --%>
+<%--         if (responseTime) { --%>
+<%--             document.getElementById('ShowgptResponseTime').style.display = 'inline-block'; --%>
+<%--         } --%>
+<%--     }); --%>
+<%-- </script> --%> 
 
 <script>
 		
@@ -1385,7 +1515,8 @@ $(function() {
  		document.getElementById("downloadinput").style.display = "";
  		document.getElementById("downloadpluggedinput").style.display = "none";//hide
 		document.getElementById("replayExp").style.display = "";
- 		document.getElementById("replayPerf").style.display = "none";
+ 		//document.getElementById("replayPerf").style.display = "none";
+ 		//document.getElementById("ShowgptResponseTime").style.display = "none";//hide
 		//document.getElementById("replaySelector").addEventListener("change", updateOtherFields);
  	// Execute the function as soon as the page loads
  	 console.log("load Line 1401");
@@ -1450,6 +1581,7 @@ $(function() {
 		document.getElementById("copyToInput").textContent = "Load the main Input file";
 		document.getElementById("pluggedininput").classList.add('prettyprint', 'lang-c'); 
 		document.getElementById("downloadinput").style.display = "none";
+		document.getElementById("optCopied").innerText="Optimization is copied into the Input file. Now Run Input again to see the effect of Optimization on the entire application.";
 		//document.getElementById("downloadpluggedinput").style.display = ""; //The file will only be created on the server after Running the Input
 		
 	}else if(displayText ==="Load the main Input file"){
@@ -1458,6 +1590,7 @@ $(function() {
 		document.getElementById("copyToInput").textContent = "Copy Exp section into Input";
 		document.getElementById("downloadinput").style.display = "";
 		document.getElementById("downloadpluggedinput").style.display = "none";//hide
+		document.getElementById("optCopied").innerText=" ";
 	}
 	 console.log("load Line 1472");
 	//hide the previous input
@@ -1676,11 +1809,11 @@ $(function() {
 	      return createCollapsibleSection("Input", content, index);
 	    });
 	    // Update the content with collapsible sections
-	    console.log("text:::: "+text);
+	    console.log("\ntext:::: "+text);
 	    content.innerHTML = text;
-	    console.log("text:::: Line 1726 ");
+	    console.log("\ntext:::: Line 1726 ");
 	   //load();
-	    console.log("text:::: Line 1728 ");
+	    console.log("\ntext:::: Line 1728 ");
 	  }
 
 	

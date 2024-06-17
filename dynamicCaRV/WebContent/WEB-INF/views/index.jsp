@@ -500,13 +500,13 @@ ul {
 									class="form-check-label" for="examplecode9"
 									id="examplecode9Label"> Array output Dependency </label></li>	
 									
-								<li style="list-style-type: none"><input
-									class="form-example-input" type="radio" name="exampleRadios"
-									id="examplecode10" style="align: left;"
-									onclick="handleExampleRadioClick(this.value);"
-									autocomplete="off" value="CaRVSimpleLoop.c"> <label
-									class="form-check-label" for="examplecode10"
-									id="examplecode10Label"> CaRV - Parallelizable Loop  </label></li>	
+<!-- 								<li style="list-style-type: none"><input -->
+<!-- 									class="form-example-input" type="radio" name="exampleRadios" -->
+<!-- 									id="examplecode10" style="align: left;" -->
+<!-- 									onclick="handleExampleRadioClick(this.value);" -->
+<!-- 									autocomplete="off" value="CaRVSimpleLoop.c"> <label -->
+<!-- 									class="form-check-label" for="examplecode10" -->
+<!-- 									id="examplecode10Label"> CaRV - Parallelizable Loop  </label></li>	 -->
 									
 							</ul>
 							<!-- 							<textarea rows="10" cols="62" WRAP="hard" id="example_code" name="examplecode" readOnly="false" contenteditable="true" placeholder="The content of example files will appear here..."></textarea> -->
@@ -1004,7 +1004,7 @@ $(function() {
 			document.getElementById("examplecode7").style.display = "none";
 			document.getElementById("examplecode8").style.display = "none";
 			document.getElementById("examplecode9").style.display = "none";
-			document.getElementById("examplecode10").style.display = "none";
+// 			document.getElementById("examplecode10").style.display = "none";
 			document.getElementById("examplecode1Label").style.display = "none";
 			document.getElementById("examplecode2Label").style.display = "none";
 			document.getElementById("examplecode3Label").style.display = "none";
@@ -1014,7 +1014,7 @@ $(function() {
 			document.getElementById("examplecode7Label").style.display = "none";
 			document.getElementById("examplecode8Label").style.display = "none";
 			document.getElementById("examplecode9Label").style.display = "none";
-			document.getElementById("examplecode10Label").style.display = "none";
+// 			document.getElementById("examplecode10Label").style.display = "none";
 			document.getElementById("example_code").style.display = "none";
 			document.getElementById("myDIV").style.display = "none";
 			document.getElementById("user_code").style.display = "none";
@@ -1086,7 +1086,7 @@ $(function() {
 			document.getElementById("examplecode7").style.display = "none";
 			document.getElementById("examplecode8").style.display = "none";
 			document.getElementById("examplecode9").style.display = "none";
-			document.getElementById("examplecode10").style.display = "none";
+// 			document.getElementById("examplecode10").style.display = "none";
 			document.getElementById("examplecode1Label").style.display = "none";
 			document.getElementById("examplecode2Label").style.display = "none";
 			document.getElementById("examplecode3Label").style.display = "none";
@@ -1096,7 +1096,7 @@ $(function() {
 			document.getElementById("examplecode7Label").style.display = "none";
 			document.getElementById("examplecode8Label").style.display = "none";
 			document.getElementById("examplecode9Label").style.display = "none";
-			document.getElementById("examplecode10Label").style.display = "none";
+// 			document.getElementById("examplecode10Label").style.display = "none";
 			document.getElementById("example_code").style.display = "none";
 			//              document.getElementByClassName("form-check-input").checked = false;
 			//              document.getElementByClassName("form-example-input").checked = false;
@@ -1126,7 +1126,7 @@ $(function() {
 			document.getElementById("examplecode7").style.display = "none";
 			document.getElementById("examplecode8").style.display = "none";
 			document.getElementById("examplecode9").style.display = "none";
-			document.getElementById("examplecode10").style.display = "none";
+// 			document.getElementById("examplecode10").style.display = "none";
 			document.getElementById("examplecode1Label").style.display = "none";
 			document.getElementById("examplecode2Label").style.display = "none";
 			document.getElementById("examplecode3Label").style.display = "none";
@@ -1136,7 +1136,7 @@ $(function() {
 			document.getElementById("examplecode7Label").style.display = "none";
 			document.getElementById("examplecode8Label").style.display = "none";
 			document.getElementById("examplecode9Label").style.display = "none";
-			document.getElementById("examplecode10Label").style.display = "none";
+// 			document.getElementById("examplecode10Label").style.display = "none";
 			document.getElementById("example_code").style.display = "none";
 		} else if (inputCode.checked) {
 			document.getElementById("user_code").style.display = "";
@@ -1150,7 +1150,7 @@ $(function() {
 			document.getElementById("examplecode7").style.display = "none";
 			document.getElementById("examplecode8").style.display = "none";
 			document.getElementById("examplecode9").style.display = "none";
-			document.getElementById("examplecode10").style.display = "none";
+// 			document.getElementById("examplecode10").style.display = "none";
 			document.getElementById("examplecode1Label").style.display = "none";
 			document.getElementById("examplecode2Label").style.display = "none";
 			document.getElementById("examplecode3Label").style.display = "none";
@@ -1160,7 +1160,7 @@ $(function() {
 			document.getElementById("examplecode7Label").style.display = "none";
 			document.getElementById("examplecode8Label").style.display = "none";
 			document.getElementById("examplecode9Label").style.display = "none";
-			document.getElementById("examplecode10Label").style.display = "none";
+// 			document.getElementById("examplecode10Label").style.display = "none";
 			document.getElementById("example_code").style.display = "none";
 			/*             document.getElementById("example_code").readOnly = "false";
 			 document.getElementById("user_code").readOnly = "false";*/
@@ -1178,7 +1178,7 @@ $(function() {
 			document.getElementById("examplecode7").style.display = "";
 			document.getElementById("examplecode8").style.display = "";
 			document.getElementById("examplecode9").style.display = "";
-			document.getElementById("examplecode10").style.display = "";
+// 			document.getElementById("examplecode10").style.display = "";
 			document.getElementById("examplecode1Label").style.display = "";
 			document.getElementById("examplecode2Label").style.display = "";
 			document.getElementById("examplecode3Label").style.display = "";
@@ -1188,7 +1188,7 @@ $(function() {
 			document.getElementById("examplecode7Label").style.display = "";
 			document.getElementById("examplecode8Label").style.display = "";
 			document.getElementById("examplecode9Label").style.display = "";
-			document.getElementById("examplecode10Label").style.display = "";
+// 			document.getElementById("examplecode10Label").style.display = "";
 			document.getElementById("example_code").style.display = "none";
 			/*             document.getElementById("example_code").readOnly = "false";
 			 document.getElementById("user_code").readOnly = "false";*/
@@ -1213,7 +1213,7 @@ $(function() {
 		var ex7 = document.getElementById("examplecode7");
 		var ex8 = document.getElementById("examplecode8");
 		var ex9 = document.getElementById("examplecode9");
-		var ex10 = document.getElementById("examplecode10");
+// 		var ex10 = document.getElementById("examplecode10");
 
 		if (ex1.checked) {
 			textArea.value = "/* The variable t is an array used temporarily during a single iteration of the outer loop. No value of t is used in an iteration other than the one that produced it. Without privatization, executing different iterations in parallel would create conflicts on accesses to t.  Declaring t private gives each thread a separate storage space, avoiding these conflicts.*/\n\n  int main(){\n  int n=10000; \n  float a[n][n], b[n][n], t[n];\n  int i, j;\n\n  for (i=1; i<n; i++) { \n    for (j=1; j<n; j++) {  \n      t[j] = a[i][j]+b[i][j]; \n    }\n    for (j=1; j<n; j++) {\n      b[i][j] =  t[j] + (t[j]*2); \n    } \n  }\n \n    return 0;\n}\n";
@@ -1251,11 +1251,12 @@ $(function() {
 			textArea.value = "/* An output dependence occurs when a location in memory is written to before that same location is written to again in another statement.*/\n\n  int main(){\n  double a[1000000];\n  int j = 0;\n  int n = 1000000;\n \n  for (j = 0; j < n; j++) {\n    a[j] = j + 1000;\n  }\n \n  for (j = 0; j < n; j++) {\n    a[j] = j;\n    a[j+1] = 5;\n  }\n \n    return 0;\n}\n";
 			textArea.contentEditable = true;
 			textArea.readOnly = false;
-		}else if (ex10.checked) {
-			textArea.value = "/* Apply the CaRV Tool to optimize the specified experimental section in this parallelizable loop. */\n\n  void main(){\n  float a[1000000], b[1000000];\n  int i;\n \n  #pragma experimental section start\n  for (i=1; i<1000000; i++) {\n    a[i]= b[i];\n  }\n  #pragma experimental section stop\n  testprocedure();\n    return ;\n}\n int testprocedure(){\n return 0; \n }\n\n";
-			textArea.contentEditable = true;
-			textArea.readOnly = false;
 		}
+//  		else if (ex10.checked) {
+// 			textArea.value = "/* Apply the CaRV Tool to optimize the specified experimental section in this parallelizable loop. */\n\n  void main(){\n  float a[1000000], b[1000000];\n  int i;\n \n  #pragma experimental section start\n  for (i=1; i<1000000; i++) {\n    a[i]= b[i];\n  }\n  #pragma experimental section stop\n  testprocedure();\n    return ;\n}\n int testprocedure(){\n return 0; \n }\n\n";
+// 			textArea.contentEditable = true;
+// 			textArea.readOnly = false;
+// 		} 
 		/*         document.getElementById("example_code").readOnly = "false";*/
 		/*         document.getElementById("user_code").contentEditable = true;
 		 document.getElementById("example_code").contentEditable = true;  */

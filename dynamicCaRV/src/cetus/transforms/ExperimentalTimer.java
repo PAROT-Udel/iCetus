@@ -2177,8 +2177,7 @@ public class ExperimentalTimer extends TransformPass {
 						String[] parts = varSize.split("\\*"); // Split the input string by '*'
 
 						//instead of creating large arrays on the stack, we created them on the heap. 
-						// Start building the variable declaration for a pointer to an array
-					    StringBuilder mallocString = new StringBuilder(varType + " (*").append(varName).append(")");
+						StringBuilder mallocString = new StringBuilder(varType + " (*").append(varName).append(")");
 					    for (int i = 1; i < parts.length; i++) { // Start from 1 to skip the first dimension in pointer declaration
 					        mallocString.append("[").append(parts[i]).append("]");
 					    }
@@ -2221,13 +2220,13 @@ public class ExperimentalTimer extends TransformPass {
 //					    stb.append(NEWLINE);
 					//}
 						// Create the converted string by iterating through the parts
-				        //StringBuilder convertedString = new StringBuilder();
-				        //for (int i = 0; i < parts.length; i++) {
-				        //    convertedString.append("[").append(parts[i]).append("]");
-				        //}
-				        
-				        //stb.append(varType+" "+varName+convertedString.toString()+";" ); //added
-				        //stb.append( NEWLINE);
+//				        StringBuilder convertedString = new StringBuilder();
+//				        for (int i = 0; i < parts.length; i++) {
+//				            convertedString.append("[").append(parts[i]).append("]");
+//				        }
+//				        
+//				        stb.append(varType+" "+varName+convertedString.toString()+";" ); //added
+//				        stb.append( NEWLINE);
 					}
 					stb.append("read_var_from_file(\""+varName+"\","+ varName +", sizeof("+varType+ "), "+varSize+",initialInputStateFile"+expname+" );" );
 					stb.append( NEWLINE);
