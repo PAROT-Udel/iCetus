@@ -3,7 +3,10 @@
  */
 package cetus.registration.model;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -108,6 +111,19 @@ public class User {
 		display(path);
 		return fileOutput;
 	}
+//	public String getFileOutput(String filePath) {
+//        StringBuilder content = new StringBuilder();
+//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                content.append(line).append(System.lineSeparator());
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return "";
+//        }
+//        return content.toString();
+//    }
 	/**
 	 * @param fileOutput the fileOutput to set
 	 */

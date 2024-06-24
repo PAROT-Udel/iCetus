@@ -3,6 +3,7 @@ package cetus.registration.controller;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -733,12 +734,14 @@ public class UserServlet extends HttpServlet {
 			// Save original err stream.
 			PrintStream originalErr = System.err;
 
+			PrintStream fileOut = null;
+		    PrintStream fileErr = null;
+		    try {    
 			// Create a new file output stream.
-
-			PrintStream fileOut = new PrintStream(cetusDebuggerReport + "/" + fileName);
+		    fileOut = new PrintStream(cetusDebuggerReport + "/" + fileName);
 			// Create a new file error stream.
 			// PrintStream fileErr = new PrintStream("./err.txt");
-			PrintStream fileErr = new PrintStream(cetusAnalysisReport + "/" + fileName);
+		    fileErr = new PrintStream(cetusAnalysisReport + "/" + fileName);
 
 			// Redirect standard out to file.
 			System.setOut(fileOut);
@@ -751,9 +754,22 @@ public class UserServlet extends HttpServlet {
 			//Running Cetus on the application
 			driver.main(args);
 			// System.out.println("UserServlet- back from Cetus Driver \n");
-			// back to original output
+		    } catch (FileNotFoundException e) {
+	            e.printStackTrace(originalErr);
+	        } finally {
+	            // Ensure the streams are flushed and closed properly
+	            if (fileOut != null) {
+	                fileOut.flush();
+	                fileOut.close();
+	            }
+	            if (fileErr != null) {
+	                fileErr.flush();
+	                fileErr.close();
+	            }
+			// restore original output
 			System.setOut(originalOut);
 			System.setErr(originalErr);
+	        }
 			//remove empty lines from Cetus output file
 			removeCommentsEmptyLines(outputFolder + "/" + fileName);
 			
@@ -1316,7 +1332,7 @@ public class UserServlet extends HttpServlet {
 			
 			// execute input and output
 						
-						  int numThreads = 4; 
+						  int numThreads = 16;//4; 
 						  //System.out.println("Input file path: " +  user.getInputCode()); 
 						  //System.out.println("Output file path: " +	  user.getCetusOutput()); // inputFile= File(user.getInputCode()); 
 						  String handParllelizedFilePath =  inputPrg; //file path on the server
@@ -1344,20 +1360,20 @@ public class UserServlet extends HttpServlet {
 						//System.out.println("parRunTime0   \n"+ parRunTime0  );
 						 double parRunTime1 = execute.runExe(paraFile, 1);
 						 System.out.println("parRunTime1   \n"+ parRunTime1  );
-							double parRunTime4 = execute.runExe(paraFile, 4);
+							double parRunTime4 = execute.runExe(paraFile, numThreads);
 							System.out.println("parRunTime4   \n"+ parRunTime4  );
 //							double parRunTime8 = execute.runExe(paraFile, 8);
-							String parResult= execute.executionResult(paraFile, 4);
+							String parResult= execute.executionResult(paraFile, numThreads);
 //							System.out.println("parRunTime8   \n"+ parRunTime8 );
 							//System.out.println("handparallelized code executed in parallel "+ parRunTime); 
 							String execution = /*
 												 * execute.calculateSpeedup(seqRunTime, parRunTime0,
 												 * 0)+"\n--------------\n"+
 												 */execute.calculateSpeedup(seqRunTime, parRunTime1, 1)
-									+ "\n--------------\n" + execute.calculateSpeedup(seqRunTime, parRunTime4, 4)
+									+ "\n--------------\n" + execute.calculateSpeedup(seqRunTime, parRunTime4, numThreads)
 //									+ "\n--------------\n" + execute.calculateSpeedup(seqRunTime, parRunTime8, 8)
 									+ "[ExecutionResultSerial] \n" + SerialResult
-									+ /* "\n-----parallel code 0 threads---------\n"+parResult0+ */"[ExecutionResultParallel]\n------ 4 threads--------\n"+ parResult; 
+									+ /* "\n-----parallel code 0 threads---------\n"+parResult0+ */"[ExecutionResultParallel]\n------ "+numThreads+" threads--------\n"+ parResult; 
 							//System.out.println("here is the speedup "+ execution );
 							//insert to DB- hand parallelized file path as input. and the execution result to analysis
 							
@@ -1669,7 +1685,7 @@ public class UserServlet extends HttpServlet {
 		String execution="";
 		StringBuilder exec= new StringBuilder("");
 		numThreads= Runtime.getRuntime().availableProcessors();
-		int halfNumThreads= numThreads/2;
+		int halfNumThreads= 16;//numThreads/2;
 		System.out.println("Input file path: " + user.getInputCode());
 		System.out.println("Output file path: " + user.getCetusOutput());
 		// inputFile= File(user.getInputCode());

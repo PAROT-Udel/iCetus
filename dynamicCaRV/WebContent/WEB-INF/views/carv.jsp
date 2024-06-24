@@ -624,7 +624,7 @@ String analysis2 = resultSet.getString("cetus_Analysis_content");//why I am savi
 System.out.println("analysis2  " + analysis2);
 //Path analysisCetus = Path.of(resultSet.getString("cetus_Analysis_filepath"));
 //String analysisContent = Files.readString(analysisCetus);
-String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
+String passesContent = null;//user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
 System.out.println("passesContent  " + passesContent);
 //String analysis2=(resultSet.getString("cetus_Analysis_content"));
 String cetusOptions = (resultSet.getString("cetus_option_set"));
@@ -668,8 +668,8 @@ System.out.println("\n\n \n inputFinalString:" + inputFinalString);
 System.out.println("Cetus input created");
 
 //make carvExpSection ready for html view===============================================================================
+System.out.println("Creating CarvExpSection");
 if (carvExpSection != null) {
-	System.out.println("Creating CarvExpSection");
 	System.out.println("carvExpSection: " + carvExpSection);
 	StringBuilder finalExpStringBuilder = new StringBuilder("");
 	String[] Explines = carvExpSection.split("\n");
@@ -1364,7 +1364,8 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<div align="left">
 										<!-- Cetus Passes Report Content: <br> -->
  										<textarea rows="15" readonly=" readonly" WRAP="off" 
- 											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea> 
+ 											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=passesContent%></textarea>
+<!--  											String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath"));  -->
 									</div>
 								</div>
 								<div align="center"><a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a></div> 
@@ -1389,8 +1390,8 @@ request.setAttribute("filepathPara",pathToFile);  */
 									<div align="left">
 										<!-- Cetus Analysis Report Content: <br> -->
  										<textarea rows="15" readonly=" readonly" WRAP="off" 
-											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))%></textarea> 
-										<!-- user.getFileOutput(resultSet.getString("cetus_Analysis_filepath")) -->
+											style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=analysisContent%></textarea> 
+										<!-- user.getFileOutput(resultSet.getString("cetus_Analysis_filepath")) user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"))  String analysisContent = user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"));-->
 									</div>
 								</div>
 								<div align="center"><a href="<%=pathWebcontent%>/downloadAnalysis.jsp">Download Cetus Analysis File</a> </div>

@@ -389,9 +389,12 @@ System.out.println("\n\n\n outputContent"+outputContent);
 //reading Analysis file content from the server not the Database file content.
 String analysisContent = user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"));
 String analysis2=resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
+//Output the results
+System.out.println("Content from file: " + analysisContent);
+System.out.println("Content from database: " + analysis2);		
 //Path analysisCetus = Path.of(resultSet.getString("cetus_Analysis_filepath"));
 //String analysisContent = Files.readString(analysisCetus);
-String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
+String passesContent = null; //user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
 //String analysis2=(resultSet.getString("cetus_Analysis_content"));
 String cetusOptions= (resultSet.getString("cetus_option_set"));
 //System.out.println("\n\n\n cetusOptions set"+cetusOptions);
@@ -1265,6 +1268,7 @@ if (befindx < 0 || befindx > betindx || betindx > analysisContent.length() || be
 <%
 System.out.println("\n Creating Call Graph");
 	/*Call Graph*/
+if (passesContent!=null){
 StringBuilder callGfinalStringBuilder = new StringBuilder("");
 StringBuilder sbWithLinks = new StringBuilder("");
 
@@ -1411,6 +1415,10 @@ if (callgfindx < 0) {
 	//System.out.println("new output"+sbWithLinks.toString());
 	callGfinalString=sbWithLinks.toString()+addLink;
 	System.out.println("\n Call Graph created");
+}
+	}else if (passesContent==null){
+		callGfinalString="";
+	}
 	/* int procFromIndex= 0;
 	int procToIndex=2;
 	while(procFromIndex>=0 && procToIndex>=0 && procFromIndex<procToIndex ){
@@ -1430,7 +1438,7 @@ if (callgfindx < 0) {
 //	}
 	//System.out.println("\n\n \n" + callGfinalString);
 
-}
+//}
 /*===================================================================================  */
 %>
 <%
@@ -1817,7 +1825,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 									me Induction Variable analysis</option>
 								<option value="BranchEliminator">Show me branches that
 									can be eliminated</option>
-								<option value="callGraph">Show me the callgraph</option>
+<!-- 								<option value="callGraph">Show me the callgraph</option> -->
 								<option value="private" class="highlight-blue">Show me
 									private variable analysis</option>
 								<option value="execute" >Show me
@@ -1960,7 +1968,8 @@ request.setAttribute("filepathPara",pathToFile);  */
 						<div align="left">
 							<!-- Cetus Passes Report Content: <br> -->
 							<textarea rows="15" readonly=" readonly" WRAP="off"
-								style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=user.getFileOutput(resultSet.getString("cetus_passes_filepath"))%></textarea>
+								style="border-radius: 10px; padding: 25px; width: 100%; box-sizing: border-box;"><%=passesContent%></textarea>
+<!-- 						String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath")); -->
 						</div>
 					</div>
 <a href="<%=pathWebcontent%>/downloadPasses.jsp">Download Cetus Passes File</a>  
@@ -2069,11 +2078,11 @@ function showResult() {
 			//userOutput.value = output; 
 			userAnalysis.innerHTML = ""<%=branchEfinalString%>;
 			helpAnalysis.innerHTML = " ";
-		} else if (selectOption.value === "callGraph") {
-			//userOutput.value = output; 
-			divOutput.innerHTML = ""<%=callgOutput%>;
-			userAnalysis.innerHTML = ""<%=callGfinalString%>; 
-			helpAnalysis.innerHTML = ""<%=callGhelp%>;
+// 		} else if (selectOption.value === "callGraph") {
+// 			//userOutput.value = output; 
+<%-- 			divOutput.innerHTML = ""<%=callgOutput%>; --%>
+<%-- 			userAnalysis.innerHTML = ""<%=callGfinalString%>;  --%>
+<%-- 			helpAnalysis.innerHTML = ""<%=callGhelp%>; --%>
 		}else if (selectOption.value === "private") {
 			//userOutput.value = output;
  		divOutput.innerHTML= ""<%=colorPrivate%>; 
