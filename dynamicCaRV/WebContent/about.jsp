@@ -83,8 +83,9 @@ pageContext.setAttribute("basePath", basePath);
 
 
 	<div class="jumbotron div1" >
-	<div style="font-size:20px;"><img src="<%=request.getContextPath()%>/resources/img/iCetus.png" width="70" height="70" Style="vertical-align:middle;margin:10px 10px;"
-                class="d-inline-block " alt="iCetus">ABOUT OUR TEAM</div>
+	<div style="font-size:20px;">
+	<img src="<%=request.getContextPath()%>/resources/img/iCetus.png" width="100" height="100" Style="vertical-align:middle;margin:10px 10px;"
+                class="d-inline-block " alt="iCetus"> <b>ABOUT OUR TEAM</b></div>
 	
 		
 	</div>

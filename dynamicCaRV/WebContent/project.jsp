@@ -44,8 +44,8 @@
 	/* 	height: 100px; */
 }
 
-.jumbotron.div1 {
-	padding: 1rem 1rem;
+.jumbotron {
+	padding: 0rem 0rem;
 }
 
 container{
@@ -91,16 +91,17 @@ ul {
 	<div class="jumbotron div1">
 		<div style="font-size: 20px;">
 			<img src="<%=request.getContextPath()%>/resources/img/iCetus.png"
-				width="70" height="70"
-				Style="vertical-align: middle; margin: 10px 10px;"
-				class="d-inline-block " alt="iCetus">ABOUT THE PROJECT
-		</div>
-
-
+				width="100" height="100" Style="vertical-align: middle; margin: 10px 10px;"
+				class="d-inline-block " alt="iCetus"><b>ABOUT THE PROJECT</b>	</div>
 	</div>
 
 	<div class="container div1" style="margin-left: 50px;text-align: justify;width:90%;">
-		
+	<center>
+	<figure>
+        <img src="<%=request.getContextPath()%>/resources/img/iCetusL.png" alt="iCetus" width="1100" height="400">
+<!--         <figcaption>This is the explanation or description of the image.</figcaption> -->
+    </figure>
+    </center>
 		<p>
 		<h3>Our Motivation:</h3>
 		Today's computers are all Multicores. With parallelization techniques, one can convert sequential code into multi-threaded or vectorized code to simultaneously use multiple processors' power in a modern shared-memory Architecture. 
@@ -133,13 +134,7 @@ ul {
 		<p>
 		<ul>
 		<li><h5>Cetus, the Compiler Engine </h5></li>	
-		The underneath compiler infrastructure used in this project is <a href="https://engineering.purdue.edu/Cetus/" page=_blank>Cetus</a>. Cetus
-		is a source-to-source compiler research infrastructure supported by
-		the National Science Foundation(NSF). Cetus	assists domain experts and researchers in efficiently parallelizing
-		their existing C/C++ applications using OpenMP parallel programming
-		model. It represents one of several software infrastructures that
-		support research and development of program analysis, optimization,
-		and translation techniques.</p>
+		The underneath compiler infrastructure used in this project is <a href="https://engineering.purdue.edu/Cetus/" page=_blank>Cetus</a>. Cetus is a source-to-source compiler research infrastructure supported by the National Science Foundation (NSF). Cetus assists domain experts and researchers in efficiently parallelizing their existing C/C++ applications using OpenMP parallel programming model. It represents one of several software infrastructures that support research and development of program analysis, optimization, and translation techniques.</p>
 		
 		<p><li><h5>CaRV, Accelerating Program Optimization through Capture, Replay, and Validate</h5></li>
 		The CaRV tool enables users to experiment quickly with large applications, comparing individual program sections before and after optimizations in terms of efficiency and accuracy. Using language-level checkpointing techniques, CaRV captures the necessary data for replaying the experimental section as a separate execution unit after the code optimization and validating the optimization against the original program. The tool reduces the amount of time and resources spent on experimentation with long-running programs, making program optimization more efficient and cost-effective.</p>
@@ -147,10 +142,7 @@ ul {
 		<p><li><h5>GPT (Generative Pre-trained Transformer)</h5></li>
 		Large Language Models (LLMs), such as GPT-4, have shown considerable proficiency in offering optimization suggestions to users. To leverage the capabilities of LLMs in providing actionable optimization advice at various stages of the development process, we have integrated GPT-4 into the iCetus project. </p>
 	</ul>
-<!-- 	<figure> -->
-<!--         <img src="iCetusFigure.jpg" alt="Description of the image" width="300" height="200"> -->
-<!--         <figcaption>This is the explanation or description of the image.</figcaption> -->
-<!--     </figure> -->
+
 	
 	</div>
 

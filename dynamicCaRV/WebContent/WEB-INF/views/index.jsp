@@ -357,10 +357,9 @@ ul {
 
 	<div class="jumbotron div1">
 		<p style="font-size: 24px;">
-			<img src="<%=pathWebcontent%>/resources/img/iCetus.png" width="70"
-				height="70" Style="vertical-align: middle; margin: 10px 10px;"
-				class="d-inline-block " alt="iCetus"> iCetus, A
-			Source-to-Source Compiler Infrastructure for C Programs
+			<img src="<%=pathWebcontent%>/resources/img/iCetus.png" width="100"
+				height="100" Style="vertical-align: middle; margin: 10px 10px;"
+				class="d-inline-block " alt="iCetus"> <b>iCetus, A Semi-Automated Parallelization Framework for C Programs</b>
 		</p>
 		<%-- 				<p style="font-size: 24px;">
 			<img src="${pageContext.request.contextPath}/iCetus.png"

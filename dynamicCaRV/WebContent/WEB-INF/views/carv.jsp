@@ -968,9 +968,9 @@ request.setAttribute("filepathPara",pathToFile);  */
 		<a class="navbar-brand" href="#">
 			<p style="font-size: 24px;">
 				<img src="<%=request.getContextPath()%>/resources/img/iCetus.png"
-					width="70" height="70"
+					width="100" height="100"
 					Style="vertical-align: middle; margin: 10px 10px;"
-					class="d-inline-block " alt="iCetus"> iCetus, A Source-to-Source Compiler Infrastructure for C Programs
+					class="d-inline-block " alt="iCetus"> <b>iCetus, A Semi-Automated Parallelization Framework for C Programs</b>
 			</p>
 		</a>
 	</nav>
