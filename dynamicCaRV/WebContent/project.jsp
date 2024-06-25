@@ -51,6 +51,10 @@
 container{
 padding: 1rem 1rem;
 }
+
+ul {
+    list-style-type: circle; /* Options: disc, circle, square, none */
+}
 </style>
 
 <title>About the Project</title>
@@ -104,21 +108,31 @@ padding: 1rem 1rem;
 		
 		<p>
 		<h3>Our Goal:</h3>
-		 Our aim for the iCetus tool is to involve the user in the decisions that compilers struggle with. User feedback is being factored into program parallelization. 
-		 To that end, iCetus provides the  user  with  information  about  how  the  compiler  analyzes, transforms, and parallelizes the program, as well as displaying 
-		 the speedup gained from applying such  optimization to the code. It offers a user interface for controlling program parallelization, based on this information. 
-		 Doing so combines user knowledge and classical compiler capabilities. 
+		 Our objective with the iCetus tool is to engage users in the optimization process, tailoring their involvement to their preferences and expertise. iCetus facilitates the application of automated parallelization, manual optimizations, and LLM-suggested optimizations. The effectiveness and correctness of these optimizations can be confirmed using the CaRV method and tool.
+		 
+<!-- 		 Our aim for the iCetus tool is to involve the user in the decisions that compilers struggle with. User feedback is being factored into program parallelization.  -->
+<!-- 		 To that end, iCetus provides the  user  with  information  about  how  the  compiler  analyzes, transforms, and parallelizes the program, as well as displaying  -->
+<!-- 		 the speedup gained from applying such  optimization to the code. It offers a user interface for controlling program parallelization, based on this information.  -->
+<!-- 		 Doing so combines user knowledge and classical compiler capabilities.  -->
 		</p>
-
+		<p>
+		Utilizing default or customized parallelization options enables running Cetus on the entire codebase, ensuring that parallelization is applied across the entire application. This approach also provides detailed insights into how the compiler analyzes and transforms the code, and the impact of these techniques on the overall codebase.
+		</p>
+		<p>
+		On the other hand, the CaRV tool is particularly advantageous for targeted optimization efforts focused on specific code sections. It is recommended when particular segments of the code require optimization, allowing for optimization and rapid validation of these segments independently of the rest of the code. This targeted approach helps to quickly iterate and refine optimizations in critical areas, ensuring optimal performance.
+		</p>
 		<p>iCetus can be used for self-paced learning of different
 			parallelization techniques. <!-- We are currently working on making Cetus
 			accessible through a web-portal for convenient code generation and
 			testing on computational resources of the national
 			CyberInfrastructure (CI), and engaging the community in the
 			development process and the usage of Cetus. --></p>
+		
+		<p><h4>Integrated Tools and Techniques in iCetus:</h4></p>
 			
 		<p>
-		<h4>Cetus, the Compiler Engine:</h4>	
+		<ul>
+		<li><h5>Cetus, the Compiler Engine </h5></li>	
 		The underneath compiler infrastructure used in this project is <a href="https://engineering.purdue.edu/Cetus/" page=_blank>Cetus</a>. Cetus
 		is a source-to-source compiler research infrastructure supported by
 		the National Science Foundation(NSF). Cetus	assists domain experts and researchers in efficiently parallelizing
@@ -126,6 +140,18 @@ padding: 1rem 1rem;
 		model. It represents one of several software infrastructures that
 		support research and development of program analysis, optimization,
 		and translation techniques.</p>
+		
+		<p><li><h5>CaRV, Accelerating Program Optimization through Capture, Replay, and Validate</h5></li>
+		The CaRV tool enables users to experiment quickly with large applications, comparing individual program sections before and after optimizations in terms of efficiency and accuracy. Using language-level checkpointing techniques, CaRV captures the necessary data for replaying the experimental section as a separate execution unit after the code optimization and validating the optimization against the original program. The tool reduces the amount of time and resources spent on experimentation with long-running programs, making program optimization more efficient and cost-effective.</p>
+		
+		<p><li><h5>GPT (Generative Pre-trained Transformer)</h5></li>
+		Large Language Models (LLMs), such as GPT-4, have shown considerable proficiency in offering optimization suggestions to users. To leverage the capabilities of LLMs in providing actionable optimization advice at various stages of the development process, we have integrated GPT-4 into the iCetus project. </p>
+	</ul>
+<!-- 	<figure> -->
+<!--         <img src="iCetusFigure.jpg" alt="Description of the image" width="300" height="200"> -->
+<!--         <figcaption>This is the explanation or description of the image.</figcaption> -->
+<!--     </figure> -->
+	
 	</div>
 
 
