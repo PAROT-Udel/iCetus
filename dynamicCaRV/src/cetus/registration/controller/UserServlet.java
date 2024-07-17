@@ -658,6 +658,8 @@ public class UserServlet extends HttpServlet {
 			Path analysisCetus = Path.of(cetusAnalysisReport + "/" + fileName);
 			String outputContent = Files.readString(outputCetus);
 			String passesContent = Files.readString(passesCetus);
+
+			
 			String analysisContent = Files.readString(analysisCetus);
 			user.setCetusOutputContent(outputContent);
 			user.setCetusPassesContent(passesContent);
@@ -694,7 +696,7 @@ public class UserServlet extends HttpServlet {
 		}else if (gridRadios.equals("CaRV")) {
 			String[] args = null;
 			args = new String[7];
-			cetusOptionSet[1] = "-verbosity=0";
+			cetusOptionSet[1] = "-verbosity=2";
 			args[0] = cetusOptionSet[0]; // preprocessor
 			args[1] = cetusOptionSet[1]; // verbosity set to 4
 			args[2] = "-callgraph";
@@ -967,8 +969,9 @@ public class UserServlet extends HttpServlet {
 			Files.writeString(outputCetus, newString, StandardOpenOption.WRITE);
 
 ////////////////////////////////////////////////////////////////////////////			
-
-			user.setCetusPassesContent(passesContent);
+			//only extract callGraph from passesContent
+			String callGraph = extractCallGraph(passesContent);
+			user.setCetusPassesContent(callGraph); //passesContent);
 
 			// time the execution of the input and output			
 			String execution = executeResultSeqPara(user);
@@ -2001,7 +2004,6 @@ public class UserServlet extends HttpServlet {
 		if (lines[j].contains("{")) {
 			lines[j] = lines[j].replaceAll("\\{", "%7B");
 		}
-
 		 if (lines[j].contains("}")) {
 			lines[j] = lines[j].replaceAll("\\}", "%7D");
 		}
@@ -2138,6 +2140,33 @@ public class UserServlet extends HttpServlet {
        return response.substring(startMarker, endMarker); // Returns the substring containing only the response.
    }
    
+   //extract call graph 
+   public static String extractCallGraph(String passesContent) {
+       if (passesContent == null || passesContent.isEmpty()) {
+           return null;
+       }
+
+       int callgfindx = passesContent.indexOf("digraph {", 0);
+       if (callgfindx < 0) {
+           return null;
+       }
+
+       int callgindexx = passesContent.indexOf("[SingleDeclarator]", callgfindx);
+       int callgindex = passesContent.indexOf("[SingleCall]", callgfindx);
+       int callgtindx = passesContent.indexOf("[IVSubstitution]", callgfindx);
+
+       String callGraph = null;
+
+       if (callgindexx > 0 && callgindexx < callgtindx && callgindexx < callgindex) {
+           callGraph = passesContent.substring(callgfindx, callgindexx);
+       } else if (callgindex > 0 && callgindex < callgtindx) {
+           callGraph = passesContent.substring(callgfindx, callgindex);
+       } else if (callgtindx > 0) {
+           callGraph = passesContent.substring(callgfindx, callgtindx);
+       }
+
+       return callGraph;
+   }
    
     static void modifyFile(String filePath, String oldString, String newString)
     {

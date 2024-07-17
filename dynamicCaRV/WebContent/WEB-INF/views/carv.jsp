@@ -624,7 +624,7 @@ String analysis2 = resultSet.getString("cetus_Analysis_content");//why I am savi
 System.out.println("analysis2  " + analysis2);
 //Path analysisCetus = Path.of(resultSet.getString("cetus_Analysis_filepath"));
 //String analysisContent = Files.readString(analysisCetus);
-String passesContent = null;//user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
+String passesContent = user.getFileOutput(resultSet.getString("cetus_passes_filepath"));//null;//user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
 System.out.println("passesContent  " + passesContent);
 //String analysis2=(resultSet.getString("cetus_Analysis_content"));
 String cetusOptions = (resultSet.getString("cetus_option_set"));

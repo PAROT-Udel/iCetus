@@ -386,15 +386,23 @@ String inputContent = user.getFileOutput(resultSet.getString("input_code"));
 System.out.println("\n\n\n inputContent"+inputContent);
 String outputContent = user.getFileOutput(resultSet.getString("cetus_output_filepath"));
 System.out.println("\n\n\n outputContent"+outputContent);
+
 //reading Analysis file content from the server not the Database file content.
 String analysisContent = user.getFileOutput(resultSet.getString("cetus_Analysis_filepath"));
-String analysis2=resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
+//only execution results are included in "cetus_Analysis_content"
+String analysis2= resultSet.getString("cetus_Analysis_content");//analysisContent;//resultSet.getString("cetus_Analysis_content");//why I am saving analysis content in another string ? for teh performance results
+if (analysis2 == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+}
 //Output the results
 System.out.println("Content from file: " + analysisContent);
 System.out.println("Content from database: " + analysis2);		
 //Path analysisCetus = Path.of(resultSet.getString("cetus_Analysis_filepath"));
 //String analysisContent = Files.readString(analysisCetus);
-String passesContent = null; //user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
+
+//cetus_passes_filepath contains the file path to the debugger that has a large size. 
+//cetus_passes_content is a large DB field. remove it to get rid of most problems.
+String passesContent = (resultSet.getString("cetus_passes_content"));//user.getFileOutput(resultSet.getString("cetus_passes_filepath"));
 //String analysis2=(resultSet.getString("cetus_Analysis_content"));
 String cetusOptions= (resultSet.getString("cetus_option_set"));
 //System.out.println("\n\n\n cetusOptions set"+cetusOptions);
@@ -765,7 +773,11 @@ System.out.println("\n Cetus-output for textarea Created");
 /* Extract Execution time  from Analysis================================================== */
 System.out.println("\n Creating Execution report ");	
 String exefinalString=null;
+if (analysis2 == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+} else {
 StringBuilder exefinalStringBuilder = new StringBuilder("");
+//System.out.println("\n\n"+ analysis2);   //debug
 int exefromidx = analysis2.indexOf("[Execution]", 0);
 System.out.println("from index \t"+exefromidx);
 //print from "Exception Type:" to * for the user to show the error to the user
@@ -800,6 +812,7 @@ if (exefromidx < 0 ) {// FormatedAnalysis == null || FormatedAnalysis.isEmpty() 
 	} */
 
 	exefinalString =  exefinalStringBuilder.toString() ;
+}
 	System.out.println("\n \n\n Execution: " + exefinalString);
 //}
 /* [Execution] Sequential code running time in seconds = 0.107
@@ -814,6 +827,9 @@ System.out.println("\n Execution report created");
 System.out.println("\n Creating Execution result report ");	
 System.out.println("\nCetus Analysis report \t"+analysis2);
 String exeResultfinalString=null;
+if (analysis2 == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+} else {
 StringBuilder exeResultfinalStringBuilder = new StringBuilder("");
 int exeresfromidx = analysis2.indexOf("[SerialCode]", 0);
 System.out.println("\nexeresfromidx \t"+exeresfromidx);
@@ -848,6 +864,7 @@ if (exeresfromidx < 0 ) {
 	exereslines= servlet.makeHTMLqualifiedNoTriming(exereslines,exeResultfinalStringBuilder);
 
 	exeResultfinalString = exeResultfinalStringBuilder.toString();
+}
 	System.out.println("\n \n\n Execution: " + exeResultfinalString);
 //}
 
@@ -859,6 +876,9 @@ System.out.println("\n Execution result report created");
 System.out.println("\n Creating profiling report ");
 System.out.println("\n\n\nCetus Analysis report \t"+analysis2);
 String prffinalString=null;
+if (analysis2 == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+} else {
 StringBuilder prffinalStringBuilder = new StringBuilder("");
 int prffromidx = analysis2.indexOf("[ExecutionResult] Standard error of the program", 0);
 System.out.println("\nprffromidx: \n"+prffromidx);
@@ -908,6 +928,7 @@ if (prfparafromidx < 0 ) {
 	prflines= servlet.makeHTMLqualifiedNoTriming(prflines,prffinalStringBuilder);
 
 	prffinalString = prffinalStringBuilder.toString();
+}
 	System.out.println("\n \n\n Profiling report: " + prffinalString);
 	
 //}
@@ -917,6 +938,10 @@ System.out.println("\n Profiling report created");
 <!-- DDT----------------------------------------------------- -->
 <%
 System.out.println("\n Creating DDT ");	
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    DDTfinalString =null;
+}else{
 	/*DDT Analysis  */
 StringBuilder ddtfinalStringBuilder = new StringBuilder("");
 int fromindex = analysisContent.indexOf("[DDT]", 0);
@@ -1037,12 +1062,17 @@ System.out.println("\n\n \n DDT " + DDTfinalString);
 	//FormatedAnalysis = DDTfinalString;
 System.out.println("\n  DDT created");	
 }
+}
 /*===================================================================================  */
 %>
 <%
 System.out.println("\n  Creating Range Analysis");	
 	/*Range Analysis  */
 //String RangefinalString=null;
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    RangefinalString =null;
+}else{	
 StringBuilder rangefinalStringBuilder = new StringBuilder("");
 int fromidx = analysisContent.indexOf("[RangeAnalysis] Range Domain for Procedure main", 0);
 //print from "Exception Type:" to * for the user to show the error to the user
@@ -1070,11 +1100,16 @@ rangelines= servlet.makeHTMLqualified(rangelines,rangefinalStringBuilder);
 	//System.out.println("\n \n\n Range " + RangefinalString);
 	System.out.println("\n Range Analysis created");	
 }
+}
 /*===================================================================================  */
 %>
 <%
 System.out.println("\n  Creating Control Flow Graph");
 /*Control Flow Graph*/
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    cfgfinalString =null;
+}else{	
 StringBuilder cfgfinalStringBuilder = new StringBuilder("");
 StringBuilder sbbb = new StringBuilder("");
 
@@ -1120,11 +1155,16 @@ cfgfinalString+=addLink;
 cfghelp= "+\"Digraph text is provided so that you can feed it to any tool that can generate the CFG graph for you. Also, a link has been provided to create the CFG graph of your input code for you. <br>Control flow graph (CFG) is a directed graph that shows all the paths that can be traversed during program execution. Edges in CFG portray control flow paths and the nodes in CFG portray basic blocks. Using CFG one can easily locate inaccessible codes of a program and syntactic structures such as loops are easy to find as well. \"";
 System.out.println("\n Control Flow Graph created");
 }
+}
 /*===================================================================================  */
 %>
 <%
 System.out.println("\n Creating IPA-Points to ");
 	/*IPA-Points to*/
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    ipafinalString =null;
+}else{		
 StringBuilder ipafinalStringBuilder = new StringBuilder("");
 
 int idxf = analysisContent.indexOf("[IPA:PointsTo] Domain ", 0);
@@ -1155,11 +1195,16 @@ if (idxf < 0 || idxf > idxt || idxt > analysisContent.length() || idxt < 0) {// 
 	//System.out.println("\n\n \n" + ipafinalString);
 	System.out.println("\n IPA-Points to created");
 }
+}
 /*===================================================================================  */
 %>
 <%
 System.out.println("\n Creating Reduction ");
 	/*Reduction*/
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    reductionfinalString =null;
+}else{	
 StringBuilder reductionfinalStringBuilder = new StringBuilder("");
 
 int fix = analysisContent.indexOf("[Reduction] candidate ", 0);
@@ -1206,6 +1251,7 @@ if (fix < 0 || fix > tix || tix > analysisContent.length() || tix < 0) {// Forma
 	//System.out.println("\n\n \n" + reductionfinalString);
 	System.out.println("\n Reduction created");
 }
+}
 /* 
 [Reduction] candidate = ( + : i )
 [Reduction] candidate = ( + : sum )
@@ -1220,6 +1266,10 @@ if (fix < 0 || fix > tix || tix > analysisContent.length() || tix < 0) {// Forma
 <%
 System.out.println("\n Creating Branch Eliminator");
 	/*Branch Eliminator*/
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    branchEfinalString =null;
+}else{
 StringBuilder branchEfinalStringBuilder = new StringBuilder("");
 
 int befindx = analysisContent.indexOf("[BranchEliminator] Removed Branches", 0);
@@ -1254,6 +1304,7 @@ if (befindx < 0 || befindx > betindx || betindx > analysisContent.length() || be
 	//System.out.println("\n\n \n" + branchEfinalString);
 	System.out.println("\n Branch Eliminator created");
 }
+}
 /* 
 [BranchEliminator] Removed Branches:
 [BranchEliminator] IF    : 0
@@ -1268,20 +1319,21 @@ if (befindx < 0 || befindx > betindx || betindx > analysisContent.length() || be
 <%
 System.out.println("\n Creating Call Graph");
 	/*Call Graph*/
-if (passesContent!=null){
+
 StringBuilder callGfinalStringBuilder = new StringBuilder("");
 StringBuilder sbWithLinks = new StringBuilder("");
+if (passesContent==null || passesContent.isEmpty()){
+// int callgfindx = passesContent.indexOf("digraph {", 0);
+// //System.out.println("call graph callgfindx from\t \t" + callgfindx);
 
-int callgfindx = passesContent.indexOf("digraph {", 0);
-//System.out.println("call graph callgfindx from\t \t" + callgfindx);
+// //Ending Index Calculation
+// int callgindexx = passesContent.indexOf("[SingleDeclarator]", callgfindx);
+// //System.out.println("call graph callgindexx to\t \t" + callgindexx);
 
-int callgindexx = passesContent.indexOf("[SingleDeclarator]", callgfindx);
-//System.out.println("call graph callgindexx to\t \t" + callgindexx);
+// int callgindex = passesContent.indexOf("[SingleCall]", callgfindx);
+// //System.out.println("call graph callgindex to\t \t" + callgindex);
 
-int callgindex = passesContent.indexOf("[SingleCall]", callgfindx);
-//System.out.println("call graph callgindex to\t \t" + callgindex);
-
-int callgtindx = passesContent.indexOf("[IVSubstitution]", callgfindx);
+// int callgtindx = passesContent.indexOf("[IVSubstitution]", callgfindx);
 //System.out.println("call graph callgtindx to\t \t" + callgtindx);
 
 /* System.out.println("length \t \t"+passesContent.length());
@@ -1292,33 +1344,39 @@ System.out.println("callgindexx>passesContent.length() \t \t"+(callgindexx>passe
 System.out.println("callgtindx>passesContent.length() \t \t"+(callgtindx>passesContent.length()));
 System.out.println("callgindex>passesContent.length() \t \t"+(callgindex>passesContent.length())); */
 
-if (callgfindx < 0) {
+//if (callgfindx < 0) {
 	callGfinalString = "+\"No Result\"";
 	callGhelp= "+\" \"";
 	//System.out.println("\n\n \n" + callGfinalString);
 } else {
 
-	if (callgindexx > 0 && callgindexx < callgtindx && callgindexx < callgindex) {
-		FormatedAnalysis = passesContent.substring(callgfindx, callgindexx);
-	} else if (callgindex > 0 && callgindex < callgtindx) {
-		FormatedAnalysis = passesContent.substring(callgfindx, callgindex);
-	} else if (callgtindx > 0) {
-		FormatedAnalysis = passesContent.substring(callgfindx, callgtindx);
-	}
-
+// 	if (callgindexx > 0 && callgindexx < callgtindx && callgindexx < callgindex) {
+// 		FormatedAnalysis = passesContent.substring(callgfindx, callgindexx);
+// 	} else if (callgindex > 0 && callgindex < callgtindx) {
+// 		FormatedAnalysis = passesContent.substring(callgfindx, callgindex);
+// 	} else if (callgtindx > 0) {
+// 		FormatedAnalysis = passesContent.substring(callgfindx, callgtindx);
+// 	}
+	FormatedAnalysis= passesContent;
 	String[] callGlines = FormatedAnalysis.split("\n");
-
+	 for (String line : callGlines) {
+         System.out.println(line);
+     }
 	for (int j = 0; j < callGlines.length; j++) {
 
 		if (callGlines[j].contains("size") || callGlines[j].contains("orientation")
-		|| callGlines[j].startsWith("[LoopNormalization]") || callGlines[j].startsWith("[NormalizeReturn]")) {
-	callGlines[j] = "";
+		|| callGlines[j].startsWith("[LoopNormalization]") || callGlines[j].startsWith("[NormalizeReturn]")
+		|| callGlines[j].trim().length()==0) {
+	callGlines[j] = "".trim();
 		}
 		//System.out.println("Call graph lines befote HTMLized: "+ callGlines[j]);
 	}
 	
 	callGlines= servlet.makeHTMLqualified(callGlines,callGfinalStringBuilder);
-
+	System.out.println("\n\n callGlines: ");
+	 for (String line : callGlines) {
+         System.out.println(line);
+     }
 /* 	for (String s : callGlines) {
 		if (!s.equals("")) {
 	callGfinalStringBuilder.append(" " + "+\"\\n ").append(s).append("\"")
@@ -1327,17 +1385,41 @@ if (callgfindx < 0) {
 	} */
 
 	callGfinalString = callGfinalStringBuilder.toString();
+	System.out.println("\n\n callGfinalString: "+ callGfinalString);
 	
 	String[] copyCallGlines=callGlines;
 	StringBuilder callGStringBuilder = new StringBuilder("");
-	
+	System.out.println("\n\ncopyCallGlines: ");
+	 for (String line : copyCallGlines) {
+         System.out.println(line);
+     }
 	String 	percentEncodedDigraph = servlet.percentEncoding(copyCallGlines, callGStringBuilder);
-
+	System.out.println("\n\npercentEncodedDigraph: "+ percentEncodedDigraph);
+	
 	String graphWebsiteLink= "https://dreampuf.github.io/GraphvizOnline/#"+percentEncodedDigraph;
-	//System.out.println("web link: "+ graphWebsiteLink);
+	System.out.println("\n\nweb link: "+ graphWebsiteLink);
+    // Split the long URL string into multiple parts
+//     StringBuilder addLinkBuilder = new StringBuilder();
+//     int len = graphWebsiteLink.length();
+//         int chunkSize= 80;
+//     int numChunks = (int) Math.ceil((double) len / chunkSize);
+//     String[] chunks = new String[numChunks];
+//     //String[] parts;// = splitLongString(graphWebsiteLink, 80);
+//     for (int i = 0; i < numChunks; i++) {
+//         int start = i * chunkSize;
+//         int end = Math.min(start + chunkSize, len);
+//         chunks[i] = graphWebsiteLink.substring(start, end);
+//     }
+//     String[] parts=chunks;
+//  // Append each part to the StringBuilder
+//     for (String part : parts) {
+//         addLinkBuilder.append(part);
+//     }
+    //graphWebsiteLink=addLinkBuilder.toString();
 	//add link to get the graph to the Analysis section
 	String addLink= "+\"<br>Check out the <a href=\'"+graphWebsiteLink+"\' target=\'_blank\'>Call Graph</a>\"";
-	callGfinalString+=addLink;
+    
+	callGfinalString+= addLink;//addLinkBuilder.toString();//
 
 	callGhelp= "+\"Digraph text is provided so that you can feed it to any tool that can generate the Call graph for you. Also, a link has been provided to create the Call graph of your input code for you. <br> \"";
 	//find procedure names and replace them with <a tag
@@ -1414,11 +1496,14 @@ if (callgfindx < 0) {
 	}
 	//System.out.println("new output"+sbWithLinks.toString());
 	callGfinalString=sbWithLinks.toString()+addLink;
+	System.out.println("\n\n \n" + callGfinalString);
 	System.out.println("\n Call Graph created");
 }
-	}else if (passesContent==null){
-		callGfinalString="";
-	}
+
+
+// 	}else if (passesContent==null){
+// 		callGfinalString="";
+// 	}
 	/* int procFromIndex= 0;
 	int procToIndex=2;
 	while(procFromIndex>=0 && procToIndex>=0 && procFromIndex<procToIndex ){
@@ -1444,6 +1529,10 @@ if (callgfindx < 0) {
 <%
 System.out.println("\n Creating Induction Variable");
 	/*Induction Variable*/
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    ivfinalString =null;
+}else{	
 StringBuilder ivfinalStringBuilder = new StringBuilder("");
 
 int ivfindx = analysisContent.indexOf("[IVSubstitution] Found", 0);
@@ -1482,7 +1571,7 @@ ivfinalString = ivfinalStringBuilder.toString();
 System.out.println("\n\n \n" + ivfinalString);
 System.out.println("\n Induction Variable created");
 }
-
+}
 /* 
 [IVSubstitution] Analysis result:
 #1 for (i=1; i<n; i ++ ) ivs=[], variants=[sum]
@@ -1493,6 +1582,11 @@ System.out.println("\n Induction Variable created");
 <%
 System.out.println("\n Creating private var");
 	/*private var*/
+	
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    privatefinalString =null;
+}else{	
 StringBuilder privatefinalStringBuilder = new StringBuilder("");
 String[] pvlines = analysisContent.split("\n");
 
@@ -1528,7 +1622,7 @@ privatefinalString = privatefinalStringBuilder.toString();
 //System.out.println("\n\n \n" + privatefinalString);
 System.out.println("\n Private var created");
 System.out.println("\n outputContent"+ outputContent);
-
+}
 
 String setMessage="";
 setMessage = request.getParameter("action");
@@ -1641,6 +1735,10 @@ request.setAttribute("filepathPara",pathToFile);  */
    <label for="cetusOptions" style="margin: 5px 40px;font-weight:bold;">Cetus Options:</label>
    <textarea id="cetusOptions" name="cetusOptions" rows="2" style="width:98%;margin-left:40px;" ><%=allOptions %></textarea> 
    </div>
+   
+<!--    <div class="row" id="note" > -->
+<!--    <textarea id="dbNote" name="dbNote" rows="1" style="width:98%;margin-left:40px;" >Queries cannot be executed on the application due to the large size of the debugger file. The necessary information to run queries is not stored in the DB. Please increase the size of GLOBAL max_allowed_packet. </textarea>  -->
+<!--    </div> -->
   <%--<%=allOptions %>  --%>
 
 <!--Set Recompile parameters, as it goes directly to servlet -->
@@ -1825,7 +1923,7 @@ request.setAttribute("filepathPara",pathToFile);  */
 									me Induction Variable analysis</option>
 								<option value="BranchEliminator">Show me branches that
 									can be eliminated</option>
-<!-- 								<option value="callGraph">Show me the callgraph</option> -->
+  								<option value="callGraph">Show me the callgraph</option> 
 								<option value="private" class="highlight-blue">Show me
 									private variable analysis</option>
 								<option value="execute" >Show me
@@ -2078,11 +2176,11 @@ function showResult() {
 			//userOutput.value = output; 
 			userAnalysis.innerHTML = ""<%=branchEfinalString%>;
 			helpAnalysis.innerHTML = " ";
-// 		} else if (selectOption.value === "callGraph") {
+ 		} else if (selectOption.value === "callGraph") {
 // 			//userOutput.value = output; 
 <%-- 			divOutput.innerHTML = ""<%=callgOutput%>; --%>
-<%-- 			userAnalysis.innerHTML = ""<%=callGfinalString%>;  --%>
-<%-- 			helpAnalysis.innerHTML = ""<%=callGhelp%>; --%>
+ 			userAnalysis.innerHTML = ""<%=callGfinalString%>;  
+ 			helpAnalysis.innerHTML = ""<%=callGhelp%>; 
 		}else if (selectOption.value === "private") {
 			//userOutput.value = output;
  		divOutput.innerHTML= ""<%=colorPrivate%>; 
