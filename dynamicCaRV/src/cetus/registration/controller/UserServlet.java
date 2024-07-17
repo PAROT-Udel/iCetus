@@ -796,7 +796,8 @@ public class UserServlet extends HttpServlet {
 			// System.out.println("UserServlet- analysisContent \n"+analysisContent);
 
 			user.setCetusOutputContent(outputConetnt);
-			user.setCetusPassesContent(passesContent);
+			String callGraph = extractCallGraph(passesContent);
+			user.setCetusPassesContent(callGraph);
 			user.setCetusAnalysisConetent(analysisContent);
 			// save Cetus output results in DB
 			try {
@@ -2154,6 +2155,7 @@ public class UserServlet extends HttpServlet {
        int callgindexx = passesContent.indexOf("[SingleDeclarator]", callgfindx);
        int callgindex = passesContent.indexOf("[SingleCall]", callgfindx);
        int callgtindx = passesContent.indexOf("[IVSubstitution]", callgfindx);
+       int callgddtindex = passesContent.indexOf("[DDT]", callgfindx);
 
        String callGraph = null;
 
@@ -2163,6 +2165,8 @@ public class UserServlet extends HttpServlet {
            callGraph = passesContent.substring(callgfindx, callgindex);
        } else if (callgtindx > 0) {
            callGraph = passesContent.substring(callgfindx, callgtindx);
+       }else if (callgddtindex > 0) {
+           callGraph = passesContent.substring(callgfindx, callgddtindex);
        }
 
        return callGraph;
