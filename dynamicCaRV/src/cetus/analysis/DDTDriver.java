@@ -61,9 +61,10 @@ public class DDTDriver extends AnalysisPass {
     public void start() {
     	//if save-experimental-section option is passed as a cetus option then do not addLoopName since DDT is disabled, 
     	//and it will not let sthe parallel code passed to Cetus with this option on to run successfully.//parinaz
-    	if (Driver.getOptionValue("save-experimental-section")==null) {
-    		        LoopTools.addLoopName(program);
-    		        }
+//    	if (Driver.getOptionValue("save-experimental-section")==null) {
+//    		        LoopTools.addLoopName(program);
+//    		        }
+    	LoopTools.addLoopName(program);
         program.createNewDDGraph();
         DDGraph ddg = program.getDDGraph();
         // Run Alias Analysis as currently it has been implemented as whole

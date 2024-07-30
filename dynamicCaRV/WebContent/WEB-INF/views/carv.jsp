@@ -12,6 +12,8 @@
 <%@page import="java.io.UnsupportedEncodingException"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.List" %>
+<%@page import="java.util.HashSet" %>
+<%@page import="java.util.Set" %>
 <%@page import="cetus.registration.dao.CarvreplayDAO" %>
 <%@page import="cetus.registration.model.Carvreplay" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -609,6 +611,14 @@ if (ResponseTime == null) {
 }
 String carvExpSection = (String) request.getAttribute("carvExpSection");
 System.out.println("\n\n\n carvExpSection  " + carvExpSection);
+//Extract all loop names from the exp section to extract correct data dependencies
+Set<String> loopNames = servlet.extractLoopNames(carvExpSection);
+
+// Print the extracted loop names
+for (String name : loopNames) {
+    System.out.println(name);
+}
+
 //int ReplayIndex=0;
 //reads from the files saved on the server -These are all file paths that we need for redaing them and writing to them in case of recompiling
 String inputContent = user.getFileOutput(resultSet.getString("input_code"));
@@ -888,6 +898,167 @@ exeResultfinalString = exeResultfinalStringBuilder.toString();
 System.out.println("\n \n\n Execution: " + exeResultfinalString);
 %>
 
+<%
+// Creating DDT analysis
+System.out.println("\n Creating DDT ");	
+if (analysisContent == null) {
+    System.out.println("The retrieved analysis content is null. Please increase the size of GLOBAL max_allowed_packet.");
+    DDTfinalString =null;
+}else{
+	/*DDT Analysis  */
+StringBuilder ddtfinalStringBuilder = new StringBuilder("");
+int fromindex = analysisContent.indexOf("[DDT]", 0);
+System.out.println("fromindex: "+ fromindex);
+//print from "Exception Type:" to * for the user to show the error to the user
+int toindex = analysisContent.indexOf("[Reduction]", fromindex);
+System.out.println("toindex: "+ toindex);
+int toidx = analysisContent.indexOf("[LinkSymbol]", fromindex);
+System.out.println("toidx: "+ toidx);
+//This Substring method throws IndexOutOfBoundsException If the beginIndex is less than zero or greater than the length of String (beginIndex<0||> length of String).
+//beginIndex is inclusive and endIndex is exclusive while getting the substring.
+//It throws IndexOutOfBoundsException If 
+//the beginIndex is less than zero OR 
+//beginIndex > endIndex OR 
+//endIndex is greater than the length of String.
+if (fromindex < 0 || fromindex > toidx  || toidx > analysisContent.length() || toidx < 0) {// FormatedAnalysis == null || FormatedAnalysis.isEmpty() || FormatedAnalysis.trim().isEmpty()){ 
+	// System.out.println("No Result");
+	DDTfinalString = "+\"No Result\"";
+	
+} else {
+	FormatedAnalysis = analysisContent.substring(fromindex, toidx);//||analysisContent.substring(fromindex, toidx) ;
+	System.out.println(FormatedAnalysis);
+
+	//save it line by line
+	String[] ddtlines = FormatedAnalysis.split("\n");
+	//System.getProperty("line.separator")
+	//based on how each line starts or what it contains format it, 
+	//now remove Range test parts from the code
+	for (int j = 0; j < ddtlines.length; j++) {
+		//		System.out.println("Line "+ i+ "===="+lines[i]);
+		if (ddtlines[j].startsWith("[RangeDomain]") || ddtlines[j].startsWith("[RangeTest]")
+		|| ddtlines[j].startsWith("**") || ddtlines[j].startsWith("Testing")
+		|| ddtlines[j].startsWith("Dependence") || ddtlines[j].contains("dependence")
+		|| ddtlines[j].startsWith(">") || ddtlines[j].startsWith("<") || ddtlines[j].startsWith("=")
+		|| ddtlines[j].startsWith("*") || ddtlines[j].startsWith("Arc Info") || ddtlines[j].startsWith("[DDT]")) {
+	ddtlines[j] = "";
+		}
+		//replace AccessType: 0 depType: 2 depVector: =
+		//direction vectors		"*", "<", "=", ">" depVector: *
+		/*  depType
+		 * 1 - Flow (True) Dependence
+		 * 2 - Anti Dependence
+		 * 3 - Output Dependence
+		 * 4 - Input Dependence
+		 */
+		if (ddtlines[j].contains("AccessType")) {
+	/* 		lines[j] = lines[j].replaceAll("ArcSource:", "\nArcSource:");
+			lines[j] = lines[j].replaceAll("ArcSink:", "\nArcSink:"); */
+	ddtlines[j] = ddtlines[j].replaceAll("AccessType: 0", "AccessType:Write");
+	ddtlines[j] = ddtlines[j].replaceAll("AccessType: 1", "AccessType:Read");
+	ddtlines[j] = ddtlines[j].replaceAll("depType: 1", "depType:Flow-Dependence");
+	ddtlines[j] = ddtlines[j].replaceAll("depType: 2", "depType:Anti-Dependence");
+	ddtlines[j] = ddtlines[j].replaceAll("depType: 3", "depType:Output-Dependence");
+	ddtlines[j] = ddtlines[j].replaceAll("depType: 4", "depType:Input-Dependence");
+		}
+		
+
+ 		if (ddtlines[j].contains("ArcSource: ArrayAccess:")) {
+			ddtlines[j] = ddtlines[j].replaceAll("ArcSource: ArrayAccess:", "{");
+		}
+		if (ddtlines[j].contains("ArrayAccess:")) {
+			ddtlines[j] = ddtlines[j].replaceAll("ArrayAccess:", "");
+				}
+		if (ddtlines[j].contains("AccessType:")) {
+	ddtlines[j] = ddtlines[j].replaceAll("AccessType:", ", ");
+		}
+		if (ddtlines[j].contains("ArcSink:")) {
+	ddtlines[j] = ddtlines[j].replaceAll("ArcSink:", "} -> {");
+		}
+		if (ddtlines[j].contains("depType:")) {
+	ddtlines[j] = ddtlines[j].replaceAll("depType:", "}  ");
+		}
+		if (ddtlines[j].contains("depVector:")) {
+	ddtlines[j] = ddtlines[j].replaceAll("depVector:", " , ");
+		} 
+		if (!ddtlines[j].startsWith("{ ")) {
+			ddtlines[j] = "";
+		}
+		//System.out.println("the line:"+ ddtlines[j]);
+		String getFileName= null;
+		//find text in between these characters
+		int from = ddtlines[j].indexOf("{ ", 0);
+		int to = ddtlines[j].indexOf(":", from);
+		
+		if (from < 0 || from > to|| to > ddtlines[j].length() || to < 0) {
+			// do nothing
+		} else {
+		getFileName = ddtlines[j].substring(from+2, to+1);
+		//System.out.println("Filename in the string:"+ getFileName); //examplecode.c: there's no space before file name
+		ddtlines[j] = ddtlines[j].replaceAll(getFileName, "");
+		//System.out.println("after replacing filename line is:"+ ddtlines[j]);
+		ddtlines[j] =getFileName+" "+ddtlines[j];
+		//System.out.println("after adding filename to the line :"+ ddtlines[j]);
+		}
+
+	
+	}
+	
+	
+	
+	//now creating the new string to pass to the user
+	/* for (String s : lines) {
+		if (!s.equals("")) {
+	finalStringBuilder.append(s).append(System.getProperty("line.separator"));
+		}
+	} */
+ddtlines= servlet.makeHTMLqualified(ddtlines,ddtfinalStringBuilder);
+
+DDTfinalString = ddtfinalStringBuilder.toString();
+
+//extract data dependencies related to loop nmaes inside he experimental section
+//Set<String> filteredLines = extractLinesContainingLoopNames(DDTfinalString, loopNames);
+// Print the extracted lines
+StringBuilder filteredLines = new StringBuilder();
+String[] lines = DDTfinalString.split("\\+\"");
+
+for (String loop : loopNames) {
+	   System.out.println(loop);
+	}
+
+for (String line : lines) {
+	System.out.println(line);
+}
+
+        for (String line : lines) {
+            for (String loopName : loopNames) {
+                if (line.contains(loopName)) {
+                	String trimmedLine = line.trim(); 
+                	if (trimmedLine.endsWith("\"")) {
+                        trimmedLine = trimmedLine.substring(0, trimmedLine.length() - 1);
+                    }
+                	filteredLines.append(trimmedLine).append("\n");
+                    break;
+                }
+            }
+        }
+
+System.out.println(filteredLines.toString());
+DDTfinalString= filteredLines.toString();
+//----------System.out.println("DDTfinalString"+DDTfinalString);
+//if (DDTfinalString != null || DDTfinalString != ""|| DDTfinalString!=" " || DDTfinalString.length()!=0 )
+
+if (DDTfinalString == null || DDTfinalString.isEmpty() || DDTfinalString.trim().isEmpty()|| DDTfinalString.length()==0){
+	
+	DDTfinalString = "+\"No dependency is reported.\"";
+}
+
+System.out.println("\n\n \n DDT " + DDTfinalString);
+	//FormatedAnalysis = DDTfinalString;
+System.out.println("\n  DDT created");	
+}
+}
+/*===================================================================================  */
+%>
 <script>
 
 	function load(){
@@ -1175,7 +1346,28 @@ request.setAttribute("filepathPara",pathToFile);  */
 					<div class="columnselect">
 
 <%--  						<a href="<%=pathWebcontent%>/download.jsp">Download output file</a>  --%>
-	
+					<div class="form-row">
+					<div class="button-group-column">
+					<div class="operation-group">
+  					<h5 class="operation-title">Experimental Section Analysis</h5>
+									<div class="button-group">
+<!-- 										<label for="ddt"> -->
+<!-- 											<h6>Data Dependencies</h6> -->
+<!-- 										</label> -->
+										<button type="button" id="ddt" name="action"
+											value="ddt" class="btn btn-primary buttonwide"
+											onclick="ddtpressed()">Data Dependencies</button>
+										&nbsp;<span><i id="helpCapture"
+											data-content="Displays result of Data Dependece Test"
+											data-placement="top" class="fa fa-question-circle"></i></span>
+									</div>
+					<code class="prettyprint" id="analysisDisplay" rows="12"
+ 										style="border-radius: 10px; width: 100%; padding: 10px; box-sizing: border-box; max-width: 47vw; overflow: scroll; height: 415px;">
+<%--  										<%= DDTfinalString%>  --%>
+					</code>				 
+					</div>
+					</div>
+					</div>
 						<div class="form-row">
 <!-- 							<div align="left"> -->
 <div class="button-group-column">
@@ -1433,7 +1625,44 @@ $(function() {
 <%System.out.println("Line 1351 "); %>	
 
 </script>
+<script>
 
+// function decodeHTMLEntities(text) {
+//     var textarea = document.createElement('textarea');
+//     textarea.innerHTML = text;
+//     return textarea.value;
+// }
+
+// function ddtpressed() {
+//     var codeSection = document.getElementById('analysisDisplay');
+<%--     var DDT = `<%= DDTfinalString %>`; // Assuming this variable will be set dynamically on the server-side --%>
+    
+//     console.log("DDT Button pressed");
+//     console.log("DDTfinalString: ", DDT);
+
+//     // Decode the HTML entities in DDT
+//     DDT = decodeHTMLEntities(DDT);
+    
+//     if (codeSection.innerHTML.trim() === "") {
+//         codeSection.innerHTML = DDT;
+//     } else {
+//         codeSection.innerHTML = "";
+//     }
+// }
+         function ddtpressed() {
+             var codeSection = document.getElementById('analysisDisplay');
+             var DDT = `<%= DDTfinalString %>`; // Assuming this variable will be set dynamically on the server-side
+            
+              console.log("DDT Button pressed");
+              console.log("DDTfinalString: ", DDT);
+            
+             if (codeSection.innerHTML.trim() === "" ) {
+                 codeSection.innerHTML = DDT;
+             } else {
+                 codeSection.innerHTML = "";
+             }
+         }
+</script>
 <%-- <%-- <script> --%>
 <%--     window.addEventListener('DOMContentLoaded', (event) => { --%>
 <%--         const responseTime = '<%= ResponseTime %>'; --%>

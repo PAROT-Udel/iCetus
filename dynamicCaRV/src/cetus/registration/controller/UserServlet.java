@@ -799,6 +799,13 @@ public class UserServlet extends HttpServlet {
 			String callGraph = extractCallGraph(passesContent);
 			user.setCetusPassesContent(callGraph);
 			user.setCetusAnalysisConetent(analysisContent);
+			String outputContent = user.getCetusOutputContent();
+			String expSection = extractExperimentalSection(outputContent);
+	        // Print extracted code section
+	        System.out.println("Extracted Code Section:\n" + expSection);
+			user.setExperimentalSection(expSection); //experimental section should be set
+			request.setAttribute("carvExpSection", expSection); //setting Exp section attribute for processing it on the user interface
+			
 			// save Cetus output results in DB
 			try {
 				// register the user using DAO layer in the DB
@@ -2139,6 +2146,35 @@ public class UserServlet extends HttpServlet {
        int startMarker = response.indexOf("content")+11; // Marker for where the content starts.
        int endMarker = response.indexOf("\"", startMarker); // Marker for where the content ends.
        return response.substring(startMarker, endMarker); // Returns the substring containing only the response.
+   }
+   //extract all loop names included in the experimental section
+   public static Set<String> extractLoopNames(String text) {
+       Set<String> loopNames = new HashSet<>();
+       Pattern pattern = Pattern.compile("#pragma loop name (\\S+)");
+       Matcher matcher = pattern.matcher(text);
+
+       while (matcher.find()) {
+           loopNames.add(matcher.group(1));
+       }
+
+       return loopNames;
+   }
+   
+ //only returns lines related to the loops inside the experimental section  
+   public static Set<String> extractLinesContainingLoopNames(String text, Set<String> loopNames) {
+       Set<String> filteredLines = new HashSet<>();
+       String[] lines = text.split("<br>\"\\+\"");
+
+       for (String line : lines) {
+           for (String loopName : loopNames) {
+               if (line.contains(loopName)) {
+                   filteredLines.add(line.trim() + "<br>");
+                   break;
+               }
+           }
+       }
+
+       return filteredLines;
    }
    
    //extract call graph 
