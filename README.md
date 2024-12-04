@@ -45,3 +45,8 @@ To run **iCetus**, follow these steps:
 3. **Run the Application**:
    - Start the Tomcat server.
    - Access the iCetus application through the configured server URL in your browser.
+  
+### Note
+To access **GPT**, the API key must be added to the code in `src/cetus/registration/controller/UserServlet.java`.
+
+A placeholder has been provided for this purpose.
