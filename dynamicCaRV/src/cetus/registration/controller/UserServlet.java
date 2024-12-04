@@ -424,7 +424,7 @@ public class UserServlet extends HttpServlet {
 		    		"Your task: Integrate OpenMP pragmas to enhance this code's efficiency. Ensure all live-out variables' values are preserved. Please provide only the optimized C code in your response, with no explanations or additional text.";
 		    String gptFinalResponse="";
 		    String url = "https://api.openai.com/v1/chat/completions";
-	        String apiKey = "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"; // API key goes here
+	        String apiKey = ""; // Add your API key here
 	        String model = "gpt-4";//"gpt-3.5-turbo";//"gpt-4";//"gpt-3.5-turbo"; // current model of chatgpt api
 	     // Measure the time before sending the request
 	        long startTime = System.currentTimeMillis();
