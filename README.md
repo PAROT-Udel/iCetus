@@ -2,6 +2,9 @@
 
 **iCetus** is an advanced tool designed to enhance and accelerate the parallelization process of scientific applications. It extends the capabilities of the **Cetus compiler**, a state-of-the-art source-to-source compiler for automatic parallelization, by integrating interactive features that allow users to guide and fine-tune the parallelization process.
 
+#### Website:  [http://icetus.ece.udel.edu/dynamicCaRV/](http://icetus.ece.udel.edu/dynamicCaRV/)
+#### YouTube Video:  [Watch on YouTube](https://youtu.be/3-D7P4Ab280?si=EZzcX4NMQOnHuq4c)
+
 ---
 
 ## Development of iCetus
